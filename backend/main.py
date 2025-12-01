@@ -26,6 +26,8 @@ import sqlite3
 import yfinance as yf
 import json
 import os
+import uuid
+from functools import lru_cache
 from dotenv import load_dotenv
 
 
@@ -60,10 +62,19 @@ def safe_json_serializer(obj):
 
 
 app = FastAPI(
-    title="Legacy Guardians API",
-    description="Financial Education Platform for Australian Teenagers",
+    title="NUVC Financial Literacy API",
+    description="AI-Powered Investment Education Platform for Australian Teenagers",
     version="1.0.0"
 )
+
+# Request ID tracking middleware
+@app.middleware("http")
+async def add_request_id(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
 
 # CORS middleware for frontend integration
 app.add_middleware(
@@ -161,8 +172,35 @@ async def root():
 
 
 @app.get("/health")
-async def health_check():
-    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+async def health_check(db: sqlite3.Connection = Depends(get_db)):
+    """Comprehensive health check"""
+    health_status = {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "services": {
+            "database": "unknown",
+            "openai": "unknown"
+        },
+        "version": "1.0.0"
+    }
+    
+    # Check database
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT 1")
+        health_status["services"]["database"] = "connected"
+    except:
+        health_status["services"]["database"] = "disconnected"
+        health_status["status"] = "degraded"
+    
+    # Check OpenAI
+    if os.getenv("OPENAI_API_KEY"):
+        health_status["services"]["openai"] = "configured"
+    else:
+        health_status["services"]["openai"] = "missing"
+        health_status["status"] = "degraded"
+    
+    return health_status
 
 # Core endpoints
 
@@ -195,6 +233,23 @@ async def get_events():
         ]
 
 
+# Price data cache
+price_cache: Dict[str, tuple] = {}
+CACHE_TTL = timedelta(hours=1)
+
+def get_cached_price_data(cache_key: str) -> Optional[Dict]:
+    """Get cached price data if still valid"""
+    if cache_key in price_cache:
+        data, timestamp = price_cache[cache_key]
+        if datetime.now() - timestamp < CACHE_TTL:
+            return data
+    return None
+
+def set_price_cache(cache_key: str, data: Dict):
+    """Cache price data with timestamp"""
+    price_cache[cache_key] = (data, datetime.now())
+
+
 @app.get("/prices")
 async def get_prices(
     tickers: str,
@@ -202,8 +257,18 @@ async def get_prices(
     db: sqlite3.Connection = Depends(get_db)
 ):
     """Get historical prices with caching"""
-    # For now, return mock data spanning from 1990 to current year
-    # This provides better chart visualization
+    cache_key = f"{tickers}_{period}"
+    
+    # Check cache first
+    cached_data = get_cached_price_data(cache_key)
+    if cached_data:
+        return {
+            **cached_data,
+            "cached": True,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    # Generate fresh data
     ticker_list = tickers.split(",")
 
     # Generate mock data spanning from 1990 to current year
@@ -273,11 +338,16 @@ async def get_prices(
 
         data[ticker] = ticker_data
 
-    return {
+    result = {
         "data": data,
         "cached": False,
         "timestamp": datetime.now().isoformat()
     }
+    
+    # Cache the result
+    set_price_cache(cache_key, result)
+    
+    return result
 
 
 @app.post("/simulate")

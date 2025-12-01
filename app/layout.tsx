@@ -18,9 +18,8 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Legacy Guardians - Time-Warp Wealth",
-  description: "Travel through historical investment missions - A gamified educational platform for learning financial investment",
-  generator: "v0.app",
+  title: "NUVC Financial Literacy App",
+  description: "Empowering Australian teens with AI-powered investment education through gamified learning",
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',

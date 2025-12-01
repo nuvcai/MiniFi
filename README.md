@@ -1,4 +1,4 @@
-# 🏆 Legacy Guardians — Time-Warp Wealth
+# 🏆 NUVC Financial Literacy App
 
 > **Empowering Australian Teens (12-18) with AI-Powered Investment Education**
 
@@ -6,7 +6,7 @@ A gamified investment education platform that takes players on a journey through
 
 ## 🎯 Project Overview
 
-**Legacy Guardians** is an innovative educational game designed specifically for Australian teenagers aged 12-18. Players navigate through major financial events in history, make investment decisions, and learn from AI coaches while competing in real-time investment competitions.
+**NUVC Financial Literacy App** is an innovative educational game designed specifically for Australian teenagers aged 12-18. Players navigate through major financial events in history, make investment decisions, and learn from AI coaches while competing in real-time investment competitions.
 
 ### 🌟 Key Features
 
