@@ -97,10 +97,10 @@ export function InvestmentDecision({
           className="flex-1 font-medium"
         >
           <DollarSign className="h-4 w-4 mr-2" />
-          Confirm Investment
+          Lock It In! 🔒
         </Button>
         <Button variant="outline" onClick={onBack}>
-          Reconsider
+          Wait, Let Me Think...
         </Button>
       </div>
     </div>

@@ -41,7 +41,7 @@ export function GameHeader({
               Legacy Guardians
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Time-Warp Wealth Adventure
+              Travel through time, master the markets! 🚀
             </p>
           </div>
           <div className="flex justify-center items-center gap-3 sm:gap-6 mt-2 sm:mt-0">

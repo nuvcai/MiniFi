@@ -16,9 +16,9 @@ export interface FinancialEvent {
 export const financialEvents: FinancialEvent[] = [
   {
     year: 1990,
-    title: "Japanese Bubble Economy Collapse",
+    title: "Japan's Epic Market Crash",
     description:
-      "The bursting of Japan's real estate and stock market bubbles marked the beginning of the lost decade",
+      "Japan's property and stock prices went absolutely wild, then crashed hard - starting their 'Lost Decade' 📉",
     impact: "negative",
     difficulty: "beginner",
     unlocked: true,
@@ -30,9 +30,9 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 1997,
-    title: "Asian Financial Crisis",
+    title: "Asia's Money Meltdown",
     description:
-      "The financial crisis that began in Thailand swept across Asia",
+      "A financial crisis that started in Thailand and spread across Asia like wildfire 🔥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -44,8 +44,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2000,
-    title: "Dot-com Bubble Burst",
-    description: "Tech stocks plummeted, with the Nasdaq index falling by 78%",
+    title: "Dot-com Bubble Goes Pop!",
+    description: "Internet company stocks went from hero to zero - Nasdaq dropped 78%! 💥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -57,9 +57,9 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2008,
-    title: "Global Financial Crisis",
+    title: "The Big Bank Breakdown",
     description:
-      "The subprime mortgage crisis triggered a global financial system collapse",
+      "When risky home loans went bad, it triggered a worldwide financial earthquake 🌍",
     impact: "negative",
     difficulty: "advanced",
     unlocked: true,
@@ -71,9 +71,9 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2020,
-    title: "COVID-19 Pandemic Impact",
+    title: "COVID Chaos & Recovery",
     description:
-      "Global pandemic caused economic shutdowns and extreme market volatility",
+      "The pandemic shut down the world, markets went crazy, but then tech stocks took off! 🦠➡️🚀",
     impact: "mixed",
     difficulty: "advanced",
     unlocked: false,
@@ -81,14 +81,14 @@ export const financialEvents: FinancialEvent[] = [
     reward: 250,
     unlockRequirements: [2008],
     unlockDescription:
-      "Unlocked after completing '2008 - Global Financial Crisis' mission",
+      "Beat the 2008 mission first to unlock this challenge!",
     image: "/images/covid.png",
     imageAlt: "covid",
   },
   {
     year: 2025,
-    title: "Current Challenges",
-    description: "Inflation, rising interest rates, and geopolitical risks",
+    title: "Today's Wild Ride",
+    description: "AI revolution, crypto drama, and global uncertainty - welcome to now! 🎢",
     impact: "mixed",
     difficulty: "expert",
     unlocked: false,
@@ -96,7 +96,7 @@ export const financialEvents: FinancialEvent[] = [
     reward: 300,
     unlockRequirements: [2020],
     unlockDescription:
-      "Unlocked after completing '2020 - COVID-19 Pandemic Impact' mission",
+      "Complete the COVID mission to face today's challenges!",
     image: "/images/inflation.png",
     imageAlt: "inflation",
   },

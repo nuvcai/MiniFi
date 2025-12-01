@@ -25,7 +25,7 @@ export function MissionIntro({
         <CardContent>
           <h4 className="font-serif font-semibold mb-3 flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            Historical Background
+            The Story So Far 📖
           </h4>
           <p className="text-sm leading-relaxed">{missionData.context}</p>
         </CardContent>
@@ -35,7 +35,7 @@ export function MissionIntro({
         <CardContent>
           <h4 className="font-serif font-semibold mb-3 flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
-            Investment Situation
+            Your Mission 🎯
           </h4>
           <p className="text-sm leading-relaxed">{missionData.situation}</p>
         </CardContent>
@@ -51,7 +51,7 @@ export function MissionIntro({
               height={40}
               className="rounded-full"
             />
-            {selectedCoach.name}'s Advice
+            {selectedCoach.name} Says 💬
           </h4>
           <p className="text-sm leading-relaxed">
             {missionData.coachAdvice[selectedCoach.id] ||
@@ -63,10 +63,10 @@ export function MissionIntro({
       <div className="flex gap-3">
         <Button onClick={onNext} className="flex-1 font-medium">
           <ArrowRight className="h-4 w-4 mr-2" />
-          Start Investment Decision
+          Show Me the Options! 💰
         </Button>
         <Button variant="outline" onClick={onExit}>
-          Exit Mission
+          Back Out
         </Button>
       </div>
     </div>

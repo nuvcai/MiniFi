@@ -37,7 +37,7 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
                   Investment Competition
                 </CardTitle>
                 <CardDescription className="font-medium text-secondary mt-1">
-                  Special Challenge
+                  Ultimate Boss Level 🏆
                 </CardDescription>
               </div>
               <div className="flex gap-2">
@@ -53,9 +53,8 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Congratulations on completing all historical challenges! Now join 
-              the investment competition and compete with other players to showcase 
-              your investment skills!
+              You crushed all the history missions! 🎉 Now it&apos;s time to prove yourself 
+              against other players. Think you&apos;ve got what it takes to top the leaderboard?
             </p>
             <div className="bg-card/50 rounded-lg p-3 mb-4 border border-border/50">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
@@ -63,17 +62,17 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
                 Competition Features
               </div>
               <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Real-time market data simulation</li>
-                <li>• Compete with global players ranking</li>
-                <li>• Rich rewards and achievement system</li>
-                <li>• Advanced investment strategy challenges</li>
+                <li>• Live market action - feels like real trading! 📊</li>
+                <li>• Battle players worldwide for the top spot 🌍</li>
+                <li>• Epic rewards and flex-worthy achievements 🏅</li>
+                <li>• Next-level investment challenges await 🧠</li>
               </ul>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 <Trophy className="h-4 w-4 text-accent-foreground" />
                 <span className="text-primary font-medium">
-                  Unlimited XP Potential
+                  Unlimited XP - Sky&apos;s the limit! ⭐
                 </span>
               </div>
               <Button

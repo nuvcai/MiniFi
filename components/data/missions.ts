@@ -19,233 +19,233 @@ export interface MissionData {
 export const missionData: Record<number, MissionData> = {
   1990: {
     context:
-      "In 1990, Japan's economy was at the peak of its bubble. Tokyo real estate prices soared, and the Nikkei index hit historic highs. However, a crisis was brewing...",
+      "It's 1990 and Japan is living its best life! 🇯🇵 Property prices are through the roof, stocks are pumping, and everyone thinks the party will never end. But smart investors are starting to notice something's off...",
     situation:
-      "You have $100,000 in investment capital. The market is filled with optimism, but some economists are beginning to warn of bubble risks.",
+      "You've got $100,000 to invest. Everyone's hyped about Japanese markets, but some finance experts are warning it might be too good to be true. What's your move?",
     options: [
       {
         id: "stocks",
         name: "Japanese Stocks",
-        description: "Invest in Nikkei 225 index fund",
+        description: "Jump into the Nikkei 225 - Japan's hottest stock index",
         risk: "High",
         expectedReturn: "15-25%",
         actualReturn: -60,
-        investmentInsight: "Japanese stocks are at historic highs due to the economic bubble. While returns look attractive, the market is showing signs of overvaluation with P/E ratios at unsustainable levels.",
+        investmentInsight: "Japanese stocks are at all-time highs! 📈 But wait - prices might be way overblown. Some companies are trading at crazy valuations that don't make sense.",
       },
       {
         id: "realestate",
         name: "Tokyo Real Estate",
-        description: "Purchase apartments in central Tokyo",
+        description: "Buy apartments in central Tokyo - prices only go up, right?",
         risk: "High",
         expectedReturn: "20-30%",
         actualReturn: -70,
-        investmentInsight: "Tokyo real estate prices have increased 10x in the past decade. Land prices in central Tokyo are now the highest in the world, making this a very high-risk speculation.",
+        investmentInsight: "Tokyo property prices have 10x'd in a decade! 🏢 Land here costs more than anywhere else on Earth. But is this FOMO or a real opportunity?",
       },
       {
         id: "bonds",
         name: "US Treasury Bonds",
-        description: "Purchase 10-year US Treasury bonds",
+        description: "Play it safe with US government bonds",
         risk: "Low",
         expectedReturn: "8-10%",
         actualReturn: 45,
-        investmentInsight: "US Treasury bonds offer stable returns backed by the US government. With moderate yields and low volatility, they provide portfolio stability during uncertain times.",
+        investmentInsight: "Boring but reliable! US government bonds are backed by Uncle Sam himself. Not as exciting as Japanese stocks, but your money stays safe 🛡️",
       },
       {
         id: "gold",
         name: "Gold",
-        description: "Invest in physical gold",
+        description: "Stack some gold - the OG store of value",
         risk: "Medium",
         expectedReturn: "5-8%",
         actualReturn: 20,
-        investmentInsight: "Gold serves as a hedge against inflation and currency devaluation. While returns are modest, it maintains value during economic uncertainty and provides portfolio diversification.",
+        investmentInsight: "Gold has been valuable for thousands of years 🥇 It won't make you rich overnight, but it protects your money when things go sideways.",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "I recommend diversifying investments, putting most of your funds into US Treasury bonds and gold. The Japanese market is too risky.",
+        "Yo, those Japanese markets are giving me bad vibes! 😬 I'd put most of your cash in US bonds and gold. Better safe than sorry!",
       "growth-guru":
-        "You can invest a small amount in the Japanese market, but maintain balance. I suggest 40% bonds, 30% stocks, 30% gold.",
+        "Don't YOLO everything into Japan. Try a mix: 40% bonds, 30% stocks, 30% gold. Balance is key! ⚖️",
       "adventure-alex":
-        "This is a once-in-a-lifetime opportunity! Go all-in on Japanese stocks and real estate - the higher the risk, the higher the returns!",
+        "This is a once-in-a-lifetime chance! 🚀 Japanese stocks and real estate are on fire - go big or go home!",
       "yield-yoda":
-        "Focus on assets that generate stable returns. US Treasury bonds may not have high returns, but they're the safest during turbulent times.",
+        "Focus on what's gonna last. US bonds aren't flashy, but they'll keep your money growing steadily while others panic. 🧘",
     },
     outcome:
-      "In 1991, the Bank of Japan began raising interest rates, and the bubble burst. Stock and real estate prices plummeted, beginning the 'Lost Decade'.",
+      "Plot twist: In 1991, Japan's central bank raised interest rates and the bubble POPPED! 💥 Stocks and property prices crashed hard, starting the 'Lost Decade' of slow growth.",
   },
   1997: {
     context:
-      "In July 1997, the Thai government announced the abandonment of the fixed exchange rate system between the Thai baht and the US dollar. This decision swept across Asia like a domino effect, triggering one of the most severe regional financial crises in history...",
+      "July 1997 - Thailand just dropped a bombshell: they're letting their currency float freely. 💸 This starts a domino effect across Asia, with currencies and stock markets falling like crazy...",
     situation:
-      "You have $100,000 in investment capital. Asian currencies are beginning to depreciate, stock markets are plummeting, but this also creates investment opportunities.",
+      "You've got $100,000 to invest. Asian markets are in chaos - currencies are crashing, but maybe there's opportunity in the madness?",
     options: [
       {
         id: "asian-stocks",
         name: "Asian Stocks",
-        description: "Invest in Korean, Thai, and Indonesian stock markets",
+        description: "Buy Korean, Thai, and Indonesian stocks while they're cheap!",
         risk: "Extreme",
         expectedReturn: "30-50%",
         actualReturn: -65,
-        investmentInsight: "Asian markets are in free fall due to currency crisis. While prices look attractive, capital flight and currency devaluation pose extreme risks to foreign investors.",
+        investmentInsight: "Asian markets are in freefall! 📉 Prices look like a bargain, but currencies are tanking too. This could get way worse before it gets better.",
       },
       {
         id: "us-stocks",
         name: "US Stocks",
-        description: "Invest in S&P 500 index fund",
+        description: "Invest in the S&P 500 - America's safest bet",
         risk: "Medium",
         expectedReturn: "12-18%",
         actualReturn: 28,
-        investmentInsight: "US stocks are benefiting from being a safe haven during the Asian crisis. The US economy remains strong with steady growth and stable currency.",
+        investmentInsight: "While Asia burns, the US economy is chugging along nicely 🇺🇸 Money is flowing OUT of Asia and INTO American stocks.",
       },
       {
         id: "bonds",
         name: "US Treasury Bonds",
-        description: "Purchase 10-year US Treasury bonds",
+        description: "Hide in the safety of government bonds",
         risk: "Low",
         expectedReturn: "6-8%",
         actualReturn: 15,
-        investmentInsight: "Safe haven asset during the crisis. US government bonds provide stability and capital preservation when global markets are volatile.",
+        investmentInsight: "When the world goes crazy, US bonds are where scared money hides 🏠 Super safe but not super exciting.",
       },
       {
         id: "cash",
         name: "US Dollar Cash",
-        description: "Hold US dollars and wait for opportunities",
+        description: "Just hold dollars and wait for better opportunities",
         risk: "None",
         expectedReturn: "4-5%",
         actualReturn: 8,
-        investmentInsight: "Cash provides maximum liquidity and no risk during market turmoil. The US dollar is strengthening against Asian currencies, providing natural hedge.",
+        investmentInsight: "Cash is king during chaos! 👑 The US dollar is actually getting STRONGER while Asian currencies collapse.",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "Asian markets are too dangerous! I recommend holding US Treasury bonds and cash, waiting for the storm to pass.",
+        "Asia is a disaster zone right now! 🚫 Stay in US bonds and cash until the storm passes. Don't try to be a hero.",
       "growth-guru":
-        "You can moderately invest in US stocks, but avoid Asian markets. I suggest 60% US stocks, 40% bonds.",
+        "Skip Asian markets for now. Try 60% US stocks, 40% bonds - America is where the action is. 🇺🇸",
       "adventure-alex":
-        "Crisis creates opportunity! Asian stocks are super cheap now, it's a great time to buy the dip!",
+        "Everyone's panicking = buying opportunity! 🎯 Asian stocks are basically on clearance sale right now!",
       "yield-yoda":
-        "In uncertain times, cash is king. Maintain liquidity and wait for better investment opportunities.",
+        "When everyone else is losing their minds, keep yours. Cash gives you options to pounce when the time is right. 🎯",
     },
     outcome:
-      "The Asian financial crisis continued until 1998, with many currencies depreciating by more than 50% and stock markets falling by 60-80%. The US market remained relatively stable, becoming a safe haven for capital.",
+      "The crisis lasted until 1998 - many Asian currencies lost over 50% of their value and stock markets dropped 60-80%! 😱 Meanwhile, US markets stayed relatively chill and became a safe haven.",
   },
   2000: {
     context:
-      "In 2000, the internet revolution was changing the world. Tech stock prices soared, and people believed the 'new economy' would forever change investment rules...",
+      "Welcome to Y2K! 🎉 The internet is changing EVERYTHING. Tech stocks have been going absolutely nuts for 5 years straight. New websites are getting billion-dollar valuations without making any money. Sound familiar?",
     situation:
-      "You have $100,000 in investment capital. The Nasdaq index has risen 400% over the past 5 years, and tech company valuations have reached astronomical levels.",
+      "You've got $100,000 to invest. The Nasdaq has pumped 400% in 5 years! Everyone's getting rich from tech stocks. Your friends are quitting their jobs to day-trade. FOMO is real!",
     options: [
       {
         id: "tech",
         name: "Tech Stocks",
-        description: "Invest in Nasdaq 100 index",
+        description: "Invest in the Nasdaq 100 - ride the internet wave!",
         risk: "High",
         expectedReturn: "25-40%",
         actualReturn: -78,
-        investmentInsight: "Tech stocks are trading at extreme P/E ratios with many companies having no profits. The dot-com euphoria has created unsustainable valuations based on future growth promises.",
+        investmentInsight: "Tech stocks are trading at insane prices! 🤯 Many companies have never made a profit but are worth billions. Is this the future or just hype?",
       },
       {
         id: "dotcom",
         name: "Dot-com Startups",
-        description: "Invest in .com company stocks",
+        description: "Go full degen on .com company stocks",
         risk: "Extreme",
         expectedReturn: "50-100%",
         actualReturn: -95,
-        investmentInsight: "Most dot-com companies burn cash with no clear path to profitability. While the internet is revolutionary, current valuations assume perfect execution and unlimited growth.",
+        investmentInsight: "Pets.com, Webvan, eToys... These companies are burning through cash like crazy with no real business plan 🔥 But STONKS ONLY GO UP, right?",
       },
       {
         id: "traditional",
         name: "Traditional Stocks",
-        description: "Invest in Dow Jones Industrial Average",
+        description: "Stick with old-school Dow Jones companies",
         risk: "Medium",
         expectedReturn: "10-15%",
         actualReturn: -25,
-        investmentInsight: "Traditional companies have reasonable valuations but face disruption from the internet. They offer more stability than tech stocks but may struggle in the 'new economy'.",
+        investmentInsight: "Boomer stocks! 👴 Coca-Cola, McDonald's, GE - they actually make money. Not as sexy as tech, but more grounded in reality.",
       },
       {
         id: "cash",
         name: "Cash",
-        description: "Hold cash and wait for opportunities",
+        description: "Sit this one out and wait",
         risk: "None",
         expectedReturn: "3-5%",
         actualReturn: 15,
-        investmentInsight: "Cash provides safety and optionality during market euphoria. While earning modest returns, it positions you to invest when asset prices become more reasonable.",
+        investmentInsight: "Sometimes the best move is no move 🧘 When everyone's greedy, smart money stays patient.",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "The market is overheated! I recommend holding cash and waiting for a better entry point.",
+        "This market is giving me major bubble vibes! 🫧 I'm staying in cash and waiting for sanity to return.",
       "growth-guru":
-        "You can moderately participate in tech stocks, but control the proportion. I suggest 50% cash, 30% traditional stocks, 20% tech stocks.",
+        "Don't go all-in on tech. Try 50% cash, 30% traditional stocks, 20% tech. Diversify, diversify, diversify! 🎯",
       "adventure-alex":
-        "The internet revolution has just begun! Go all-in on .com companies - this is a historic opportunity!",
+        "The internet is literally changing the world! 🌐 This is your chance to get rich - YOLO into .com stocks!",
       "yield-yoda":
-        "High valuations mean low future returns. Stay patient, cash is king.",
+        "When prices are crazy high, future returns are usually low. Patience > FOMO. 🧘",
     },
     outcome:
-      "In March 2000, the dot-com bubble burst. The Nasdaq index fell 78% over the next two years, and many .com companies went bankrupt.",
+      "March 2000 - the bubble BURSTS! 💥 Nasdaq crashes 78% over the next two years. Most .com companies go bankrupt. Pets.com becomes a meme. The party is over.",
   },
   2008: {
     context:
-      "In September 2008, Lehman Brothers declared bankruptcy, triggering a global financial tsunami. The subprime mortgage crisis spread from the US to the world, and the banking system faced collapse...",
+      "September 2008 - Lehman Brothers (a MASSIVE bank) just went bankrupt! 🏦💀 Turns out, banks were making super risky home loans and it's all falling apart. The whole financial system is on the edge of collapse...",
     situation:
-      "You have $100,000 in investment capital. Global stock markets are plummeting, credit markets are frozen, but central banks are beginning massive rescue operations.",
+      "You've got $100,000 to invest. Stock markets worldwide are in freefall. Banks are failing. Governments are scrambling to save the economy. What do you do?",
     options: [
       {
         id: "stocks",
         name: "Global Stocks",
-        description: "Invest in MSCI World Index",
+        description: "Buy the dip on world stocks!",
         risk: "Extreme",
         expectedReturn: "20-30%",
         actualReturn: -55,
-        investmentInsight: "Global deleveraging and credit contraction are causing widespread stock selloffs. While prices may look attractive, corporate earnings face severe headwinds from recession.",
+        investmentInsight: "Stock prices are crashing everywhere! 📉 Companies are losing value fast as everyone panics. It might be a buying opportunity... or it could get much worse.",
       },
       {
         id: "banks",
         name: "Banking Stocks",
-        description: "Invest in financial sector stocks",
+        description: "Buy bank stocks while they're cheap",
         risk: "Extreme",
         expectedReturn: "40-60%",
         actualReturn: -75,
-        investmentInsight: "Banks face potential insolvency from mortgage losses and frozen credit markets. While government bailouts may help, massive writedowns and dilution pose extreme risks to shareholders.",
+        investmentInsight: "Banks are getting crushed! 🏦 Some might survive, some might not. The government is bailing some out, but shareholders could lose everything.",
       },
       {
         id: "bonds",
         name: "US Treasury Bonds",
-        description: "Purchase 10-year US Treasury bonds",
+        description: "Run to the safest investment on Earth",
         risk: "Low",
         expectedReturn: "4-6%",
         actualReturn: 25,
-        investmentInsight: "Flight-to-quality drives demand for US Treasuries during the financial crisis. Government bonds offer safety and capital appreciation as yields fall amid Fed rate cuts.",
+        investmentInsight: "When the world is on fire, everyone wants US government bonds 🇺🇸 Super safe, and the Fed is cutting interest rates which makes bonds go up!",
       },
       {
         id: "gold",
         name: "Gold",
-        description: "Invest in physical gold",
+        description: "Stack gold - the ultimate crisis hedge",
         risk: "Medium",
         expectedReturn: "8-12%",
         actualReturn: 35,
-        investmentInsight: "Gold serves as a hedge against financial system collapse and currency debasement. Central bank money printing and economic uncertainty drive demand for this traditional safe haven.",
+        investmentInsight: "Gold shines brightest in dark times! ✨ Banks can fail, currencies can crash, but gold has been valuable for 5,000 years.",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "This is a once-in-a-century crisis! Go all-in on US Treasury bonds and gold, stay away from the stock market.",
+        "This is scary stuff! 😰 All my money is going into US bonds and gold. Don't even think about stocks right now.",
       "growth-guru":
-        "Stay calm during the crisis. I suggest 70% bonds, 20% gold, 10% stocks, entering in batches.",
+        "Stay calm but stay careful. Try 70% bonds, 20% gold, 10% stocks. Maybe add more stocks slowly over time. 📊",
       "adventure-alex":
-        "Stocks are super cheap now! This is a once-in-a-lifetime opportunity to buy the dip - go all-in!",
+        "BLOOD IN THE STREETS! 🩸 Stocks are on mega-sale right now. Warren Buffett is buying - maybe you should too!",
       "yield-yoda":
-        "Stay rational in panic. Treasury bonds and gold are the safest havens.",
+        "Fear is in the air, but that's when opportunities are born. Treasury bonds and gold first, then look for quality stocks later. 🎯",
     },
     outcome:
-      "In 2008-2009, global stock markets fell by more than 50%, but US Treasury bonds and gold became safe-haven assets. Central banks implemented massive quantitative easing, laying the foundation for subsequent recovery.",
+      "2008-2009: Global stocks dropped 50%+ 📉 But US bonds and gold were the safe havens everyone needed. The government pumped TRILLIONS into the economy, setting up the recovery that followed.",
   },
   2020: {
     context:
-      "In March 2020, the COVID-19 pandemic spread globally, and countries implemented lockdown measures. Stock markets plummeted 30% in just one month, but unprecedented central bank stimulus policies were about to emerge...",
+      "March 2020 - COVID-19 is spreading worldwide! 🦠 Countries are locking down, businesses are closing, and stock markets just crashed 30% in ONE MONTH. But then something unexpected happens...",
     situation:
-      "You have $100,000 in investment capital. Market panic has reached its peak, but tech stocks are beginning to show resilience.",
+      "You've got $100,000 to invest. Everyone's working from home, Zoom is blowing up, and the government is sending everyone free money. Peak panic or time to be greedy?",
     options: [
       {
         id: "tech-stocks",
@@ -254,103 +254,103 @@ export const missionData: Record<number, MissionData> = {
         risk: "Medium",
         expectedReturn: "15-25%",
         actualReturn: 85,
-        investmentInsight: "Tech companies are benefiting from pandemic-driven digital transformation. Remote work and e-commerce trends favor these giants with strong balance sheets.",
+        investmentInsight: "Everyone's stuck at home using Netflix, Amazon, and Zoom! 📱 Tech companies are actually THRIVING while the rest of the economy struggles.",
       },
       {
         id: "travel-stocks",
         name: "Travel & Airlines",
-        description: "Invest in airline, cruise, and hotel stocks",
+        description: "Bet on airlines, cruises, and hotels recovering",
         risk: "Extreme",
         expectedReturn: "50-100%",
         actualReturn: -45,
-        investmentInsight: "Travel industry faces unprecedented disruption from lockdowns and border closures. While eventual recovery is likely, airlines carry high debt loads and may face bankruptcy or dilution.",
+        investmentInsight: "Travel is DEAD right now ✈️💀 But vaccines are coming... eventually. Could be the ultimate comeback story or a total disaster.",
       },
       {
         id: "bonds",
         name: "US Treasury Bonds",
-        description: "Purchase 10-year US Treasury bonds",
+        description: "Play it safe with government bonds",
         risk: "Low",
         expectedReturn: "2-4%",
         actualReturn: 12,
-        investmentInsight: "Ultra-low interest rates and massive Fed stimulus create safe haven demand for Treasuries. While yields are low, bonds provide stability during market volatility.",
+        investmentInsight: "The Fed cut interest rates to basically zero! Bonds are safe but won't make you rich. Still, safe > sorry during a pandemic 🏠",
       },
       {
         id: "gold",
         name: "Gold",
-        description: "Invest in physical gold",
+        description: "Buy gold as an inflation hedge",
         risk: "Medium",
         expectedReturn: "8-15%",
         actualReturn: 28,
-        investmentInsight: "Unprecedented monetary stimulus and negative real interest rates favor gold as an inflation hedge. Central bank money printing and currency debasement concerns drive precious metal demand.",
+        investmentInsight: "The government is printing TRILLIONS of dollars 💵 When money printers go brrr, gold usually goes up!",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "The pandemic's impact is hard to predict. I recommend investing in safe-haven assets like Treasury bonds and gold.",
+        "A literal pandemic?! 😷 I'm staying super safe with bonds and gold until we know more about this virus.",
       "growth-guru":
-        "Tech stocks benefit from digital transformation and can be moderately allocated. I suggest 50% tech stocks, 30% bonds, 20% gold.",
+        "Tech is clearly winning the pandemic. Try 50% tech stocks, 30% bonds, 20% gold. The future is digital! 💻",
       "adventure-alex":
-        "Travel stocks have hit rock bottom. The pandemic will end eventually - now is the perfect time to buy the dip!",
+        "Travel stocks are basically free money once vaccines arrive! ✈️ Everyone's gonna want to travel SO BAD after being locked up!",
       "yield-yoda":
-        "Focus on pandemic-benefiting industries like tech, healthcare, and e-commerce.",
+        "Follow the trends - tech, healthcare, and online shopping are the new normal. Focus on companies that benefit from staying home. 🏠",
     },
     outcome:
-      "In the second half of 2020, tech stocks surged, and travel stocks rebounded after vaccines emerged, but overall tech stocks performed best. Central banks' massive money printing pushed up asset prices.",
+      "Plot twist: Tech stocks went absolutely INSANE! 🚀 After the initial crash, the Nasdaq doubled while many traditional companies struggled. The Fed's money printing pushed all asset prices up.",
   },
   2025: {
     context:
-      "In 2025, the world faces multiple challenges including inflationary pressures, central bank rate hikes, and geopolitical tensions. The AI revolution is changing industry landscapes, but market volatility is intensifying...",
+      "Welcome to 2025! 🎮 AI is changing everything (like, EVERYTHING), crypto is still wild, and the world's trying to figure out what's next. Inflation, interest rates, and global drama keep markets on their toes...",
     situation:
-      "You have $100,000 in investment capital. Inflation remains high, interest rates are at multi-year highs, but AI and green energy industries are showing strong growth.",
+      "You've got $100,000 to invest. ChatGPT and AI are everywhere. Green energy is growing fast. Interest rates are high. What's the winning move?",
     options: [
       {
         id: "ai-stocks",
         name: "AI Tech Stocks",
-        description: "Invest in artificial intelligence related companies",
+        description: "Bet big on artificial intelligence companies",
         risk: "High",
         expectedReturn: "20-40%",
         actualReturn: 0,
-        investmentInsight: "AI revolution is transforming industries, but valuations are high and competition intense. Early winners may dominate, but market is still evolving rapidly.",
+        investmentInsight: "AI is the hottest thing since the internet! 🤖 Nvidia, Microsoft, Google - they're all racing to dominate. But are prices already too high?",
       },
       {
         id: "energy",
         name: "Green Energy Stocks",
-        description: "Invest in solar, wind and other green energy",
+        description: "Invest in solar, wind, and clean energy",
         risk: "High",
         expectedReturn: "15-30%",
         actualReturn: 0,
-        investmentInsight: "Government subsidies and climate initiatives drive green energy adoption, but rising interest rates hurt capital-intensive projects. Regulatory changes and competition create volatility.",
+        investmentInsight: "The world is going green! 🌱 Governments are spending big on clean energy. But high interest rates make these projects more expensive.",
       },
       {
         id: "tips",
         name: "Inflation-Protected Bonds",
-        description: "Purchase Treasury Inflation-Protected Securities (TIPS)",
+        description: "Get bonds that adjust for inflation",
         risk: "Low",
         expectedReturn: "5-8%",
         actualReturn: 0,
-        investmentInsight: "TIPS provide direct inflation protection as principal adjusts with CPI changes. With persistent inflation concerns and high nominal rates, they offer real return preservation.",
+        investmentInsight: "With prices going up everywhere, these bonds protect your buying power 💪 Not exciting, but you won't lose money to inflation!",
       },
       {
         id: "commodities",
         name: "Commodities",
-        description: "Invest in oil, gold, and agricultural products",
+        description: "Invest in oil, gold, and food",
         risk: "Medium",
         expectedReturn: "10-20%",
         actualReturn: 0,
-        investmentInsight: "Geopolitical tensions and supply chain disruptions support commodity prices as inflation hedges. However, recession risks and central bank tightening may dampen demand.",
+        investmentInsight: "Real stuff like oil, gold, and food usually does well when inflation is high 🛢️ Global supply chain issues and conflicts can push prices up.",
       },
     ],
     coachAdvice: {
       "steady-sam":
-        "In uncertain times, I recommend investing in inflation-protected bonds and commodities to preserve value.",
+        "Things are pretty uncertain right now 🤔 I'd go with inflation-protected bonds and commodities to keep your money safe.",
       "growth-guru":
-        "AI is the future trend, but balance the risks. I suggest 40% AI stocks, 30% inflation-protected bonds, 30% commodities.",
+        "AI is definitely the future, but balance it out. Try 40% AI stocks, 30% inflation bonds, 30% commodities. Don't go all-in! ⚖️",
       "adventure-alex":
-        "The AI revolution has just begun! Go all-in on AI tech stocks - this is the theme of the next decade!",
+        "AI IS GOING TO CHANGE EVERYTHING! 🤖 This is like the internet in 1995 - get in now before it's too late!",
       "yield-yoda":
-        "In an inflationary environment, physical assets and inflation-protected bonds are the best choices.",
+        "High inflation means you need real assets that hold value. Commodities and inflation bonds are your friends right now. 🛡️",
     },
     outcome:
-      "This is a current ongoing event, and the results are yet to be determined. Your investment decisions will impact future wealth accumulation!",
+      "This is happening RIGHT NOW! 🎬 Your investment choices will shape your future wealth. There's no crystal ball - make your best call!",
   },
 };

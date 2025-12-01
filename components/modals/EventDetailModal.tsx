@@ -33,15 +33,15 @@ export function EventDetailModal({
   const getCoachStrategy = () => {
     switch (selectedCoach.id) {
       case "steady-sam":
-        return "Stay calm during crises and choose defensive assets like bonds and gold.";
+        return "Keep cool when things get crazy! 😎 Safe picks like bonds and gold are our jam.";
       case "growth-guru":
-        return "Balance risk and opportunity by diversifying across different asset classes.";
+        return "Don't put all your eggs in one basket! Mix it up with different investments for the win. ⚖️";
       case "adventure-alex":
-        return "Crisis creates opportunity! Look for undervalued high-growth potential investments.";
+        return "When everyone else panics, that's when the real opportunities pop up! Let's hunt for gems! 💎";
       case "yield-yoda":
-        return "Focus on investments that generate stable cash flow and let compound interest work for you.";
+        return "Make your money work for YOU. Passive income + compound interest = magic! ✨";
       default:
-        return "Follow a balanced investment approach based on market conditions.";
+        return "Let's read the market vibes and make smart moves! 🎯";
     }
   };
 
@@ -114,7 +114,7 @@ export function EventDetailModal({
                     <p className="text-sm">
                       <span className="font-semibold text-accent-foreground flex items-center gap-2 mb-1">
                         <Target className="h-4 w-4" />
-                        Recommended Strategy:
+                        My Game Plan:
                       </span>
                       <span className="text-muted-foreground">
                         {getCoachStrategy()}
@@ -129,10 +129,10 @@ export function EventDetailModal({
           <div className="flex gap-3">
             <Button onClick={onStartMission} className="flex-1 font-medium">
               <Play className="h-4 w-4 mr-2" />
-              Start Time Mission
+              Let&apos;s Go! 🚀
             </Button>
             <Button variant="outline" onClick={onClose}>
-              Challenge Later
+              Maybe Later
             </Button>
           </div>
         </div>

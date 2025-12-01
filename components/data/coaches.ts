@@ -12,8 +12,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "steady-sam",
     name: "Steady Sam",
-    personality: "Conservative Coach",
-    description: "Specialises in bonds, gold, and stable investment strategies",
+    personality: "Safety First",
+    description: "Your chill guide to safe investments - bonds, gold, and keeping your money secure 🛡️",
     avatar: "/avatars/conservative.png",
     color: "bg-blue-100 text-blue-800",
     animatedAvatar: "/gifs/conservative.gif",
@@ -21,8 +21,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "growth-guru",
     name: "Growth Guru",
-    personality: "Balanced Coach",
-    description: "Balanced investment approach mixing stocks, ETFs, and REITs",
+    personality: "Smart Mixer",
+    description: "All about balance - mixing stocks, ETFs, and REITs like a pro DJ 🎧",
     avatar: "/avatars/balanced.png",
     color: "bg-green-100 text-green-800",
     animatedAvatar: "/gifs/balanced.gif",
@@ -30,8 +30,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "adventure-alex",
     name: "Adventure Alex",
-    personality: "Aggressive Coach",
-    description: "High-risk, high-reward crypto and growth stocks",
+    personality: "Risk Taker",
+    description: "Go big or go home! Crypto, growth stocks, and chasing those moonshots 🚀",
     avatar: "/avatars/aggressive.png",
     color: "bg-purple-100 text-purple-800",
     animatedAvatar: "/gifs/aggressive.gif",
@@ -39,8 +39,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "yield-yoda",
     name: "Yield Yoda",
-    personality: "Income Coach",
-    description: "Focuses on passive income and compound interest effects",
+    personality: "Money Multiplier",
+    description: "Master of passive income - let your money work while you sleep 💰",
     avatar: "/avatars/master.png",
     color: "bg-yellow-100 text-yellow-800",
     animatedAvatar: "/gifs/master.gif",
