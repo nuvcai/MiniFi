@@ -1,0 +1,800 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║   MiniFi Investment Competition (MVP - Hackathon Edition)                    ║
+ * ║   ✨ Vibe-coded by Tick.AI ✨                                                ║
+ * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
+"use client";
+
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
+import {
+  ArrowLeft,
+  DollarSign,
+  TrendingUp,
+  TrendingDown,
+  Zap,
+  Shield,
+  Target,
+  Brain,
+  Apple,
+  Cpu,
+  Car,
+  Building,
+  Coins,
+  Bitcoin,
+} from "lucide-react";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
+interface InvestmentOptionMeta {
+  id: string;
+  name: string;
+  type: "stock" | "fund" | "crypto";
+  icon: any;
+  risk: "low" | "medium" | "high";
+  description: string;
+}
+
+interface Quote {
+  currentPrice: number;
+  change: number; // %
+}
+interface AICoach {
+  id: string;
+  name: string;
+  avatar: string;
+  style: string;
+  description: string;
+  specialty: string;
+  successRate: number;
+  gif?: string;
+}
+
+const investmentOptions: InvestmentOptionMeta[] = [
+  {
+    id: "apple",
+    name: "Apple Inc.",
+    type: "stock",
+    icon: Apple,
+    risk: "medium",
+    description: "Global tech giant, iPhone manufacturer",
+  },
+  {
+    id: "microsoft",
+    name: "Microsoft Corp.",
+    type: "stock",
+    icon: Building,
+    risk: "medium",
+    description: "Cloud services and software leader",
+  },
+  {
+    id: "nvidia",
+    name: "NVIDIA Corp.",
+    type: "stock",
+    icon: Cpu,
+    risk: "high",
+    description: "AI chips and graphics processor leader",
+  },
+  {
+    id: "tesla",
+    name: "Tesla Inc.",
+    type: "stock",
+    icon: Car,
+    risk: "high",
+    description: "Electric vehicle and clean energy innovator",
+  },
+  {
+    id: "sp500",
+    name: "S&P 500 ETF",
+    type: "fund",
+    icon: TrendingUp,
+    risk: "low",
+    description: "Tracks US top 500 companies index",
+  },
+  {
+    id: "etf",
+    name: "Global ETF",
+    type: "fund",
+    icon: Building,
+    risk: "low",
+    description: "Global diversified investment portfolio",
+  },
+  {
+    id: "bitcoin",
+    name: "Bitcoin",
+    type: "crypto",
+    icon: Bitcoin,
+    risk: "high",
+    description: "Digital gold, cryptocurrency king",
+  },
+  {
+    id: "ethereum",
+    name: "Ethereum",
+    type: "crypto",
+    icon: Coins,
+    risk: "high",
+    description: "Smart contract platform leader",
+  },
+];
+
+const aiCoaches: AICoach[] = [
+  {
+    id: "conservative",
+    name: "Steady Sam",
+    avatar: "/avatars/conservative.png",
+    style: "Conservative",
+    description: "Focuses on risk control and stable returns",
+    specialty: "Defensive investment strategies",
+    successRate: 78,
+    gif: "/gifs/conservative.gif",
+  },
+  {
+    id: "balanced",
+    name: "Balanced Bella",
+    avatar: "/avatars/balanced.png",
+    style: "Balanced",
+    description: "Finds the best balance between risk and return",
+    specialty: "Diversified asset allocation",
+    successRate: 82,
+    gif: "/gifs/balanced.gif",
+  },
+  {
+    id: "aggressive",
+    name: "Adventure Alex",
+    avatar: "/avatars/aggressive.png",
+    style: "Aggressive",
+    description: "Pursues high returns, willing to take risks",
+    specialty: "Growth stocks and emerging markets",
+    successRate: 85,
+    gif: "/gifs/aggressive.gif",
+  },
+  {
+    id: "tech",
+    name: "Tech Taylor",
+    avatar: "/avatars/tech.png",
+    style: "Tech-focused",
+    description: "Specialises in tech stocks and innovative investments",
+    specialty: "AI and tech trend analysis",
+    successRate: 88,
+    gif: "/gifs/master.gif",
+  },
+];
+
+interface InvestmentCompetitionProps {
+  onBack: () => void;
+  onStartTrading: (portfolio: Record<string, number>, coach: AICoach) => void;
+}
+
+export default function InvestmentCompetition({
+  onBack,
+  onStartTrading,
+}: InvestmentCompetitionProps) {
+  const [allocations, setAllocations] = useState<Record<string, number>>({});
+  const [selectedCoach, setSelectedCoach] = useState<AICoach | null>(null);
+  const [totalAllocated, setTotalAllocated] = useState(0);
+
+  const startingCapital = 5000;
+
+  // Market quote status
+  const [quotes, setQuotes] = useState<Record<string, Quote>>({});
+  const [loadingQuotes, setLoadingQuotes] = useState(false);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+
+  // Fetch backend /quotes
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const fetchQuotes = async () => {
+      try {
+        setLoadingQuotes(true);
+        setQuoteError(null);
+
+        // Build repeated parameters: ?ids=a&ids=b...
+        const ids = investmentOptions.map((o) => o.id);
+        const params = new URLSearchParams();
+        ids.forEach((id) => params.append("ids", id));
+        const url = `${API_BASE}/quotes?${params.toString()}`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        const map: Record<string, Quote> = {};
+        (data?.quotes ?? []).forEach((q: any) => {
+          map[q.id] = { currentPrice: q.currentPrice, change: q.change };
+        });
+        setQuotes(map);
+      } catch (e: any) {
+        setQuoteError(e?.message ?? "Failed to fetch quotes");
+      } finally {
+        setLoadingQuotes(false);
+      }
+    };
+
+    fetchQuotes();
+    // Polling refresh (adjustable, currently 30s)
+    timer = setInterval(fetchQuotes, 30000);
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, []);
+
+  const updateAllocation = (optionId: string, amount: number) => {
+    // Limit amount to not exceed remaining available funds + original option value
+    const maxAllowed =
+      startingCapital - totalAllocated + (allocations[optionId] || 0);
+    const safeAmount = Math.min(amount, maxAllowed);
+
+    const newAllocations = { ...allocations, [optionId]: safeAmount };
+    const newTotal = Object.values(newAllocations).reduce(
+      (sum, val) => sum + val,
+      0
+    );
+
+    setAllocations(newAllocations);
+    setTotalAllocated(newTotal);
+  };
+
+  const remainingCapital = startingCapital - totalAllocated;
+
+  // === calculate pecentage of different type (different colour) ===
+  const sumByType = (type: AssetType) =>
+    investmentOptions
+      .filter((o) => o.type === type)
+      .reduce((acc, o) => acc + (allocations[o.id] || 0), 0);
+
+  const allocStock = sumByType("stock");
+  const allocFund = sumByType("fund");
+  const allocCrypto = sumByType("crypto");
+
+  const pct = (v: number) => (v / startingCapital) * 100;
+
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case "low":
+        return "text-green-600 bg-green-100";
+      case "medium":
+        return "text-yellow-600 bg-yellow-100";
+      case "high":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-gray-600 bg-gray-100";
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "stock":
+        return TrendingUp;
+      case "fund":
+        return Shield;
+      case "crypto":
+        return Zap;
+      default:
+        return Target;
+    }
+  };
+
+  const canStartCompetition = selectedCoach && totalAllocated > 0;
+
+  const startCompetition = () => {
+    if (canStartCompetition) {
+      onStartTrading(allocations, selectedCoach);
+    }
+  };
+
+  //Progress bar colour
+  type AssetType = InvestmentOptionMeta["type"];
+
+  const TYPE_COLORS: Record<
+    AssetType,
+    { range: string; track: string; thumb: string; legend: string }
+  > = {
+    stock: {
+      range: "bg-emerald-500",
+      track: "bg-emerald-100",
+      thumb: "border-emerald-500",
+      legend: "bg-emerald-500",
+    },
+    fund: {
+      range: "bg-indigo-500",
+      track: "bg-indigo-100",
+      thumb: "border-indigo-500",
+      legend: "bg-indigo-500",
+    },
+    crypto: {
+      range: "bg-amber-500",
+      track: "bg-amber-100",
+      thumb: "border-amber-500",
+      legend: "bg-amber-500",
+    },
+  };
+
+  const sliderTheme = (type: AssetType) =>
+    [
+      `[&_[data-slot=track]]:${TYPE_COLORS[type].track}`,
+      `[&_[data-slot=range]]:${TYPE_COLORS[type].range}`,
+      `[&_[data-slot=thumb]]:${TYPE_COLORS[type].thumb}`,
+    ].join(" ");
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-card/30 to-background">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-8 gap-6 sm:gap-0">
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="flex items-center gap-2 bg-transparent w-full sm:w-auto justify-center order-2 sm:order-none py-3 sm:py-2"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Timeline
+          </Button>
+          <div className="text-center order-1 sm:order-none flex-1">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mb-2 sm:mb-1">
+              Investment Competition
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Use your $5,000 starting capital to begin your investment journey
+            </p>
+          </div>
+          <div className="w-full sm:w-auto order-3 sm:order-none flex justify-end">
+            <Button
+              variant="destructive"
+              className="w-full sm:w-auto py-3 sm:py-2"
+            >
+              End Competition
+            </Button>
+          </div>
+        </div>
+
+        {/* Quotes loading/error */}
+        {quoteError && (
+          <p className="text-sm text-red-600 mb-4">
+            Failed to load quotes: {quoteError}
+          </p>
+        )}
+
+        {/* Capital Overview - Sticky positioning */}
+        <div className="sticky top-4 z-10 mb-6 sm:mb-8">
+          <Card className="border-primary/20 shadow-lg">
+            <CardHeader className="pb-3 sm:pb-6">
+              <CardTitle className="flex items-center gap-2 text-primary text-base sm:text-lg">
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" /> Capital
+                Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6">
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Starting Capital
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold text-primary">
+                    ${startingCapital}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Allocated
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold text-secondary">
+                    ${totalAllocated}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Remaining
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold text-accent">
+                    ${remainingCapital}
+                  </p>
+                </div>
+              </div>
+              {/* Stacked progress: Stocks / Funds / Crypto / Remaining */}
+              <div className="mt-4 h-3 w-full rounded-full bg-secondary overflow-hidden flex">
+                <div
+                  className={`h-full ${TYPE_COLORS.stock.legend}`}
+                  style={{ width: `${pct(allocStock)}%` }}
+                  title={`Stocks $${allocStock}`}
+                />
+                <div
+                  className={`h-full ${TYPE_COLORS.fund.legend}`}
+                  style={{ width: `${pct(allocFund)}%` }}
+                  title={`Funds $${allocFund}`}
+                />
+                <div
+                  className={`h-full ${TYPE_COLORS.crypto.legend}`}
+                  style={{ width: `${pct(allocCrypto)}%` }}
+                  title={`Crypto $${allocCrypto}`}
+                />
+                <div
+                  className="h-full bg-muted"
+                  style={{ width: `${pct(remainingCapital)}%` }}
+                  title={`Remaining $${remainingCapital}`}
+                />
+              </div>
+
+              {/* 图例 */}
+              <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
+                  <span
+                    className={`inline-block h-2 w-2 rounded-sm ${TYPE_COLORS.stock.legend}`}
+                  />
+                  <span className="hidden sm:inline">Stocks</span> ${allocStock}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span
+                    className={`inline-block h-2 w-2 rounded-sm ${TYPE_COLORS.fund.legend}`}
+                  />
+                  <span className="hidden sm:inline">Funds</span> ${allocFund}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span
+                    className={`inline-block h-2 w-2 rounded-sm ${TYPE_COLORS.crypto.legend}`}
+                  />
+                  <span className="hidden sm:inline">Crypto</span> $
+                  {allocCrypto}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="inline-block h-2 w-2 rounded-sm bg-muted" />
+                  <span className="hidden sm:inline">Remaining</span> $
+                  {remainingCapital}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+          {/* Investment Options */}
+          <div className="lg:col-span-2">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">
+              Choose Investment Targets
+            </h2>
+
+            {/* Stocks */}
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />{" "}
+                Stocks
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {investmentOptions
+                  .filter((o) => o.type === "stock")
+                  .map((option) => {
+                    const Icon = option.icon;
+                    const q = quotes[option.id];
+                    const price = q?.currentPrice;
+                    const change = q?.change ?? 0;
+
+                    return (
+                      <Card
+                        key={option.id}
+                        className="hover:shadow-lg transition-shadow"
+                      >
+                        <CardHeader className="pb-2 sm:pb-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                              <div className="flex-1">
+                                <CardTitle className="text-sm sm:text-base">
+                                  {option.name}
+                                </CardTitle>
+                                <p className="text-xs sm:text-sm text-muted-foreground">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              className={`text-xs ${getRiskColor(option.risk)}`}
+                            >
+                              {option.risk === "low"
+                                ? "Low Risk"
+                                : option.risk === "medium"
+                                ? "Medium Risk"
+                                : "High Risk"}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="p-3 sm:p-6">
+                          <div className="flex items-center justify-between mb-2 sm:mb-3">
+                            <span className="font-semibold text-sm sm:text-base">
+                              {price != null ? `$${price.toFixed(2)}` : "--"}
+                            </span>
+                            <span
+                              className={`flex items-center gap-1 text-xs sm:text-sm ${
+                                change >= 0 ? "text-green-600" : "text-red-600"
+                              }`}
+                            >
+                              {change >= 0 ? (
+                                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                              ) : (
+                                <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4" />
+                              )}
+                              {change >= 0 ? "+" : ""}
+                              {change.toFixed(2)}%
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-xs sm:text-sm">
+                              <span>Investment Amount</span>
+                              <span>${allocations[option.id] || 0}</span>
+                            </div>
+                            <Slider
+                              value={[allocations[option.id] || 0]}
+                              onValueChange={(value) =>
+                                updateAllocation(option.id, value[0])
+                              }
+                              max={startingCapital}
+                              step={10}
+                              className={`w-full ${sliderTheme(option.type)}`}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+              </div>
+            </div>
+
+            {/* Funds */}
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary" /> Funds
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {investmentOptions
+                  .filter((o) => o.type === "fund")
+                  .map((option) => {
+                    const Icon = option.icon;
+                    const q = quotes[option.id];
+                    const price = q?.currentPrice;
+                    const change = q?.change ?? 0;
+
+                    return (
+                      <Card
+                        key={option.id}
+                        className="hover:shadow-lg transition-shadow"
+                      >
+                        <CardHeader className="pb-2 sm:pb-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                              <div className="flex-1">
+                                <CardTitle className="text-sm sm:text-base">
+                                  {option.name}
+                                </CardTitle>
+                                <p className="text-xs sm:text-sm text-muted-foreground">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              className={`text-xs ${getRiskColor(option.risk)}`}
+                            >
+                              {option.risk === "low"
+                                ? "Low Risk"
+                                : option.risk === "medium"
+                                ? "Medium Risk"
+                                : "High Risk"}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="p-3 sm:p-6">
+                          <div className="flex items-center justify-between mb-2 sm:mb-3">
+                            <span className="font-semibold text-sm sm:text-base">
+                              {price != null ? `$${price.toFixed(2)}` : "--"}
+                            </span>
+                            <span
+                              className={`flex items-center gap-1 text-xs sm:text-sm ${
+                                change >= 0 ? "text-green-600" : "text-red-600"
+                              }`}
+                            >
+                              {change >= 0 ? (
+                                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                              ) : (
+                                <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4" />
+                              )}
+                              {change >= 0 ? "+" : ""}
+                              {change.toFixed(2)}%
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-xs sm:text-sm">
+                              <span>Investment Amount</span>
+                              <span>${allocations[option.id] || 0}</span>
+                            </div>
+                            <Slider
+                              value={[allocations[option.id] || 0]}
+                              onValueChange={(value) =>
+                                updateAllocation(option.id, value[0])
+                              }
+                              max={startingCapital}
+                              step={10}
+                              className={`w-full ${sliderTheme(option.type)}`}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+              </div>
+            </div>
+
+            {/* Crypto */}
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />{" "}
+                Cryptocurrency
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {investmentOptions
+                  .filter((o) => o.type === "crypto")
+                  .map((option) => {
+                    const Icon = option.icon;
+                    const q = quotes[option.id];
+                    const price = q?.currentPrice;
+                    const change = q?.change ?? 0;
+
+                    return (
+                      <Card
+                        key={option.id}
+                        className="hover:shadow-lg transition-shadow"
+                      >
+                        <CardHeader className="pb-2 sm:pb-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                              <div className="flex-1">
+                                <CardTitle className="text-sm sm:text-base">
+                                  {option.name}
+                                </CardTitle>
+                                <p className="text-xs sm:text-sm text-muted-foreground">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              className={`text-xs ${getRiskColor(option.risk)}`}
+                            >
+                              {option.risk === "low"
+                                ? "Low Risk"
+                                : option.risk === "medium"
+                                ? "Medium Risk"
+                                : "High Risk"}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="p-3 sm:p-6">
+                          <div className="flex items-center justify-between mb-2 sm:mb-3">
+                            <span className="font-semibold text-sm sm:text-base">
+                              {price != null
+                                ? `$${price.toLocaleString(undefined, {
+                                    maximumFractionDigits: 2,
+                                  })}`
+                                : "--"}
+                            </span>
+                            <span
+                              className={`flex items-center gap-1 text-xs sm:text-sm ${
+                                change >= 0 ? "text-green-600" : "text-red-600"
+                              }`}
+                            >
+                              {change >= 0 ? (
+                                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                              ) : (
+                                <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4" />
+                              )}
+                              {change >= 0 ? "+" : ""}
+                              {change.toFixed(2)}%
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-xs sm:text-sm">
+                              <span>Investment Amount</span>
+                              <span>${allocations[option.id] || 0}</span>
+                            </div>
+                            <Slider
+                              value={[allocations[option.id] || 0]}
+                              onValueChange={(value) =>
+                                updateAllocation(option.id, value[0])
+                              }
+                              max={startingCapital}
+                              step={10}
+                              className={`w-full ${sliderTheme(option.type)}`}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+          {/* AI Coach Selection */}
+          <div>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold mb-4 sm:mb-6">
+              Choose AI Coach
+            </h2>
+            <div className="space-y-3 sm:space-y-4">
+              {aiCoaches.map((coach) => (
+                <Card
+                  key={coach.id}
+                  className={`cursor-pointer transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg ${
+                    selectedCoach?.id === coach.id
+                      ? "ring-2 ring-primary bg-primary/5"
+                      : ""
+                  }`}
+                  onClick={() => setSelectedCoach(coach)}
+                >
+                  <CardHeader className="pb-2 sm:pb-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <Image
+                        src={coach.avatar}
+                        alt={coach.name}
+                        width={32}
+                        height={32}
+                        className="rounded-full sm:w-10 sm:h-10"
+                      />
+                      <div className="flex-1">
+                        <CardTitle className="text-sm sm:text-base">
+                          {coach.name}
+                        </CardTitle>
+                        <Badge variant="secondary" className="text-xs">
+                          {coach.style}
+                        </Badge>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs sm:text-sm font-semibold text-primary">
+                          {coach.successRate}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Success Rate
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-3 sm:p-6">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2">
+                      {coach.description}
+                    </p>
+                    <p className="text-xs text-primary font-medium">
+                      Specialty: {coach.specialty}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Start Competition Button */}
+            <Card className="mt-6 sm:mt-8 border-primary/20">
+              <CardContent className="pt-4 sm:pt-6">
+                <Button
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
+                  disabled={!canStartCompetition}
+                  onClick={startCompetition}
+                >
+                  <Brain className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  Start Competition
+                </Button>
+                {!canStartCompetition && (
+                  <p className="text-xs sm:text-sm text-muted-foreground text-center mt-2">
+                    Please select investments and AI coach
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
