@@ -76,36 +76,62 @@ interface TeachingMessage {
 // ============================================================================
 
 const TICKER_MAP: Record<string, string> = {
+  // ============================================================================
   // 1990 Japanese Bubble options
+  // ============================================================================
   "Japanese Stocks": "^N225", // Nikkei 225 - Japanese stock market
-  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate market (same period correlation)
-  "US Treasury Bonds": "^TNX", // 10-year Treasury yield
-  Gold: "GLD", // Gold ETF
+  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate (same period correlation)
+  "US Treasury Bonds": "^TYX", // 30-year Treasury yield (better for long-term bonds)
+  "Gold": "GLD", // Gold ETF (or ^GOLD for spot gold)
 
+  // ============================================================================
   // 1997 Asian Financial Crisis options
+  // ============================================================================
   "Asian Stocks": "^N225", // Using Nikkei as proxy for Asian markets
   "US Stocks": "^GSPC", // S&P 500
-  Bonds: "^TNX", // 10-year Treasury yield
+  "Bonds": "^TYX", // 30-year Treasury yield
+  "US Dollar Cash": "UUP", // US Dollar ETF
 
+  // ============================================================================
   // 2000 Dot-com Bubble options
-  "Tech Stocks": "^IXIC", // NASDAQ
-  "Traditional Stocks": "^GSPC", // S&P 500
+  // ============================================================================
+  "Tech Stocks": "^IXIC", // NASDAQ Composite
+  "Dot-com Startups": "^IXIC", // NASDAQ Composite (best proxy for dot-coms)
+  "Traditional Stocks": "^DJI", // Dow Jones Industrial Average
+  "Cash": "^IRX", // 3-month Treasury Bill rate (proxy for cash returns)
 
+  // ============================================================================
   // 2008 Financial Crisis options
-  "Bank Stocks": "^BKX", // KBW Bank Index
-  "Real Estate": "^DJUSRE", // Dow Jones US Real Estate
-  "Government Bonds": "^TNX", // 10-year Treasury yield
+  // ============================================================================
+  "Global Stocks": "^GSPC", // S&P 500 as global equity proxy
+  "Banking Stocks": "XLF", // Financial Select Sector SPDR Fund
+  "Bank Stocks": "XLF", // Financial Select Sector SPDR Fund (alias)
 
+  // ============================================================================
   // 2020 COVID-19 options
+  // ============================================================================
   "Tech Growth": "^IXIC", // NASDAQ
+  "Travel & Airlines": "JETS", // US Global Jets ETF (or XAL for airlines index)
   "Value Stocks": "^GSPC", // S&P 500
   "Safe Havens": "GLD", // Gold ETF
 
-  // General assets
-  "US Dollar Cash": "UUP", // US Dollar ETF
+  // ============================================================================
+  // 2025 Current Market options
+  // ============================================================================
+  "AI Tech Stocks": "^IXIC", // NASDAQ (includes major AI companies)
+  "Green Energy Stocks": "ICLN", // iShares Global Clean Energy ETF
+  "Inflation-Protected Bonds (TIPS)": "TIP", // iShares TIPS Bond ETF
+  "Commodities Basket": "DJP", // iPath Bloomberg Commodity Index ETN
+
+  // ============================================================================
+  // General/Shared assets across multiple missions
+  // ============================================================================
+  "Real Estate": "VNQ", // Vanguard Real Estate ETF
+  "Government Bonds": "^TYX", // 30-year Treasury yield
   "Australian Stocks": "^AXJO", // ASX 200
-  Bitcoin: "BTC-USD", // Bitcoin
-  Ethereum: "ETH-USD", // Ethereum
+  "Bitcoin": "BTC-USD", // Bitcoin spot price
+  "Ethereum": "ETH-USD", // Ethereum spot price
+  "Commodities": "DJP", // Bloomberg Commodity Index (alias)
 };
 
 const TYPING_SPEED = 15; // milliseconds per character (faster typing)

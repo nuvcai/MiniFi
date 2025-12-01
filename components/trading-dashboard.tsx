@@ -68,19 +68,132 @@ interface TradingDashboardProps {
   startingCapital?: number;
 }
 
-// Mock market data for simulation
-const marketData = {
-  apple: { price: 230.45, change: 2.3 },
-  microsoft: { price: 506.46, change: 1.8 },
-  nvidia: { price: 178.1, change: 4.2 },
-  tesla: { price: 346.76, change: -1.5 },
-  sp500: { price: 646.33, change: 1.2 },
-  etf: { price: 134.18, change: 0.8 },
-  bitcoin: { price: 43250.0, change: 3.7 },
-  ethereum: { price: 2680.5, change: 2.1 },
+// Asset Class Types - aligned with Family Office standards
+type AssetClass = "equities" | "fixed_income" | "commodities" | "alternatives" | "cash" | "cryptocurrency";
+type TimeHorizon = "short" | "medium" | "long";
+type RiskLevel = "low" | "medium" | "high" | "extreme";
+
+// Enhanced market data with FO-aligned asset class information
+interface MarketAsset {
+  price: number;
+  change: number;
+  assetClass: AssetClass;
+  riskLevel: RiskLevel;
+  timeHorizon: TimeHorizon;
+  foAllocationRange: string;  // Typical Family Office allocation
+  volatility: string;         // Historical volatility range
+}
+
+const marketData: Record<string, MarketAsset> = {
+  apple: { 
+    price: 230.45, 
+    change: 2.3,
+    assetClass: "equities",
+    riskLevel: "medium",
+    timeHorizon: "long",
+    foAllocationRange: "5-15%",
+    volatility: "20-30%"
+  },
+  microsoft: { 
+    price: 506.46, 
+    change: 1.8,
+    assetClass: "equities",
+    riskLevel: "medium",
+    timeHorizon: "long",
+    foAllocationRange: "5-15%",
+    volatility: "18-25%"
+  },
+  nvidia: { 
+    price: 178.1, 
+    change: 4.2,
+    assetClass: "equities",
+    riskLevel: "high",
+    timeHorizon: "long",
+    foAllocationRange: "3-10%",
+    volatility: "35-50%"
+  },
+  tesla: { 
+    price: 346.76, 
+    change: -1.5,
+    assetClass: "equities",
+    riskLevel: "high",
+    timeHorizon: "long",
+    foAllocationRange: "2-8%",
+    volatility: "40-60%"
+  },
+  sp500: { 
+    price: 646.33, 
+    change: 1.2,
+    assetClass: "equities",
+    riskLevel: "medium",
+    timeHorizon: "long",
+    foAllocationRange: "20-40%",
+    volatility: "15-20%"
+  },
+  etf: { 
+    price: 134.18, 
+    change: 0.8,
+    assetClass: "equities",
+    riskLevel: "medium",
+    timeHorizon: "long",
+    foAllocationRange: "15-30%",
+    volatility: "12-18%"
+  },
+  bitcoin: { 
+    price: 43250.0, 
+    change: 3.7,
+    assetClass: "cryptocurrency",
+    riskLevel: "extreme",
+    timeHorizon: "long",
+    foAllocationRange: "0-5%",
+    volatility: "60-100%"
+  },
+  ethereum: { 
+    price: 2680.5, 
+    change: 2.1,
+    assetClass: "cryptocurrency",
+    riskLevel: "extreme",
+    timeHorizon: "long",
+    foAllocationRange: "0-3%",
+    volatility: "70-120%"
+  },
 };
 
-const investmentNames = {
+// Asset class display colors and labels
+const assetClassInfo: Record<AssetClass, { label: string; color: string; description: string }> = {
+  equities: { 
+    label: "📈 Equities", 
+    color: "text-blue-600",
+    description: "Stocks & shares - ownership in companies"
+  },
+  fixed_income: { 
+    label: "📊 Fixed Income", 
+    color: "text-green-600",
+    description: "Bonds & treasuries - steady income with lower risk"
+  },
+  commodities: { 
+    label: "🥇 Commodities", 
+    color: "text-yellow-600",
+    description: "Gold, oil, agriculture - real assets"
+  },
+  alternatives: { 
+    label: "🏢 Alternatives", 
+    color: "text-purple-600",
+    description: "Real estate, private equity, hedge funds"
+  },
+  cash: { 
+    label: "💵 Cash", 
+    color: "text-slate-600",
+    description: "Money market & short-term deposits"
+  },
+  cryptocurrency: { 
+    label: "₿ Crypto", 
+    color: "text-orange-600",
+    description: "Digital assets - high risk/high reward"
+  },
+};
+
+const investmentNames: Record<string, string> = {
   apple: "Apple Inc.",
   microsoft: "Microsoft Corp.",
   nvidia: "NVIDIA Corp.",
@@ -413,7 +526,7 @@ export default function TradingDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-card/30 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950">
       <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">

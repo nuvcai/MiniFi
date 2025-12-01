@@ -1,3 +1,25 @@
+// Asset Class Categories - aligned with Family Office standards
+export type AssetClass = 
+  | "equities"           // Stocks, shares, equity funds
+  | "fixed_income"       // Bonds, treasuries, fixed-rate securities
+  | "commodities"        // Gold, oil, agricultural products
+  | "alternatives"       // Real estate, private equity, hedge funds
+  | "cash"               // Cash, money market, short-term deposits
+  | "cryptocurrency";    // Digital assets (high-risk alternative)
+
+// Investment Time Horizons
+export type TimeHorizon = 
+  | "short"    // 0-1 years - ideal for capital preservation
+  | "medium"   // 1-5 years - balanced growth and stability
+  | "long";    // 5+ years - wealth building, can ride out volatility
+
+// Risk/Return Profile aligned with FO standards
+export interface RiskReturnProfile {
+  riskLevel: "none" | "low" | "medium" | "high" | "extreme";
+  historicalVolatility: string;  // e.g., "15-25%" annual
+  correlationWithStocks: "negative" | "low" | "moderate" | "high";
+}
+
 export interface InvestmentOption {
   id: string;
   name: string;
@@ -6,6 +28,12 @@ export interface InvestmentOption {
   expectedReturn: string;
   actualReturn: number;
   investmentInsight: string;
+  // NEW: Family Office aligned fields
+  assetClass: AssetClass;
+  timeHorizon: TimeHorizon;
+  riskReturnProfile: RiskReturnProfile;
+  foAllocationRange: string;  // Typical FO allocation e.g., "5-15%"
+  liquidityRating: "high" | "medium" | "low";
 }
 
 export interface MissionData {
@@ -31,6 +59,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "15-25%",
         actualReturn: -60,
         investmentInsight: "Japanese stocks are at all-time highs! 📈 But wait - prices might be way overblown. Some companies are trading at crazy valuations that don't make sense.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "20-35%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "10-25%",
+        liquidityRating: "high",
       },
       {
         id: "realestate",
@@ -40,6 +77,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "20-30%",
         actualReturn: -70,
         investmentInsight: "Tokyo property prices have 10x'd in a decade! 🏢 Land here costs more than anywhere else on Earth. But is this FOMO or a real opportunity?",
+        assetClass: "alternatives" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "15-25%",
+          correlationWithStocks: "moderate",
+        },
+        foAllocationRange: "10-20%",
+        liquidityRating: "low",
       },
       {
         id: "bonds",
@@ -49,6 +95,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "8-10%",
         actualReturn: 45,
         investmentInsight: "Boring but reliable! US government bonds are backed by Uncle Sam himself. Not as exciting as Japanese stocks, but your money stays safe 🛡️",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-10%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "15-30%",
+        liquidityRating: "high",
       },
       {
         id: "gold",
@@ -58,6 +113,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "5-8%",
         actualReturn: 20,
         investmentInsight: "Gold has been valuable for thousands of years 🥇 It won't make you rich overnight, but it protects your money when things go sideways.",
+        assetClass: "commodities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-20%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -87,6 +151,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "30-50%",
         actualReturn: -65,
         investmentInsight: "Asian markets are in freefall! 📉 Prices look like a bargain, but currencies are tanking too. This could get way worse before it gets better.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "extreme",
+          historicalVolatility: "30-50%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "medium",
       },
       {
         id: "us-stocks",
@@ -96,6 +169,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "12-18%",
         actualReturn: 28,
         investmentInsight: "While Asia burns, the US economy is chugging along nicely 🇺🇸 Money is flowing OUT of Asia and INTO American stocks.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-20%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "25-40%",
+        liquidityRating: "high",
       },
       {
         id: "bonds",
@@ -105,6 +187,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "6-8%",
         actualReturn: 15,
         investmentInsight: "When the world goes crazy, US bonds are where scared money hides 🏠 Super safe but not super exciting.",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-10%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "15-30%",
+        liquidityRating: "high",
       },
       {
         id: "cash",
@@ -114,6 +205,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "4-5%",
         actualReturn: 8,
         investmentInsight: "Cash is king during chaos! 👑 The US dollar is actually getting STRONGER while Asian currencies collapse.",
+        assetClass: "cash" as AssetClass,
+        timeHorizon: "short" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "none",
+          historicalVolatility: "0-2%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -143,6 +243,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "25-40%",
         actualReturn: -78,
         investmentInsight: "Tech stocks are trading at insane prices! 🤯 Many companies have never made a profit but are worth billions. Is this the future or just hype?",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "25-40%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "15-25%",
+        liquidityRating: "high",
       },
       {
         id: "dotcom",
@@ -152,6 +261,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "50-100%",
         actualReturn: -95,
         investmentInsight: "Pets.com, Webvan, eToys... These companies are burning through cash like crazy with no real business plan 🔥 But STONKS ONLY GO UP, right?",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "extreme",
+          historicalVolatility: "50-100%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "0-5%",
+        liquidityRating: "low",
       },
       {
         id: "traditional",
@@ -161,6 +279,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "10-15%",
         actualReturn: -25,
         investmentInsight: "Boomer stocks! 👴 Coca-Cola, McDonald's, GE - they actually make money. Not as sexy as tech, but more grounded in reality.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "12-18%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "20-35%",
+        liquidityRating: "high",
       },
       {
         id: "cash",
@@ -170,6 +297,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "3-5%",
         actualReturn: 15,
         investmentInsight: "Sometimes the best move is no move 🧘 When everyone's greedy, smart money stays patient.",
+        assetClass: "cash" as AssetClass,
+        timeHorizon: "short" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "none",
+          historicalVolatility: "0-2%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -199,6 +335,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "20-30%",
         actualReturn: -55,
         investmentInsight: "Stock prices are crashing everywhere! 📉 Companies are losing value fast as everyone panics. It might be a buying opportunity... or it could get much worse.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "extreme",
+          historicalVolatility: "30-50%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "25-40%",
+        liquidityRating: "high",
       },
       {
         id: "banks",
@@ -208,6 +353,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "40-60%",
         actualReturn: -75,
         investmentInsight: "Banks are getting crushed! 🏦 Some might survive, some might not. The government is bailing some out, but shareholders could lose everything.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "extreme",
+          historicalVolatility: "40-70%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "high",
       },
       {
         id: "bonds",
@@ -217,6 +371,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "4-6%",
         actualReturn: 25,
         investmentInsight: "When the world is on fire, everyone wants US government bonds 🇺🇸 Super safe, and the Fed is cutting interest rates which makes bonds go up!",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-10%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "15-30%",
+        liquidityRating: "high",
       },
       {
         id: "gold",
@@ -226,6 +389,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "8-12%",
         actualReturn: 35,
         investmentInsight: "Gold shines brightest in dark times! ✨ Banks can fail, currencies can crash, but gold has been valuable for 5,000 years.",
+        assetClass: "commodities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-25%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -255,6 +427,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "15-25%",
         actualReturn: 85,
         investmentInsight: "Everyone's stuck at home using Netflix, Amazon, and Zoom! 📱 Tech companies are actually THRIVING while the rest of the economy struggles.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "20-30%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "15-25%",
+        liquidityRating: "high",
       },
       {
         id: "travel-stocks",
@@ -264,6 +445,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "50-100%",
         actualReturn: -45,
         investmentInsight: "Travel is DEAD right now ✈️💀 But vaccines are coming... eventually. Could be the ultimate comeback story or a total disaster.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "extreme",
+          historicalVolatility: "40-60%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
       {
         id: "bonds",
@@ -273,6 +463,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "2-4%",
         actualReturn: 12,
         investmentInsight: "The Fed cut interest rates to basically zero! Bonds are safe but won't make you rich. Still, safe > sorry during a pandemic 🏠",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-8%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "15-25%",
+        liquidityRating: "high",
       },
       {
         id: "gold",
@@ -282,6 +481,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "8-15%",
         actualReturn: 28,
         investmentInsight: "The government is printing TRILLIONS of dollars 💵 When money printers go brrr, gold usually goes up!",
+        assetClass: "commodities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-20%",
+          correlationWithStocks: "negative",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -311,6 +519,15 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "20-40%",
         actualReturn: 0,
         investmentInsight: "AI is the hottest thing since the internet! 🤖 Nvidia, Microsoft, Google - they're all racing to dominate. But are prices already too high?",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "25-40%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "10-20%",
+        liquidityRating: "high",
       },
       {
         id: "energy",
@@ -320,24 +537,51 @@ export const missionData: Record<number, MissionData> = {
         expectedReturn: "15-30%",
         actualReturn: 0,
         investmentInsight: "The world is going green! 🌱 Governments are spending big on clean energy. But high interest rates make these projects more expensive.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "25-35%",
+          correlationWithStocks: "moderate",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "high",
       },
       {
         id: "tips",
-        name: "Inflation-Protected Bonds",
+        name: "Inflation-Protected Bonds (TIPS)",
         description: "Get bonds that adjust for inflation",
         risk: "Low",
         expectedReturn: "5-8%",
         actualReturn: 0,
         investmentInsight: "With prices going up everywhere, these bonds protect your buying power 💪 Not exciting, but you won't lose money to inflation!",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-10%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "10-20%",
+        liquidityRating: "high",
       },
       {
         id: "commodities",
-        name: "Commodities",
+        name: "Commodities Basket",
         description: "Invest in oil, gold, and food",
         risk: "Medium",
         expectedReturn: "10-20%",
         actualReturn: 0,
         investmentInsight: "Real stuff like oil, gold, and food usually does well when inflation is high 🛢️ Global supply chain issues and conflicts can push prices up.",
+        assetClass: "commodities" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-25%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
