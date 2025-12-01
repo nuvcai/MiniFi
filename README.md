@@ -13,13 +13,23 @@ Built for **NextGen AI Hackathon 2025** by Tick.AI.
 ### 🌟 Key Features
 
 - **📚 Historical Financial Missions**: Journey through 35+ years of financial history (1990-2025)
-- **🤖 AI-Powered Coaching**: Personalized investment advice teaching family office strategies
-- **📊 Real-Time Trading Simulation**: Practice with virtual capital
+- **🤖 AI-Powered Coaching**: 4 specialized coaches teaching Family Office investment strategies
+- **📊 Real-Time Trading Simulation**: Practice with virtual capital and real market data
 - **🏆 Competitive Leaderboards**: Compete with players globally
-- **📈 Advanced Analytics**: Performance charts and risk analysis
+- **📈 Advanced Analytics**: Performance charts, Sharpe ratio, volatility, and drawdown metrics
 - **🎮 Gamified Learning**: XP system, achievements, and progressive unlocking
 - **🎁 Real Rewards System**: Exchange XP for Australian brand gift cards
 - **📱 Mobile-First Design**: Optimized for all devices
+
+### 🆕 Latest Features (v1.1)
+
+- **📊 Asset Class System**: 6 distinct asset classes with FO-aligned categorization
+  - Equities, Fixed Income, Commodities, Alternatives, Cash, Cryptocurrency
+- **⏱️ Time Horizon Guidance**: Short (0-1yr), Medium (1-5yr), Long (5+yr) recommendations
+- **📈 Risk/Return Profiles**: Volatility ranges, stock correlation, and FO allocation percentages
+- **🎯 Asset Class Mastery**: Track progress across all 6 asset classes
+- **🎓 FO Certification Path**: Earn Capital Guardian → Balanced Investor → FO Fellow credentials
+- **🔮 Upcoming Features Preview**: Risk Profile Quiz, Portfolio Builder, Daily Challenges
 
 ## 🚀 Quick Start
 
@@ -129,19 +139,34 @@ npm run dev
 
 ```
 components/
+├── data/
+│   ├── missions.ts          # Historical missions with asset class metadata
+│   ├── coaches.ts           # AI coach profiles with FO strategies
+│   ├── assetClasses.ts      # Comprehensive asset class reference
+│   └── events.ts            # Financial events data
+├── features/
+│   ├── UpcomingFeatures.tsx # Coming soon feature teasers
+│   ├── AssetClassMastery.tsx # Asset class progress tracking
+│   ├── RiskSpectrum.tsx     # Risk/return visualization
+│   └── FOCertificationTeaser.tsx # Certification path preview
+├── mission/
+│   ├── InvestmentDecision.tsx # Investment choice with asset badges
+│   └── TeachingDialogue.tsx  # Post-mission learning with real data
 ├── PerformanceChart.tsx      # Investment performance visualization
 ├── AICoach.tsx              # AI coaching interface
 ├── investment-competition.tsx # Competition setup
-├── trading-dashboard.tsx    # Real-time trading interface
+├── trading-dashboard.tsx    # Real-time trading with asset classes
 └── competition-results.tsx  # Results and leaderboards
 
 backend/
 ├── main.py                  # FastAPI application
 ├── models.py               # Pydantic data models
 ├── database.py             # Database management
-└── services/               # Business logic services
+└── services/
     ├── coach_service.py    # AI coaching (family office approach)
-    └── coach_chat.py       # Real-time chat
+    ├── coach_chat.py       # Real-time chat
+    ├── price_service.py    # Yahoo Finance price data
+    └── investment_metrics_service.py # Historical performance with ticker proxies
 ```
 
 ## 🎯 AI Coaching - Family Office Approach
@@ -150,42 +175,74 @@ MiniFi teaches teens to invest like wealthy families:
 
 ### Core Philosophy
 - **Reward Effort** over outcomes
-- **Explore Asset Classes** (stocks, bonds, ETFs, crypto, REITs, commodities)
+- **Explore Asset Classes** (equities, fixed income, commodities, alternatives, cash, crypto)
 - **Think Long-Term** like family offices managing multi-generational wealth
-- **Diversify Strategically** across 4-6+ asset classes
+- **Diversify Strategically** across 6 asset classes with proper allocation
 
-### AI Coach Personalities
+### AI Coach Personalities & FO Strategies
 
-#### Steady Sam (Conservative) 🛡️
-- Focus: Capital preservation, defensive assets
-- Language: "Steady as she goes," "Family offices think in generations"
-- Teaches: Bonds, gold, dividend stocks, REITs
+#### 🛡️ Steady Sam (Conservative)
+- **Risk Tolerance**: Conservative
+- **Target Allocation**: 40-50% Bonds, 20-30% Equities, 10-15% Commodities, 10-15% Cash
+- **Philosophy**: "Capital preservation first! Focus on stable income and protecting your principal."
+- **Best For**: Short to medium-term goals (1-5 years), risk-averse investors
 
-#### Wise Wendy (Balanced) ⚖️
-- Focus: Strategic allocation, risk-adjusted returns
-- Language: "Balance is key," "Diversification protects"
-- Teaches: Mixed portfolios, asset correlations
+#### ⚖️ Growth Guru (Balanced)
+- **Risk Tolerance**: Moderate
+- **Target Allocation**: 40-50% Equities, 25-35% Bonds, 10-15% Alternatives, 5-10% Cash
+- **Philosophy**: "Diversification is key! Balance growth potential with downside protection."
+- **Best For**: Medium to long-term goals (5-15 years), moderate risk tolerance
 
-#### Adventure Alex (Aggressive) 🚀
-- Focus: Growth opportunities, calculated risks
-- Language: "Go big," "Innovation pays off"
-- Teaches: Growth stocks, crypto, emerging markets
+#### 🚀 Adventure Alex (Aggressive)
+- **Risk Tolerance**: Very Aggressive
+- **Target Allocation**: 60-75% Equities, 15-25% Alternatives, 5-15% Bonds, 0-5% Crypto
+- **Philosophy**: "High risk, high reward! Stay invested through volatility for long-term gains."
+- **Best For**: Long-term goals (10+ years), young investors in wealth accumulation phase
 
-#### Tech Taylor (Technology) 💻
-- Focus: Tech-focused diversification
-- Language: "Focus on the future," "Innovation drives wealth"
-- Teaches: AI, cloud, semiconductors
+#### 💰 Yield Yoda (Income Master)
+- **Risk Tolerance**: Moderate
+- **Target Allocation**: 30-40% Equities, 30-40% Bonds, 15-25% Alternatives (REITs), 5-10% Cash
+- **Philosophy**: "Let your money work for you! Focus on dividend-paying assets and regular income."
+- **Best For**: Income generation, passive income streams, semi-retirement
 
-## 📊 Performance Metrics
+## 📊 Performance Metrics & Asset Class Data
 
+### Investment Metrics
 - **Total Return**: Overall portfolio performance
 - **Sharpe Ratio**: Risk-adjusted returns
-- **Volatility**: Portfolio risk measurement
+- **Volatility**: Portfolio risk measurement (with historical ranges)
 - **Max Drawdown**: Maximum loss from peak
 - **Annualized Return**: Yearly performance rate
-- **Asset Class Exploration**: Track diversification progress
+
+### Asset Class Framework
+
+| Asset Class | Risk Level | Time Horizon | FO Allocation |
+|-------------|------------|--------------|---------------|
+| 📈 **Equities** | Medium-High | Long (5+ yr) | 25-60% |
+| 📊 **Fixed Income** | Low | Medium (1-5 yr) | 15-50% |
+| 🥇 **Commodities** | Medium | Long | 5-15% |
+| 🏢 **Alternatives** | Medium | Long | 10-25% |
+| 💵 **Cash** | None | Short (0-1 yr) | 5-15% |
+| ₿ **Cryptocurrency** | Extreme | Long (speculative) | 0-5% |
+
+### Asset Class Mastery System
+- Track exploration across all 6 asset classes
+- Earn badges for completing missions in each class
+- Progress toward "Diversification Pro" achievement
+- Unlock FO Certification levels
 
 ## 🚀 Recent Updates
+
+### v1.1.0 - Asset Class & Financial Literacy Update (December 2025)
+- ✅ **Asset Class System**: 6 FO-aligned asset classes with full metadata
+- ✅ **Risk/Return Profiles**: Volatility, correlation, and FO allocation ranges
+- ✅ **Time Horizon Guidance**: Short/Medium/Long investment recommendations
+- ✅ **Asset Class Mastery UI**: Track progress across all asset classes
+- ✅ **FO Certification Teaser**: 3-level certification path preview
+- ✅ **Upcoming Features Preview**: Coming soon teasers for new features
+- ✅ **Risk Spectrum Visualization**: Interactive risk/return chart component
+- ✅ **Real Data Connection**: All mission tickers linked to Yahoo Finance
+- ✅ **Historical Ticker Proxies**: ETF alternatives for pre-2000 periods
 
 ### v1.0.0 - Family Office Edition
 - ✅ AI Coach rewards effort and exploration
@@ -199,21 +256,39 @@ MiniFi teaches teens to invest like wealthy families:
 
 ## 🗺️ Product Roadmap
 
-### Current: v1.0 MVP (December 2025)
-> *Hackathon Release - Foundation*
+### Current: v1.1 (December 2025)
+> *Asset Class & Financial Literacy Update*
 
 | Feature | Status | Description |
 |---------|--------|-------------|
 | Historical Missions | ✅ Complete | 6 major financial events (1990-2025) |
-| AI Coach System | ✅ Complete | 4 personalities with GPT-4o-mini |
-| Trading Simulation | ✅ Complete | Real-time portfolio management |
-| Performance Analytics | ✅ Complete | Sharpe ratio, volatility, drawdown |
+| AI Coach System | ✅ Complete | 4 FO-aligned coaches with strategies |
+| Trading Simulation | ✅ Complete | Real-time portfolio with asset classes |
+| Performance Analytics | ✅ Complete | Real Yahoo Finance data integration |
 | Mobile-First UI | ✅ Complete | Responsive design, touch-optimized |
 | Leaderboards | ✅ Complete | Global competition rankings |
+| **Asset Class System** | ✅ Complete | 6 classes with FO metadata |
+| **Risk/Return Profiles** | ✅ Complete | Volatility, correlation, time horizons |
+| **Asset Class Mastery** | ✅ Complete | Progress tracking UI |
+| **Upcoming Features UI** | ✅ Complete | Coming soon teasers |
 
 ---
 
-### v1.1 - Enhanced Learning (Q1 2026)
+### v1.2 - Interactive Features (Q1 2026)
+> *Engaging Learning Tools*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 🎯 Risk Profile Quiz | High | Personalized coach matching |
+| 📊 Portfolio Builder | High | Drag-drop portfolio construction |
+| 🎲 Risk Roulette | High | Daily prediction mini-game |
+| 🎓 FO Certification | High | 3-level credential system |
+| ⏱️ Time Horizon Challenges | Medium | Goal-matching gameplay |
+| 📈 Asset Comparison Tool | Medium | Side-by-side analysis |
+
+---
+
+### v1.3 - Enhanced Learning (Q2 2026)
 > *Deepening Educational Impact*
 
 | Feature | Priority | Description |

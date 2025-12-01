@@ -360,3 +360,18 @@ export function getRandomCourageMessage(): string {
   return courageMessages[Math.floor(Math.random() * courageMessages.length)];
 }
 
+// Centralized courage XP by risk level - single source of truth
+export const riskLevelCourageXp: Record<string, { xp: number; label: string; emoji: string }> = {
+  extreme: { xp: 25, label: "Fearless Explorer", emoji: "🔥" },
+  high: { xp: 20, label: "Bold Investor", emoji: "⚡" },
+  medium: { xp: 15, label: "Balanced Thinker", emoji: "⚖️" },
+  low: { xp: 10, label: "Steady Hand", emoji: "🛡️" },
+  none: { xp: 5, label: "Cautious Planner", emoji: "💎" },
+};
+
+// Get courage XP for a risk level (centralized function)
+export function getCourageXpForRisk(risk: string): { xp: number; label: string; emoji: string } {
+  const normalizedRisk = risk.toLowerCase();
+  return riskLevelCourageXp[normalizedRisk] || { xp: 10, label: "Curious Learner", emoji: "🔍" };
+}
+

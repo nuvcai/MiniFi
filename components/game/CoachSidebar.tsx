@@ -22,13 +22,13 @@ export function CoachSidebar({
   onCoachSelect,
 }: CoachSidebarProps) {
   return (
-    <Card>
+    <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur">
       <CardHeader>
-        <CardTitle className="font-serif flex items-center gap-2">
-          <Users className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-slate-100">
+          <Users className="h-5 w-5 text-emerald-400" />
           Your Squad 🤖
         </CardTitle>
-        <CardDescription>Pick your vibe - who&apos;s got your back?</CardDescription>
+        <CardDescription className="text-slate-400">Pick your vibe - who&apos;s got your back?</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {coaches.map((coach) => (
@@ -36,8 +36,8 @@ export function CoachSidebar({
             key={coach.id}
             className={`p-3 rounded-lg border cursor-pointer transition-all ${
               selectedCoach.id === coach.id
-                ? "border-primary bg-primary/10 shadow-sm"
-                : "border-border hover:border-primary/50 hover:bg-primary/5"
+                ? "border-emerald-500/50 bg-emerald-500/10 shadow-sm shadow-emerald-500/10"
+                : "border-slate-700/50 hover:border-emerald-500/30 hover:bg-emerald-500/5"
             }`}
             onClick={() => onCoachSelect(coach)}
           >
@@ -50,13 +50,13 @@ export function CoachSidebar({
                 className="rounded-full"
               />
               <div className="flex-1">
-                <p className="font-medium text-sm">{coach.name}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="font-medium text-sm text-slate-100">{coach.name}</p>
+                <p className="text-xs text-slate-400">
                   {coach.personality}
                 </p>
               </div>
             </div>
-            <p className="text-xs mt-2 text-muted-foreground">
+            <p className="text-xs mt-2 text-slate-400">
               {coach.description}
             </p>
           </div>

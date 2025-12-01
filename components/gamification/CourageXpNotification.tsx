@@ -64,21 +64,25 @@ export function CourageXpNotification({
     <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
       {/* Background overlay with particle effects */}
       <div className={`absolute inset-0 transition-opacity duration-300 ${animationPhase === "show" ? "opacity-100" : "opacity-0"}`}>
-        {/* Floating particles */}
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute animate-float"
-            style={{
-              left: `${10 + Math.random() * 80}%`,
-              top: `${20 + Math.random() * 60}%`,
-              animationDelay: `${i * 0.1}s`,
-              animationDuration: `${2 + Math.random() * 2}s`,
-            }}
-          >
-            <Sparkles className={`h-4 w-4 text-amber-${300 + Math.floor(Math.random() * 3) * 100} opacity-60`} />
-          </div>
-        ))}
+        {/* Floating particles - using static classes for Tailwind compatibility */}
+        {[...Array(12)].map((_, i) => {
+          const colorClasses = ["text-amber-300", "text-amber-400", "text-amber-500", "text-orange-400"];
+          const colorClass = colorClasses[i % colorClasses.length];
+          return (
+            <div
+              key={i}
+              className="absolute animate-float"
+              style={{
+                left: `${10 + (i * 7) % 80}%`,
+                top: `${20 + (i * 5) % 60}%`,
+                animationDelay: `${i * 0.1}s`,
+                animationDuration: `${2 + (i % 3)}s`,
+              }}
+            >
+              <Sparkles className={`h-4 w-4 ${colorClass} opacity-60`} />
+            </div>
+          );
+        })}
       </div>
 
       {/* Main notification card */}

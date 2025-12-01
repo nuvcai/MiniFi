@@ -10,7 +10,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -60,31 +60,39 @@ interface LevelUpCelebrationProps {
   onClose: () => void;
 }
 
-// Confetti particle component
-function ConfettiParticle({ delay, left }: { delay: number; left: number }) {
-  const colors = [
-    "bg-emerald-500",
-    "bg-teal-500",
-    "bg-amber-500",
-    "bg-pink-500",
-    "bg-purple-500",
-    "bg-blue-500",
-    "bg-red-500",
-    "bg-yellow-500",
-  ];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  const randomSize = 8 + Math.random() * 8;
-  const randomRotation = Math.random() * 360;
+// Confetti particle colors (static for Tailwind compatibility)
+const CONFETTI_COLORS = [
+  "bg-emerald-500",
+  "bg-teal-500",
+  "bg-amber-500",
+  "bg-pink-500",
+  "bg-purple-500",
+  "bg-blue-500",
+  "bg-red-500",
+  "bg-yellow-500",
+];
+
+// Confetti particle component with pre-computed values for stability
+interface ConfettiParticleProps {
+  delay: number;
+  left: number;
+  colorIndex: number;
+  size: number;
+  rotation: number;
+}
+
+function ConfettiParticle({ delay, left, colorIndex, size, rotation }: ConfettiParticleProps) {
+  const color = CONFETTI_COLORS[colorIndex % CONFETTI_COLORS.length];
 
   return (
     <div
-      className={`absolute ${randomColor} rounded-sm opacity-90`}
+      className={`absolute ${color} rounded-sm opacity-90`}
       style={{
-        width: `${randomSize}px`,
-        height: `${randomSize}px`,
+        width: `${size}px`,
+        height: `${size}px`,
         left: `${left}%`,
         top: "-20px",
-        transform: `rotate(${randomRotation}deg)`,
+        transform: `rotate(${rotation}deg)`,
         animation: `confetti-fall 3s ease-out ${delay}s forwards`,
       }}
     />
@@ -98,27 +106,30 @@ export function LevelUpCelebration({
   onClose,
 }: LevelUpCelebrationProps) {
   const [showContent, setShowContent] = useState(false);
-  const [confettiParticles, setConfettiParticles] = useState<Array<{ id: number; delay: number; left: number }>>([]);
 
   const levelInfo = levelTitles[newLevel] || levelTitles[8];
   const rewards = levelRewards[newLevel] || [];
 
+  // Pre-compute confetti particles once using useMemo (stable random values)
+  const confettiParticles = useMemo(() => {
+    // Use a seeded approach for consistent particles
+    return Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      delay: (i * 0.01) % 0.5, // Distributed delays
+      left: (i * 2.1) % 100, // Distributed positions
+      colorIndex: i,
+      size: 8 + (i % 8), // Sizes 8-15
+      rotation: (i * 7.2) % 360, // Distributed rotations
+    }));
+  }, []);
+
   useEffect(() => {
     if (open) {
-      // Generate confetti particles
-      const particles = Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        delay: Math.random() * 0.5,
-        left: Math.random() * 100,
-      }));
-      setConfettiParticles(particles);
-
       // Delay showing content for dramatic effect
       const timer = setTimeout(() => setShowContent(true), 300);
       return () => clearTimeout(timer);
     } else {
       setShowContent(false);
-      setConfettiParticles([]);
     }
   }, [open]);
 
@@ -126,15 +137,20 @@ export function LevelUpCelebration({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-amber-500/50">
         {/* Confetti Container */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {confettiParticles.map((particle) => (
-            <ConfettiParticle
-              key={particle.id}
-              delay={particle.delay}
-              left={particle.left}
-            />
-          ))}
-        </div>
+        {open && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {confettiParticles.map((particle) => (
+              <ConfettiParticle
+                key={particle.id}
+                delay={particle.delay}
+                left={particle.left}
+                colorIndex={particle.colorIndex}
+                size={particle.size}
+                rotation={particle.rotation}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Glow effect */}
         <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent pointer-events-none" />

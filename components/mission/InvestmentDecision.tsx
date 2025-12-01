@@ -7,6 +7,7 @@ import { DollarSign, BarChart3, InfoIcon, Clock, TrendingUp, Sparkles } from "lu
 import { InvestmentOption, AssetClass, TimeHorizon } from "@/components/data/missions";
 import { RiskPreviewCard } from "@/components/gamification/RiskPreviewCard";
 import { CourageXpNotification } from "@/components/gamification/CourageXpNotification";
+import { getCourageXpForRisk } from "@/components/gamification/effortRewards";
 
 // Asset class display configuration
 const assetClassDisplay: Record<AssetClass, { label: string; emoji: string; color: string }> = {
@@ -69,17 +70,6 @@ export function InvestmentDecision({
     }
   };
 
-  // Get courage XP based on risk level
-  const getCourageXp = (risk: string) => {
-    switch (risk.toLowerCase()) {
-      case "extreme": return { xp: 25, label: "Fearless Explorer" };
-      case "high": return { xp: 20, label: "Bold Investor" };
-      case "medium": return { xp: 15, label: "Balanced Thinker" };
-      case "low": return { xp: 10, label: "Steady Hand" };
-      case "none": return { xp: 5, label: "Cautious Planner" };
-      default: return { xp: 10, label: "Curious Learner" };
-    }
-  };
 
   const handleConfirmClick = () => {
     if (selectedOption) {
@@ -90,7 +80,7 @@ export function InvestmentDecision({
   const handleRiskPreviewConfirm = () => {
     if (selectedOption) {
       // Award courage XP
-      const reward = getCourageXp(selectedOption.risk);
+      const reward = getCourageXpForRisk(selectedOption.risk);
       setCourageNotification(reward);
       
       if (onCourageXpEarned) {
@@ -156,7 +146,7 @@ export function InvestmentDecision({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {options.map((option) => {
-          const courageReward = getCourageXp(option.risk);
+          const courageReward = getCourageXpForRisk(option.risk);
           return (
             <Card
               key={option.id}

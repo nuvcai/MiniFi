@@ -156,6 +156,7 @@ app.add_middleware(
 
 ## Post-Deployment Verification
 
+### Core Functionality
 - [ ] Backend `/health` returns `{ "status": "healthy" }`
 - [ ] Backend `/docs` loads Swagger UI
 - [ ] Backend `/quotes?ids=apple,bitcoin` returns price data
@@ -163,6 +164,15 @@ app.add_middleware(
 - [ ] Frontend loads at Vercel URL
 - [ ] Frontend can call backend (CORS works)
 - [ ] Leaderboard submit/get works
+
+### v1.1 Features (Asset Class System)
+- [ ] Historical missions display asset class badges
+- [ ] Time horizon and FO allocation data visible
+- [ ] Asset Class Mastery component loads on timeline page
+- [ ] Risk Spectrum visualization renders correctly
+- [ ] FO Certification Teaser displays on timeline
+- [ ] Upcoming Features preview shows on home page
+- [ ] Real historical data fetched for mission results (Yahoo Finance)
 
 ---
 

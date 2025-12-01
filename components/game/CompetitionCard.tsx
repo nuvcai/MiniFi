@@ -23,20 +23,20 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
   return (
     <div className="relative flex items-start gap-6">
       {/* Competition Node */}
-      <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 bg-gradient-to-r from-accent to-primary border-accent text-accent-foreground">
+      <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 bg-gradient-to-r from-amber-500 to-emerald-500 border-amber-500 text-white">
         <Trophy className="h-6 w-6" />
       </div>
 
       {/* Competition Card */}
       <div className="flex-1">
-        <Card className="border-2 border-accent/50 bg-gradient-to-r from-accent/10 to-primary/10">
+        <Card className="border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-800/50 to-emerald-500/10 backdrop-blur">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="font-serif text-lg text-primary">
+                <CardTitle className="text-lg bg-gradient-to-r from-amber-400 to-emerald-400 bg-clip-text text-transparent">
                   Investment Competition
                 </CardTitle>
-                <CardDescription className="font-medium text-secondary mt-1">
+                <CardDescription className="font-medium text-teal-400 mt-1">
                   Ultimate Boss Level 🏆
                 </CardDescription>
               </div>
@@ -52,16 +52,16 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-slate-400 mb-4">
               You crushed all the history missions! 🎉 Now it&apos;s time to prove yourself 
               against other players. Think you&apos;ve got what it takes to top the leaderboard?
             </p>
-            <div className="bg-card/50 rounded-lg p-3 mb-4 border border-border/50">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
-                <Trophy className="h-4 w-4 text-accent-foreground" />
+            <div className="bg-slate-800/50 rounded-lg p-3 mb-4 border border-slate-700/50">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-200 mb-2">
+                <Trophy className="h-4 w-4 text-amber-400" />
                 Competition Features
               </div>
-              <ul className="text-xs text-muted-foreground space-y-1">
+              <ul className="text-xs text-slate-400 space-y-1">
                 <li>• Live market action - feels like real trading! 📊</li>
                 <li>• Battle players worldwide for the top spot 🌍</li>
                 <li>• Epic rewards and flex-worthy achievements 🏅</li>
@@ -70,14 +70,14 @@ export function CompetitionCard({ unlocked, onStartCompetition }: CompetitionCar
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
-                <Trophy className="h-4 w-4 text-accent-foreground" />
-                <span className="text-primary font-medium">
+                <Trophy className="h-4 w-4 text-amber-400" />
+                <span className="text-emerald-400 font-medium">
                   Unlimited XP - Sky&apos;s the limit! ⭐
                 </span>
               </div>
               <Button
                 size="sm"
-                className="font-medium bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 text-primary-foreground border-0"
+                className="font-medium bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-white border-0"
                 onClick={onStartCompetition}
               >
                 <Trophy className="h-5 w-5 mr-2" />

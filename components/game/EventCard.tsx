@@ -39,12 +39,12 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
 
   const getNodeStyle = () => {
     if (event.completed) {
-      return "bg-primary border-primary text-primary-foreground";
+      return "bg-emerald-500 border-emerald-500 text-white";
     }
     if (event.unlocked) {
-      return "bg-background border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer";
+      return "bg-slate-800 border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-white cursor-pointer";
     }
-    return "bg-muted border-muted-foreground text-muted-foreground";
+    return "bg-slate-800 border-slate-600 text-slate-500";
   };
 
   return (
@@ -65,26 +65,26 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-          className={`relative overflow-hidden transition-all duration-300 transform 
+          className={`relative overflow-hidden transition-all duration-300 transform border-slate-700/50
     ${
       event.unlocked
-        ? "hover:shadow-md hover:-translate-y-1 hover:scale-[1.01] cursor-pointer"
+        ? "hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1 hover:scale-[1.01] cursor-pointer hover:border-emerald-500/30"
         : ""
     }
   `}
           onClick={() => onEventClick(event)}
         >
           {/* Overlay */}
-          <div className="pointer-events-none absolute inset-0 bg-white/90 z-[1]" />
+          <div className="pointer-events-none absolute inset-0 bg-slate-900/90 z-[1]" />
           {/* Card Content */}
           <div className="relative z-[2]">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="font-serif text-lg">
+                  <CardTitle className="text-lg text-slate-100">
                     {event.year}
                   </CardTitle>
-                  <CardDescription className="font-medium text-foreground mt-1">
+                  <CardDescription className="font-medium text-slate-300 mt-1">
                     {event.title}
                   </CardDescription>
                 </div>
@@ -103,20 +103,20 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-sm text-slate-400 mb-3">
                 {event.description}
               </p>
               {!event.unlocked && event.unlockDescription && (
-                <div className="mb-3 p-2 bg-muted/50 rounded-md">
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
+                <div className="mb-3 p-2 bg-slate-800/50 rounded-md border border-slate-700/50">
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3 text-amber-500" />
                     {event.unlockDescription}
                   </p>
                 </div>
               )}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm">
-                  <Trophy className="h-4 w-4 text-yellow-500" />
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Trophy className="h-4 w-4 text-amber-400" />
                   <span>{event.reward} XP</span>
                 </div>
                 
@@ -124,7 +124,7 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
                 {event.unlocked && !event.completed && (
                   <Button
                     size="sm"
-                    className="font-medium"
+                    className="font-medium bg-emerald-500 hover:bg-emerald-600 text-white"
                     onClick={(e) => {
                       e.stopPropagation();
                       onEventClick(event);
@@ -140,7 +140,7 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="font-medium border-border text-muted-foreground bg-muted hover:bg-muted/80 hover:border-primary/30"
+                    className="font-medium border-slate-600 text-slate-300 bg-slate-800/50 hover:bg-slate-700 hover:border-emerald-500/30"
                     onClick={(e) => {
                       e.stopPropagation();
                       onEventClick(event);
@@ -157,7 +157,7 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
                     size="sm"
                     variant="outline"
                     disabled
-                    className="font-medium bg-transparent"
+                    className="font-medium bg-transparent border-slate-700 text-slate-500"
                   >
                     <AlertTriangle className="h-4 w-4 mr-1" />
                     Locked

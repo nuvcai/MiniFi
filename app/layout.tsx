@@ -9,21 +9,23 @@
 
 import type React from "react";
 import type { Metadata } from "next";
-import { Montserrat, Open_Sans } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const montserrat = Montserrat({
+// Outfit - Modern geometric sans for headings, bold and youthful
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-montserrat",
-  weight: ["400", "600", "700", "900"], // Including Black weight for headings
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const openSans = Open_Sans({
+// Plus Jakarta Sans - Contemporary rounded sans for body, friendly and readable
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-open-sans",
-  weight: ["400", "500"],
+  variable: "--font-plus-jakarta",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -47,16 +49,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${openSans.variable} antialiased`}
+      className={`${outfit.variable} ${plusJakarta.variable} antialiased`}
     >
-      <body className="font-sans min-h-screen flex flex-col" suppressHydrationWarning={true}>
+      <body className="font-sans min-h-screen flex flex-col bg-slate-950" suppressHydrationWarning={true}>
         <main className="flex-1">
           {children}
         </main>
         {/* NUVC.AI Watermark Footer */}
-        <footer className="w-full py-3 px-4 text-center text-xs text-muted-foreground/60 border-t border-border/30 bg-background/50">
+        <footer className="w-full py-3 px-4 text-center text-xs text-slate-500 border-t border-slate-800/50 bg-slate-950/80 backdrop-blur">
           <p>
-            ✨ Vibe-coded by <a href="https://tick.ai" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors font-medium">Tick.AI</a> • MVP for AWS AI Hackathon 2025 • © <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">NUVC.AI</a>
+            ✨ Vibe-coded by <a href="https://tick.ai" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors font-medium">Tick.AI</a> • MVP for AWS AI Hackathon 2025 • © <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">NUVC.AI</a>
           </p>
         </footer>
       </body>

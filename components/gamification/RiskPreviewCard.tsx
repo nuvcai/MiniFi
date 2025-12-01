@@ -20,7 +20,6 @@ import {
   Lightbulb,
   Sparkles,
   TrendingDown,
-  TrendingUp,
   Shield,
   Brain,
   Trophy,
@@ -30,6 +29,7 @@ import {
   Target,
 } from "lucide-react";
 import { InvestmentOption } from "@/components/data/missions";
+import { getCourageXpForRisk } from "./effortRewards";
 
 // Learning outcomes based on risk level and asset class
 const learningOutcomes: Record<string, string[]> = {
@@ -65,14 +65,6 @@ const learningOutcomes: Record<string, string[]> = {
   ],
 };
 
-// Courage XP rewards based on risk level
-const courageXpRewards: Record<string, { xp: number; label: string }> = {
-  extreme: { xp: 25, label: "Fearless Explorer" },
-  high: { xp: 20, label: "Bold Investor" },
-  medium: { xp: 15, label: "Balanced Thinker" },
-  low: { xp: 10, label: "Steady Hand" },
-  none: { xp: 5, label: "Cautious Planner" },
-};
 
 // Worst-case scenarios (educational, not scary)
 const worstCaseScenarios: Record<string, string> = {
@@ -111,7 +103,7 @@ export function RiskPreviewCard({
 
   const riskLevel = option.risk.toLowerCase();
   const riskInfo = option.riskReturnProfile;
-  const courageReward = courageXpRewards[riskLevel] || courageXpRewards.medium;
+  const courageReward = getCourageXpForRisk(riskLevel);
   const learnings = learningOutcomes[riskLevel] || learningOutcomes.medium;
   const worstCase = worstCaseScenarios[riskLevel] || worstCaseScenarios.medium;
   const encouragement = encouragementMessages[riskLevel] || encouragementMessages.medium;
@@ -152,14 +144,7 @@ export function RiskPreviewCard({
   };
 
   const getRiskEmoji = (risk: string) => {
-    switch (risk) {
-      case "extreme": return "🔥";
-      case "high": return "⚡";
-      case "medium": return "⚖️";
-      case "low": return "🛡️";
-      case "none": return "💎";
-      default: return "📊";
-    }
+    return getCourageXpForRisk(risk).emoji;
   };
 
   if (!showFullPreview) {

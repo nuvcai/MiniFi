@@ -1,7 +1,7 @@
 # 🏗️ MiniFi - Technical Architecture
 
-**Version**: 1.0.0  
-**Last Updated**: December 1, 2025
+**Version**: 1.1.0  
+**Last Updated**: December 2025
 
 ---
 
@@ -107,13 +107,26 @@ minifi/
 ├── components/                   # React components
 │   ├── AICoach.tsx               # AI coaching interface
 │   ├── PerformanceChart.tsx      # Portfolio visualization
-│   ├── trading-dashboard.tsx     # Real-time trading UI
+│   ├── trading-dashboard.tsx     # Real-time trading with asset class metadata
 │   ├── investment-competition.tsx # Competition setup
 │   ├── competition-results.tsx   # Results display
 │   ├── CoachChat/
 │   │   └── CoachChat.tsx         # Chat interface
+│   ├── data/                     # Data definitions
+│   │   ├── missions.ts           # Historical missions with asset class metadata
+│   │   ├── coaches.ts            # AI coach profiles with FO strategies
+│   │   ├── assetClasses.ts       # Comprehensive asset class reference
+│   │   └── events.ts             # Financial events data
+│   ├── features/                 # Feature components (v1.1)
+│   │   ├── UpcomingFeatures.tsx  # Coming soon feature teasers
+│   │   ├── AssetClassMastery.tsx # Asset class progress tracking
+│   │   ├── RiskSpectrum.tsx      # Risk/return visualization
+│   │   ├── FOCertificationTeaser.tsx # Certification path preview
+│   │   └── index.ts              # Feature exports
 │   ├── game/                     # Game UI components
 │   ├── mission/                  # Mission components
+│   │   ├── InvestmentDecision.tsx # Investment UI with asset badges
+│   │   └── TeachingDialogue.tsx  # Post-mission learning with real data
 │   ├── modals/                   # Modal dialogs
 │   ├── shared/                   # Reusable components
 │   └── ui/                       # shadcn/ui components
@@ -309,6 +322,55 @@ def detect_asset_classes(portfolio: dict) -> set:
         else:
             classes.add('Stocks')
     return classes
+```
+
+### Asset Class Data Model (v1.1)
+```typescript
+// components/data/assetClasses.ts
+type AssetClass = "equities" | "fixed_income" | "commodities" | "alternatives" | "cash" | "cryptocurrency";
+type TimeHorizon = "short" | "medium" | "long";
+type RiskLevel = "none" | "low" | "medium" | "high" | "extreme";
+
+interface InvestmentOption {
+  assetClass: AssetClass;
+  timeHorizon: TimeHorizon;
+  riskReturnProfile: {
+    riskLevel: RiskLevel;
+    historicalVolatility: string;  // e.g., "15-25%"
+    correlationWithStocks: "negative" | "low" | "moderate" | "high";
+  };
+  foAllocationRange: string;       // e.g., "25-60%"
+  liquidityRating: "high" | "medium" | "low";
+}
+```
+
+### Historical Ticker Mapping (v1.1)
+```python
+# backend/services/investment_metrics_service.py
+# Proxy tickers for historical periods when ETFs didn't exist
+
+HISTORICAL_MAPPING = {
+    "GLD": {
+        1990: "^GSPC",  # S&P 500 as Gold proxy
+        2000: "^GSPC",
+        2008: "GLD",    # GLD launched 2004
+    },
+    "TIP": {
+        1990: "^TNX",   # 10Y Treasury yield
+        2000: "^TNX",
+        2008: "TIP",    # TIP launched 2003
+    },
+    # ... comprehensive mapping for all tickers
+}
+
+EVENT_PERIODS = {
+    1990: ("1990-01-01", "1990-12-31"),  # Japanese Bubble
+    1997: ("1997-01-01", "1997-12-31"),  # Asian Financial Crisis
+    2000: ("2000-01-01", "2000-12-31"),  # Dot-com Bubble
+    2008: ("2008-01-01", "2008-12-31"),  # Global Financial Crisis
+    2020: ("2020-01-01", "2020-12-31"),  # COVID-19 Pandemic
+    2025: ("2024-01-01", "2024-12-31"),  # Current Market
+}
 ```
 
 ---
@@ -577,6 +639,42 @@ async def health_check():
 - **CDN**: Static asset delivery
 - **Kubernetes**: Container orchestration
 - **Analytics**: User behavior tracking
+
+### v1.2 Feature Architecture (Upcoming)
+
+#### Risk Profile Quiz System
+```typescript
+interface RiskQuizResult {
+  riskTolerance: "conservative" | "moderate" | "aggressive" | "very_aggressive";
+  suggestedCoach: string;
+  timeHorizon: "short" | "medium" | "long";
+  investmentGoals: string[];
+}
+```
+
+#### Portfolio Builder
+```typescript
+interface PortfolioAllocation {
+  assetClass: AssetClass;
+  percentage: number;
+  suggestedAssets: string[];
+  riskContribution: number;
+}
+```
+
+#### FO Certification System
+```typescript
+interface Certification {
+  level: "capital_guardian" | "balanced_investor" | "fo_fellow";
+  requirements: {
+    missionsCompleted: number;
+    assetClassesMastered: number;
+    xpRequired: number;
+  };
+  badge: string;
+  perks: string[];
+}
+```
 
 ---
 

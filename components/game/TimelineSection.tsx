@@ -19,13 +19,13 @@ export function TimelineSection({
   onStartCompetition 
 }: TimelineSectionProps) {
   return (
-    <Card>
+    <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur">
       <CardHeader>
-        <CardTitle className="font-serif flex items-center gap-2">
-          <Clock className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-slate-100">
+          <Clock className="h-5 w-5 text-cyan-400" />
           Financial History Timeline
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-400">
           Travel through time and experience major financial events.
           Click on events to start your investment missions!
         </CardDescription>
@@ -33,7 +33,7 @@ export function TimelineSection({
       <CardContent>
         <div className="relative">
           {/* Timeline Line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border"></div>
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500/50 via-teal-500/50 to-cyan-500/50"></div>
 
           {/* Timeline Events */}
           <div className="space-y-8">

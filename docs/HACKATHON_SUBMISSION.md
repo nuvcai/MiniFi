@@ -12,7 +12,14 @@
 
 MiniFi is an AI-powered gamified investment education platform that teaches Australian teenagers to invest like family offices. Through historical missions, real-time trading simulations, and personalized AI coaching, students learn sophisticated wealth management strategies in a safe, engaging environment.
 
-**Key Innovation**: We reward **effort and exploration** over outcomes, teaching teens to diversify across 6+ asset classes (stocks, bonds, ETFs, crypto, REITs, commodities) using family office investment principles.
+**Key Innovation**: We reward **effort and exploration** over outcomes, teaching teens to diversify across 6 distinct asset classes using Family Office investment principles with real market data.
+
+### 🆕 Latest Features (v1.1)
+- **Asset Class System**: Equities, Fixed Income, Commodities, Alternatives, Cash, Cryptocurrency
+- **FO-Aligned Data**: Risk/return profiles, time horizons, allocation percentages
+- **Asset Class Mastery**: Progress tracking across all 6 classes
+- **Upcoming Features Preview**: Risk Quiz, Portfolio Builder, Daily Challenges
+- **Real Data Integration**: All historical missions linked to Yahoo Finance
 
 ---
 
@@ -64,31 +71,31 @@ Students travel through 35+ years of financial history:
 
 ### 2. AI Coaching System (Personalized Learning)
 
-**4 Distinct Coach Personalities:**
+**4 FO-Aligned Coach Personalities with Strategy Profiles:**
 
 #### 🛡️ Steady Sam (Conservative)
-- **Philosophy**: Capital preservation, generational wealth
-- **Teaches**: Bonds, gold, dividend stocks, REITs
-- **Language**: "Steady as she goes," "Family offices think in generations"
-- **Best For**: Risk-averse learners
+- **Risk Tolerance**: Conservative
+- **Target Allocation**: 40-50% Bonds, 20-30% Equities, 10-15% Commodities, 10-15% Cash
+- **Philosophy**: Capital preservation first! Focus on stable income and protecting principal
+- **Best For**: Short to medium-term goals (1-5 years), risk-averse investors
 
-#### ⚖️ Wise Wendy (Balanced)
-- **Philosophy**: Strategic allocation, risk-adjusted returns
-- **Teaches**: Diversified portfolios, asset correlations
-- **Language**: "Balance is key," "Diversification protects"
-- **Best For**: Strategic thinkers
+#### ⚖️ Growth Guru (Balanced)
+- **Risk Tolerance**: Moderate
+- **Target Allocation**: 40-50% Equities, 25-35% Bonds, 10-15% Alternatives, 5-10% Cash
+- **Philosophy**: Diversification is key! Balance growth potential with downside protection
+- **Best For**: Medium to long-term goals (5-15 years), moderate risk tolerance
 
 #### 🚀 Adventure Alex (Aggressive)
-- **Philosophy**: High risk, high reward, innovation
-- **Teaches**: Growth stocks, crypto, emerging markets
-- **Language**: "Go big," "Innovation pays off"
-- **Best For**: Bold learners
+- **Risk Tolerance**: Very Aggressive
+- **Target Allocation**: 60-75% Equities, 15-25% Alternatives, 5-15% Bonds, 0-5% Crypto
+- **Philosophy**: High risk, high reward! Stay invested through volatility for long-term gains
+- **Best For**: Long-term goals (10+ years), young investors in wealth accumulation
 
-#### 💻 Tech Taylor (Technology)
-- **Philosophy**: Future-focused, tech diversification
-- **Teaches**: AI, cloud, semiconductors
-- **Language**: "Focus on the future," "Tech drives wealth"
-- **Best For**: Tech enthusiasts
+#### 💰 Yield Yoda (Income Master)
+- **Risk Tolerance**: Moderate
+- **Target Allocation**: 30-40% Equities, 30-40% Bonds, 15-25% REITs, 5-10% Cash
+- **Philosophy**: Let your money work for you! Focus on dividend-paying assets
+- **Best For**: Income generation, passive income streams, semi-retirement
 
 **AI Coaching Features:**
 - Real-time chat during trading
@@ -137,7 +144,7 @@ MiniFi teaches:
 - ✅ Exploration and learning
 
 **Family Office Principles:**
-1. **Diversify across 6+ asset classes** (not just stocks)
+1. **Diversify across 6 asset classes** with proper allocation
 2. **Think in decades**, not days
 3. **Preserve capital** while seeking growth
 4. **Learn by exploring** each asset class
@@ -149,6 +156,33 @@ MiniFi teaches:
 - ✅ Strategic thinking: +50 XP
 - ✅ Completing missions: +150 XP
 - ❌ NOT based on returns (removes fear of failure)
+
+### 5. Asset Class Education System (NEW in v1.1)
+
+**6 FO-Aligned Asset Classes:**
+
+| Asset Class | Risk Level | Time Horizon | FO Allocation | Example |
+|-------------|------------|--------------|---------------|---------|
+| 📈 **Equities** | Medium-High | Long (5+ yr) | 25-60% | Apple, S&P 500 |
+| 📊 **Fixed Income** | Low | Medium (1-5 yr) | 15-50% | Treasury Bonds |
+| 🥇 **Commodities** | Medium | Long | 5-15% | Gold, Silver |
+| 🏢 **Alternatives** | Medium | Long | 10-25% | REITs, Private Equity |
+| 💵 **Cash** | None | Short (0-1 yr) | 5-15% | Money Market |
+| ₿ **Cryptocurrency** | Extreme | Long (speculative) | 0-5% | Bitcoin, Ethereum |
+
+**Each Investment Option Includes:**
+- Asset class categorization with visual badges
+- Risk/return profile with historical volatility
+- Time horizon recommendation
+- FO allocation guidance (typical percentages)
+- Correlation with stocks (for diversification)
+- Liquidity rating (ease of selling)
+
+**Educational Value:**
+- Visual badges help teens quickly identify asset types
+- Time horizons teach goal-matching
+- FO allocations show professional benchmarks
+- Teen-friendly explanations for each concept
 
 ---
 
@@ -231,8 +265,21 @@ Response Format:
 **Components:**
 ```
 components/
+├── data/
+│   ├── missions.ts           # Historical missions with asset class metadata
+│   ├── coaches.ts            # AI coach profiles with FO strategies
+│   ├── assetClasses.ts       # Comprehensive asset class reference
+│   └── events.ts             # Financial events data
+├── features/
+│   ├── UpcomingFeatures.tsx  # Coming soon feature teasers
+│   ├── AssetClassMastery.tsx # Asset class progress tracking
+│   ├── RiskSpectrum.tsx      # Risk/return visualization
+│   └── FOCertificationTeaser.tsx # Certification path preview
+├── mission/
+│   ├── InvestmentDecision.tsx # Investment UI with asset badges
+│   └── TeachingDialogue.tsx  # Post-mission learning with real data
 ├── investment-competition.tsx  # Competition setup
-├── trading-dashboard.tsx       # Real-time trading
+├── trading-dashboard.tsx       # Real-time trading with asset classes
 ├── competition-results.tsx     # Performance analysis
 ├── AICoach.tsx                # AI coaching interface
 ├── CoachChat/                 # Real-time chat
@@ -252,12 +299,18 @@ components/
 **Services:**
 ```
 services/
-├── coach_service.py           # AI coaching logic
+├── coach_service.py           # AI coaching with FO strategies
 ├── coach_chat.py             # Real-time chat
-├── price_service.py          # Market data
+├── price_service.py          # Yahoo Finance market data
 ├── simulation_service.py     # Trading simulation
-└── investment_metrics_service.py  # Performance metrics
+└── investment_metrics_service.py  # Real historical data with ticker proxies
 ```
+
+**Historical Data Features:**
+- All missions connected to real Yahoo Finance data
+- Intelligent ticker proxies for pre-2000 periods (e.g., S&P 500 → Gold proxy)
+- Support for 1990, 1997, 2000, 2008, 2020, 2025 event periods
+- Comprehensive ticker mapping for all investment options
 
 **Performance Optimizations:**
 - Price caching: 500ms → 50ms (10x faster)
@@ -387,25 +440,31 @@ Performance Analysis → Leaderboard → Earn XP → Redeem Rewards
 
 1. **Family Office Approach**
    - First platform teaching teens to invest like wealthy families
-   - Focus on asset class diversification, not stock picking
-   - Multi-generational wealth thinking
+   - Focus on 6 asset classes with FO allocation percentages
+   - Multi-generational wealth thinking with time horizon guidance
 
 2. **Effort-Based Rewards**
    - Rewards exploration, not just returns
    - Removes fear of failure
-   - Encourages experimentation
+   - Asset Class Mastery system tracks progress across all 6 classes
 
-3. **AI Coaching Personalities**
-   - 4 distinct coaches with unique philosophies
-   - Personalized to learning style
-   - Real-time contextual advice
+3. **AI Coaching with FO Strategy Profiles**
+   - 4 distinct coaches with target allocations and investment philosophies
+   - Personalized to risk tolerance and time horizon
+   - Real-time contextual advice based on portfolio composition
 
-4. **Historical Learning**
-   - Learn from 35+ years of real events
-   - Understand cause and effect
-   - Pattern recognition
+4. **Real Historical Data Integration**
+   - Learn from 35+ years of real market events
+   - All investments linked to Yahoo Finance tickers
+   - Historical proxies for pre-ETF periods (e.g., S&P 500 for Gold in 1990)
 
-5. **Australian Focus**
+5. **Comprehensive Asset Class Education**
+   - Visual badges for each asset class
+   - Risk/return profiles with historical volatility
+   - Time horizon recommendations for goal-matching
+   - FO allocation guidance showing professional benchmarks
+
+6. **Australian Focus**
    - Designed for Australian teens
    - Local brand rewards (Woolworths, JB Hi-Fi, etc.)
    - Culturally relevant examples

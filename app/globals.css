@@ -5,117 +5,89 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════════════════
-     NUVC.AI Brand Colors - MiniFi MVP (Purple Edition)
-     Primary: Light Purple #8B5CF6 | Secondary: Deep Purple #7C3AED | Accent: Gold
-     ✨ Vibe-coded by Tick.AI
+     NUVC.AI Brand Colors - MiniFi MVP (Dark Emerald Edition)
+     Primary: Emerald #10b981 | Secondary: Teal #14b8a6 | Accent: Cyan #06b6d4
+     ✨ Vibe-coded by Tick.AI - Teen-friendly dark theme
      ═══════════════════════════════════════════════════════════════════════════ */
   
-  --background: oklch(0.985 0.015 290); /* Light purple-tinted background */
-  --foreground: oklch(0.20 0.03 285); /* Deep purple-navy text */
-  --card: oklch(1 0 0); /* White cards */
-  --card-foreground: oklch(0.25 0.03 285); /* Purple-navy on cards */
-  --popover: oklch(1 0 0); /* White popover */
-  --popover-foreground: oklch(0.20 0.03 285); /* Purple-navy popover text */
+  /* Dark slate background - modern, gaming-inspired */
+  --background: oklch(0.13 0.02 260); /* Deep slate #0f172a */
+  --foreground: oklch(0.93 0.01 260); /* Light slate text #f1f5f9 */
+  --card: oklch(0.18 0.02 260); /* Slate card #1e293b */
+  --card-foreground: oklch(0.93 0.01 260);
+  --popover: oklch(0.18 0.02 260);
+  --popover-foreground: oklch(0.93 0.01 260);
   
-  /* NUVC Primary: Light Purple - Modern & Innovative */
-  --primary: oklch(0.55 0.18 290); /* NUVC Purple #8B5CF6 */
-  --primary-foreground: oklch(1 0 0); /* White text on primary */
+  /* Primary: Emerald - Growth & Success */
+  --primary: oklch(0.70 0.17 160); /* Emerald #10b981 */
+  --primary-foreground: oklch(0.98 0 0); /* White text */
   
-  /* NUVC Secondary: Deep Purple - Trust & Sophistication */
-  --secondary: oklch(0.45 0.20 285); /* NUVC Deep Purple #7C3AED */
-  --secondary-foreground: oklch(1 0 0); /* White text on secondary */
+  /* Secondary: Teal - Trust & Innovation */
+  --secondary: oklch(0.68 0.14 175); /* Teal #14b8a6 */
+  --secondary-foreground: oklch(0.98 0 0);
   
-  --muted: oklch(0.96 0.015 290); /* Light purple-tinted muted */
-  --muted-foreground: oklch(0.45 0.03 285); /* Muted purple text */
+  --muted: oklch(0.25 0.02 260); /* Slate muted #334155 */
+  --muted-foreground: oklch(0.60 0.01 260); /* Slate text #94a3b8 */
   
-  /* NUVC Accent: Gold - Wealth & Success */
-  --accent: oklch(0.75 0.16 75); /* NUVC Gold #F59E0B */
-  --accent-foreground: oklch(0.20 0.02 240); /* Dark text on accent */
+  /* Accent: Cyan - Energy & Excitement */
+  --accent: oklch(0.72 0.15 195); /* Cyan #06b6d4 */
+  --accent-foreground: oklch(0.13 0.02 260);
   
-  --destructive: oklch(0.55 0.22 25); /* Red destructive #dc2626 */
-  --destructive-foreground: oklch(1 0 0); /* White on destructive */
-  --border: oklch(0.90 0.02 290); /* Purple-tinted borders */
-  --input: oklch(1 0 0); /* White input background */
-  --ring: oklch(0.55 0.18 290); /* Purple focus ring */
+  --destructive: oklch(0.60 0.22 25); /* Red #ef4444 */
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.30 0.02 260); /* Slate border #475569 */
+  --input: oklch(0.22 0.02 260); /* Slate input #334155 */
+  --ring: oklch(0.70 0.17 160); /* Emerald focus ring */
   
-  /* Chart colors - NUVC Purple themed */
-  --chart-1: oklch(0.60 0.18 290); /* Purple for positive growth */
-  --chart-2: oklch(0.75 0.16 75); /* Gold for highlights */
-  --chart-3: oklch(0.55 0.22 25); /* Red for negative trends */
-  --chart-4: oklch(0.50 0.20 285); /* Deep purple for neutral */
-  --chart-5: oklch(0.70 0.15 300); /* Light violet for additional */
+  /* Chart colors - Emerald/Teal themed */
+  --chart-1: oklch(0.70 0.17 160); /* Emerald for positive */
+  --chart-2: oklch(0.72 0.15 195); /* Cyan for highlights */
+  --chart-3: oklch(0.60 0.22 25); /* Red for negative */
+  --chart-4: oklch(0.68 0.14 175); /* Teal for neutral */
+  --chart-5: oklch(0.75 0.12 280); /* Purple accent */
   
-  --radius: 0.625rem; /* Slightly more rounded for modern feel */
+  --radius: 0.75rem; /* Rounded for friendly feel */
   
-  /* Sidebar - NUVC Purple themed */
-  --sidebar: oklch(0.98 0.015 290); /* Light purple sidebar */
-  --sidebar-foreground: oklch(0.20 0.03 285); /* Purple-navy sidebar text */
-  --sidebar-primary: oklch(0.55 0.18 290); /* Purple sidebar primary */
-  --sidebar-primary-foreground: oklch(1 0 0); /* White on sidebar primary */
-  --sidebar-accent: oklch(0.45 0.20 285); /* Deep purple sidebar accent */
-  --sidebar-accent-foreground: oklch(1 0 0); /* White sidebar accent text */
-  --sidebar-border: oklch(0.90 0.02 290); /* Purple-tinted sidebar border */
-  --sidebar-ring: oklch(0.55 0.18 290); /* Purple sidebar focus */
+  /* Sidebar - Dark slate themed */
+  --sidebar: oklch(0.11 0.02 260); /* Darker slate */
+  --sidebar-foreground: oklch(0.93 0.01 260);
+  --sidebar-primary: oklch(0.70 0.17 160);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.25 0.02 260);
+  --sidebar-accent-foreground: oklch(0.93 0.01 260);
+  --sidebar-border: oklch(0.30 0.02 260);
+  --sidebar-ring: oklch(0.70 0.17 160);
   
-  --font-open-sans: "Open Sans", sans-serif;
-  --font-montserrat: "Montserrat", serif;
+  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
 }
 
-.dark {
-  /* ═══════════════════════════════════════════════════════════════════════════
-     NUVC.AI Dark Mode - MiniFi MVP (Purple Theme)
-     ✨ Vibe-coded by Tick.AI
-     ═══════════════════════════════════════════════════════════════════════════ */
-  
-  --background: oklch(0.15 0.03 285); /* Deep purple-navy background */
-  --foreground: oklch(0.95 0.02 290); /* Light purple-tinted text */
-  --card: oklch(0.18 0.03 285); /* Slightly lighter purple-navy cards */
-  --card-foreground: oklch(0.95 0.02 290);
-  --popover: oklch(0.18 0.03 285);
-  --popover-foreground: oklch(0.95 0.02 290);
-  
-  /* NUVC Primary: Bright Purple for dark mode */
-  --primary: oklch(0.70 0.18 290); /* Brighter purple #A78BFA */
-  --primary-foreground: oklch(0.15 0.03 285); /* Dark background */
-  
-  /* NUVC Secondary: Lighter Purple for dark mode */
-  --secondary: oklch(0.60 0.20 285);
-  --secondary-foreground: oklch(0.95 0.02 290);
-  
-  --muted: oklch(0.22 0.03 285);
-  --muted-foreground: oklch(0.70 0.02 290);
-  
-  /* NUVC Accent: Gold stays bright */
-  --accent: oklch(0.75 0.16 75);
-  --accent-foreground: oklch(0.15 0.03 285);
-  
-  --destructive: oklch(0.50 0.20 25);
-  --destructive-foreground: oklch(0.95 0 0);
-  --border: oklch(0.28 0.03 285);
-  --input: oklch(0.22 0.03 285);
-  --ring: oklch(0.70 0.18 290);
-  
-  /* Chart colors - NUVC Purple dark mode */
-  --chart-1: oklch(0.70 0.18 290); /* Bright purple */
-  --chart-2: oklch(0.75 0.16 75); /* Gold */
-  --chart-3: oklch(0.60 0.22 25); /* Red */
-  --chart-4: oklch(0.60 0.20 285); /* Deep purple */
-  --chart-5: oklch(0.75 0.15 300); /* Light violet */
-  
-  /* Sidebar - NUVC Purple dark themed */
-  --sidebar: oklch(0.12 0.03 285);
-  --sidebar-foreground: oklch(0.95 0.02 290);
-  --sidebar-primary: oklch(0.70 0.18 290);
-  --sidebar-primary-foreground: oklch(0.15 0.03 285);
-  --sidebar-accent: oklch(0.28 0.03 285);
-  --sidebar-accent-foreground: oklch(0.95 0.02 290);
-  --sidebar-border: oklch(0.28 0.03 285);
-  --sidebar-ring: oklch(0.70 0.18 290);
+/* Light mode (optional - can be enabled with class="light" on html) */
+.light {
+  --background: oklch(0.98 0.01 260);
+  --foreground: oklch(0.15 0.02 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 260);
+  --primary: oklch(0.60 0.17 160);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.58 0.14 175);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.95 0.01 260);
+  --muted-foreground: oklch(0.45 0.02 260);
+  --accent: oklch(0.62 0.15 195);
+  --accent-foreground: oklch(0.15 0.02 260);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.90 0.01 260);
+  --input: oklch(0.95 0.01 260);
+  --ring: oklch(0.60 0.17 160);
 }
 
 @theme inline {
-  --font-sans: var(--font-open-sans); /* Open Sans for body text */
-  --font-serif: var(--font-montserrat); /* Montserrat for headings */
+  --font-sans: var(--font-plus-jakarta); /* Plus Jakarta Sans for body - modern, friendly */
+  --font-heading: var(--font-outfit); /* Outfit for headings - bold, youthful */
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --color-background: var(--background);
@@ -162,5 +134,36 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+    font-feature-settings: "cv11", "ss01"; /* Enable stylistic alternates */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+  
+  /* Apply Outfit to all headings - bold, modern, teen-friendly */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  
+  h1 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+}
+
+/* Utility class for heading font */
+.font-heading {
+  font-family: var(--font-outfit);
+}
+
+/* Fun text gradient utility */
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, #10b981, #14b8a6, #06b6d4);
+}
+
+/* Glow effect for emphasis */
+.text-glow {
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
 }

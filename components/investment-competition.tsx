@@ -327,7 +327,7 @@ export default function InvestmentCompetition({
     ].join(" ");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-card/30 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950">
       <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-8 gap-6 sm:gap-0">

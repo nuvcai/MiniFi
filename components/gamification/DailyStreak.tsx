@@ -112,6 +112,9 @@ export function DailyStreak({ onBonusClaimed }: DailyStreakProps) {
           claimedToday: false,
         };
 
+        let shouldShowModal = false;
+        let newStreakStarted = false;
+
         // Check if it's a new day
         if (data.lastPlayDate !== today) {
           const yesterday = new Date();
@@ -121,15 +124,15 @@ export function DailyStreak({ onBonusClaimed }: DailyStreakProps) {
           if (wasYesterday) {
             // Continue streak
             data.currentStreak += 1;
-            setIsNewStreak(false);
+            newStreakStarted = false;
           } else if (data.lastPlayDate) {
             // Streak broken - reset
             data.currentStreak = 1;
-            setIsNewStreak(true);
+            newStreakStarted = true;
           } else {
             // First time playing
             data.currentStreak = 1;
-            setIsNewStreak(true);
+            newStreakStarted = true;
           }
 
           // Update stats
@@ -141,14 +144,18 @@ export function DailyStreak({ onBonusClaimed }: DailyStreakProps) {
           // Save updated data
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
-          // Show claim modal for returning players
-          if (!isNewStreak || data.currentStreak === 1) {
-            setShowClaimModal(true);
-          }
+          // Show claim modal for all new day logins
+          shouldShowModal = true;
+          setIsNewStreak(newStreakStarted);
         }
 
         setStreakData(data);
         setTodayBonus(getStreakBonus(data.currentStreak));
+        
+        // Show modal after state updates
+        if (shouldShowModal) {
+          setShowClaimModal(true);
+        }
       } catch (e) {
         console.error("Failed to load streak data:", e);
       }
