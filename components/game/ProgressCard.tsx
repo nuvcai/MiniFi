@@ -21,13 +21,13 @@ export function ProgressCard({
     {
       id: "completed",
       icon: <Trophy className="h-6 w-6 text-primary" />,
-      title: "Completed Missions",
+      title: "Missions Crushed 💪",
       value: completedCount,
     },
     {
       id: "available",
       icon: <Users className="h-6 w-6 text-secondary" />,
-      title: "Available Missions",
+      title: "Ready to Play 🎮",
       value: availableCount,
     },
   ];
@@ -37,7 +37,7 @@ export function ProgressCard({
       <CardHeader>
         <CardTitle className="font-serif flex items-center gap-2">
           <Trophy className="h-5 w-5" />
-          Learning Progress
+          Your Progress 📊
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -26,9 +26,9 @@ export function CoachSidebar({
       <CardHeader>
         <CardTitle className="font-serif flex items-center gap-2">
           <Users className="h-5 w-5" />
-          AI Coach Team
+          Your Squad 🤖
         </CardTitle>
-        <CardDescription>Choose your investment mentor</CardDescription>
+        <CardDescription>Pick your vibe - who&apos;s got your back?</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {coaches.map((coach) => (
