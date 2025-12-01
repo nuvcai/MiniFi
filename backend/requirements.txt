@@ -9,3 +9,6 @@ scipy>=1.11.0,<2.0.0
 openai>=1.0.0,<2.0.0
 multipart>=0.0.6,<1.0.0
 python-dotenv>=1.0.0,<2.0.0
+
+# AWS Bedrock (optional)
+boto3>=1.34.0,<2.0.0
