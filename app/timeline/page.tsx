@@ -20,6 +20,8 @@ import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
 import { RewardsModal } from "@/components/modals/RewardsModal";
 import { LevelUpCelebration } from "@/components/gamification/LevelUpCelebration";
+import { FOCertificationTeaser } from "@/components/features/FOCertificationTeaser";
+import { AssetClassMastery } from "@/components/features/AssetClassMastery";
 
 // Import data
 import { financialEvents, FinancialEvent } from "@/components/data/events";
@@ -266,6 +268,19 @@ export default function TimelinePage() {
               }
               onStreakBonusClaimed={handleStreakBonus}
             />
+
+            {/* Asset Class Mastery - Track progress across asset classes */}
+            <div className="mt-4 bg-slate-800/50 backdrop-blur rounded-xl p-4 border border-slate-700/50">
+              <AssetClassMastery 
+                variant="compact" 
+                completedMissions={completedMissions}
+              />
+            </div>
+
+            {/* FO Certification Teaser - Coming soon feature */}
+            <div className="mt-4">
+              <FOCertificationTeaser variant="compact" currentLevel={0} />
+            </div>
           </div>
 
           {/* Main Timeline */}

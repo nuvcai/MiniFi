@@ -12,8 +12,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, GraduationCap, ExternalLink } from "lucide-react";
+import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, GraduationCap, ExternalLink, Rocket } from "lucide-react";
 import { aiCoaches } from "@/components/data/coaches";
+import { UpcomingFeatures } from "@/components/features/UpcomingFeatures";
+import { AssetClassMastery } from "@/components/features/AssetClassMastery";
 
 export default function HomePage() {
   const [selectedCoachIndex, setSelectedCoachIndex] = useState(0);
@@ -391,6 +393,18 @@ export default function HomePage() {
                 {feature}
               </span>
             ))}
+          </div>
+
+          {/* Upcoming Features Preview - Teaser Section */}
+          <div className={`mt-10 sm:mt-12 transition-all duration-1000 delay-750 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="bg-slate-800/30 backdrop-blur rounded-2xl p-6 border border-slate-700/50">
+              <UpcomingFeatures variant="compact" maxItems={4} />
+              
+              {/* Asset Class Mastery Preview */}
+              <div className="mt-6 pt-6 border-t border-slate-700/50">
+                <AssetClassMastery variant="compact" />
+              </div>
+            </div>
           </div>
 
           {/* Sponsor & Share Section - Prominent */}
