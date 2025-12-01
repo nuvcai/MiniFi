@@ -1,110 +1,208 @@
-import sqlite3
 import pandas as pd
-from typing import Generator
+from typing import Generator, Any
 import os
 import threading
 
-DATABASE_URL = "legacy_guardians.db"
+# Check for PostgreSQL (Supabase) or fallback to SQLite
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+USE_POSTGRES = DATABASE_URL.startswith("postgresql://")
+
+if USE_POSTGRES:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    print(f"🐘 Using PostgreSQL (Supabase)")
+else:
+    import sqlite3
+    DATABASE_URL = "legacy_guardians.db"
+    print(f"📁 Using SQLite: {DATABASE_URL}")
 
 # Thread-local storage for database connections
 _local = threading.local()
 
 
-def get_db() -> Generator[sqlite3.Connection, None, None]:
+def get_db() -> Generator[Any, None, None]:
     """Get database connection (thread-safe)"""
-    if not hasattr(_local, 'conn') or _local.conn is None:
-        _local.conn = sqlite3.connect(DATABASE_URL, check_same_thread=False)
-        _local.conn.row_factory = sqlite3.Row
-        # Enable WAL mode for better concurrency
-        _local.conn.execute("PRAGMA journal_mode=WAL")
-
-    try:
-        yield _local.conn
-    except Exception:
-        # If there's an error, close the connection and create a new one
-        if hasattr(_local, 'conn') and _local.conn:
-            _local.conn.close()
-            _local.conn = None
-        raise
+    if USE_POSTGRES:
+        # PostgreSQL connection
+        if not hasattr(_local, 'conn') or _local.conn is None or _local.conn.closed:
+            _local.conn = psycopg2.connect(DATABASE_URL)
+        try:
+            yield _local.conn
+        except Exception:
+            if hasattr(_local, 'conn') and _local.conn and not _local.conn.closed:
+                _local.conn.close()
+                _local.conn = None
+            raise
+    else:
+        # SQLite connection
+        if not hasattr(_local, 'conn') or _local.conn is None:
+            _local.conn = sqlite3.connect(DATABASE_URL, check_same_thread=False)
+            _local.conn.row_factory = sqlite3.Row
+            _local.conn.execute("PRAGMA journal_mode=WAL")
+        try:
+            yield _local.conn
+        except Exception:
+            if hasattr(_local, 'conn') and _local.conn:
+                _local.conn.close()
+                _local.conn = None
+            raise
 
 
 def init_db():
     """Initialize database tables"""
-    conn = sqlite3.connect(DATABASE_URL)
-    cursor = conn.cursor()
+    if USE_POSTGRES:
+        conn = psycopg2.connect(DATABASE_URL)
+        cursor = conn.cursor()
+        
+        # PostgreSQL syntax
+        # Prices table for caching
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS prices (
+                ticker TEXT,
+                date DATE,
+                open REAL,
+                high REAL,
+                low REAL,
+                close REAL,
+                volume BIGINT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (ticker, date)
+            )
+        """)
 
-    # Prices table for caching
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS prices (
-            ticker TEXT,
-            date DATE,
-            open REAL,
-            high REAL,
-            low REAL,
-            close REAL,
-            volume INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (ticker, date)
-        )
-    """)
+        # Events table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id SERIAL PRIMARY KEY,
+                year INTEGER,
+                title TEXT,
+                description TEXT,
+                available_assets TEXT,
+                market_volatility TEXT,
+                open_trading BOOLEAN,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
 
-    # Events table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            year INTEGER,
-            title TEXT,
-            description TEXT,
-            available_assets TEXT,
-            market_volatility TEXT,
-            open_trading BOOLEAN,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+        # Leaderboard table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS leaderboard (
+                id SERIAL PRIMARY KEY,
+                player_id TEXT,
+                player_name TEXT,
+                season TEXT,
+                total_score REAL,
+                risk_adjusted_return REAL,
+                completed_missions INTEGER,
+                exploration_breadth INTEGER,
+                portfolio_performance TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
 
-    # Leaderboard table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS leaderboard (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            player_id TEXT,
-            player_name TEXT,
-            season TEXT,
-            total_score REAL,
-            risk_adjusted_return REAL,
-            completed_missions INTEGER,
-            exploration_breadth INTEGER,
-            portfolio_performance TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+        # Player progress table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS player_progress (
+                id SERIAL PRIMARY KEY,
+                player_id TEXT,
+                mission_id TEXT,
+                completed_at TIMESTAMP,
+                score REAL,
+                performance_data TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
 
-    # Player progress table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS player_progress (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            player_id TEXT,
-            mission_id TEXT,
-            completed_at TIMESTAMP,
-            score REAL,
-            performance_data TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+        # Coach interactions table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS coach_interactions (
+                id SERIAL PRIMARY KEY,
+                player_id TEXT,
+                coach_level TEXT,
+                request_data TEXT,
+                response_data TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
 
-    # Coach interactions table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS coach_interactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            player_id TEXT,
-            coach_level TEXT,
-            request_data TEXT,
-            response_data TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("✅ PostgreSQL tables initialized")
+        
+    else:
+        # SQLite syntax
+        conn = sqlite3.connect(DATABASE_URL)
+        cursor = conn.cursor()
 
-    conn.commit()
-    conn.close()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS prices (
+                ticker TEXT,
+                date DATE,
+                open REAL,
+                high REAL,
+                low REAL,
+                close REAL,
+                volume INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (ticker, date)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                year INTEGER,
+                title TEXT,
+                description TEXT,
+                available_assets TEXT,
+                market_volatility TEXT,
+                open_trading BOOLEAN,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS leaderboard (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id TEXT,
+                player_name TEXT,
+                season TEXT,
+                total_score REAL,
+                risk_adjusted_return REAL,
+                completed_missions INTEGER,
+                exploration_breadth INTEGER,
+                portfolio_performance TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS player_progress (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id TEXT,
+                mission_id TEXT,
+                completed_at TIMESTAMP,
+                score REAL,
+                performance_data TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS coach_interactions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id TEXT,
+                coach_level TEXT,
+                request_data TEXT,
+                response_data TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        conn.commit()
+        conn.close()
+        print("✅ SQLite tables initialized")
 
     # Create data directory if it doesn't exist
     os.makedirs("data", exist_ok=True)

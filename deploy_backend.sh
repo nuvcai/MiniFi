@@ -1,18 +1,17 @@
 #!/bin/bash
-# MiniFi Backend Deployment Script
-# Run this in your terminal: ./deploy_backend.sh
+# MiniFi Backend Deployment Script (Render)
+# 
+# NOTE: Render deployment is done via:
+# 1. Dashboard: render.com → New → Web Service → Connect repo
+# 2. Or via render.yaml (Blueprint) in project root
+#
+# This script is for local testing only.
 
 set -e
 
-echo "🚀 MiniFi Backend Deployment"
-echo "============================"
+echo "🚀 MiniFi Backend - Local Testing"
+echo "=================================="
 echo ""
-
-# Check if Railway CLI is installed
-if ! command -v railway &> /dev/null; then
-    echo "📦 Installing Railway CLI..."
-    npm install -g @railway/cli
-fi
 
 # Navigate to backend directory
 cd "$(dirname "$0")/backend"
@@ -20,37 +19,35 @@ cd "$(dirname "$0")/backend"
 echo "📁 Current directory: $(pwd)"
 echo ""
 
-# Login to Railway
-echo "🔐 Logging into Railway..."
-echo "   (A browser window will open for authentication)"
-railway login
+# Create virtual environment if it doesn't exist
+if [ ! -d ".venv" ]; then
+    echo "📦 Creating virtual environment..."
+    python3 -m venv .venv
+fi
 
-# Initialize project if not already
-echo ""
-echo "🏗️  Initializing Railway project..."
-railway init --name minifi-backend
+# Activate virtual environment
+echo "🔄 Activating virtual environment..."
+source .venv/bin/activate
 
-# Set environment variables
-echo ""
-echo "🔑 Setting environment variables..."
-echo "   Enter your OpenAI API Key when prompted:"
-read -p "   OPENAI_API_KEY: " OPENAI_KEY
-railway variables set OPENAI_API_KEY="$OPENAI_KEY"
+# Install dependencies
+echo "📥 Installing dependencies..."
+pip install -r requirements.txt
 
-# Deploy
+# Start the server
 echo ""
-echo "🚀 Deploying to Railway..."
-railway up
+echo "🚀 Starting FastAPI server..."
+echo "🌐 API: http://localhost:8000"
+echo "📚 Docs: http://localhost:8000/docs"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📦 To deploy to Render:"
+echo "   1. Go to render.com"
+echo "   2. New → Web Service"
+echo "   3. Connect your repo"
+echo "   4. Root Directory: backend"
+echo "   5. Add OPENAI_API_KEY in Environment"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 
-# Get the deployment URL
-echo ""
-echo "✅ Deployment complete!"
-echo ""
-echo "📋 Your backend URL:"
-railway open
-
-echo ""
-echo "🔗 Copy your backend URL and use it in the frontend deployment!"
-echo "   Example: https://minifi-backend-production.up.railway.app"
-echo ""
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
