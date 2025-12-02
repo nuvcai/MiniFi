@@ -28,8 +28,8 @@ export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = "https://legacy-guardians.vercel.app";
-  const shareText = "🎮 Check out Legacy Guardians - a free game that teaches teens about investing through time-travel adventures! Built with AI for the AWS Hackathon 2025 🚀";
+  const shareUrl = "https://minifi.vercel.app";
+  const shareText = "🎮 Check out MiniFi - a free game that teaches teens about investing through time-travel adventures! Built with AI for the AWS Hackathon 2025 🚀";
   
   const handleCopyLink = async () => {
     try {
@@ -131,14 +131,14 @@ export default function HomePage() {
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 rounded-full blur-xl animate-pulse" />
                 <Image
                   src="/favicon.png"
-                  alt="Legacy Guardians"
+                  alt="MiniFi"
                   width={100}
                   height={100}
                   className="relative object-contain w-20 h-20 sm:w-24 sm:h-24 drop-shadow-lg"
                 />
               </div>
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
-                Legacy Guardians
+                MiniFi
               </h1>
               <p className="text-xl sm:text-2xl font-medium text-slate-300 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-emerald-400 animate-pulse" />

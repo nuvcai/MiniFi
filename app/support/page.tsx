@@ -81,14 +81,14 @@ export default function SupportPage() {
             <div className="flex items-center justify-center gap-3 mb-6">
               <Image
                 src="/favicon.png"
-                alt="Legacy Guardians"
+                alt="MiniFi"
                 width={60}
                 height={60}
                 className="rounded-xl"
               />
               <div className="text-left">
                 <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  Support Legacy Guardians
+                  Support MiniFi
                 </h1>
                 <p className="text-slate-400">Help us make financial literacy free for every teen</p>
               </div>
@@ -136,7 +136,7 @@ export default function SupportPage() {
                 Share Your Feedback
               </h2>
               <p className="text-slate-400 max-w-xl mx-auto">
-                Help shape the future of Legacy Guardians. Your ideas and feedback directly influence our roadmap!
+                Help shape the future of MiniFi. Your ideas and feedback directly influence our roadmap!
               </p>
             </div>
             <FeedbackWidget variant="inline" pageContext="support-page" />

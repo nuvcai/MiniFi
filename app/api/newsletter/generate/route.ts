@@ -100,7 +100,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           body: s.content.replace(/<[^>]*>/g, ''), // Strip HTML
           quote: undefined
         })),
-        cta: { text: 'Play Legacy Guardians', url: 'https://legacyguardians.app' }
+        cta: { text: 'Play MiniFi', url: 'https://minifi.vercel.app' }
       });
       
       return new NextResponse(
@@ -130,8 +130,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // WhatsApp share links
     const whatsappLinks = {
       shareNewsletter: whatsapp.shareLink(
-        `📰 New from Legacy Guardians: ${edition.title}\n\n${edition.preheader}`,
-        'https://legacyguardians.substack.com'
+        `📰 New from MiniFi: ${edition.title}\n\n${edition.preheader}`,
+        'https://minifi.vercel.app'
       ),
       shareWithParents: whatsapp.shareLink(whatsapp.messages.parentShare()),
       inviteFriend: whatsapp.shareLink(whatsapp.messages.inviteFriend())
@@ -252,7 +252,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            from: 'Legacy Guardians <news@legacyguardians.app>',
+            from: 'MiniFi <news@nuvc.ai>',
             to: testEmail,
             subject: `[TEST] ${edition.title}`,
             html
@@ -304,7 +304,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(batch.map(email => ({
-              from: 'Legacy Guardians <news@legacyguardians.app>',
+              from: 'MiniFi <news@nuvc.ai>',
               to: email,
               subject: edition.title,
               html
