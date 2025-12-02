@@ -9,8 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Users, Quote, Sparkles } from "lucide-react";
+import { Users, Quote, Sparkles, BookOpen } from "lucide-react";
 import { AICoach } from "@/components/data/coaches";
+import { getRandomInvestorWisdom, type InvestorWisdom } from "@/components/data/wealthWisdom";
 
 // Coach-specific inspirational quotes
 const coachQuotes: Record<string, string[]> = {
@@ -61,9 +62,15 @@ export function CoachSidebar({
 }: CoachSidebarProps) {
   const [currentQuote, setCurrentQuote] = useState("");
   const [isQuoteAnimating, setIsQuoteAnimating] = useState(false);
+  const [investorTip, setInvestorTip] = useState<InvestorWisdom | null>(null);
 
   // Get quotes for the selected coach
   const quotes = coachQuotes[selectedCoach.id] || coachQuotes["growth-guru"];
+
+  // Load investor wisdom on mount
+  useEffect(() => {
+    setInvestorTip(getRandomInvestorWisdom());
+  }, []);
 
   // Rotate quotes every 8 seconds
   useEffect(() => {
@@ -146,6 +153,24 @@ export function CoachSidebar({
             </p>
           </div>
         ))}
+
+        {/* Wealth Wisdom Tip */}
+        {investorTip && (
+          <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <BookOpen className="h-3.5 w-3.5 text-purple-400" />
+              <span className="text-[10px] text-purple-400 font-medium uppercase tracking-wide">
+                Investor Wisdom
+              </span>
+            </div>
+            <p className="text-xs text-purple-200 italic mb-1">
+              "{investorTip.quote}"
+            </p>
+            <p className="text-[10px] text-slate-500">
+              — {investorTip.investor}
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

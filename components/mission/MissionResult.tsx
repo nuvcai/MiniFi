@@ -5,6 +5,7 @@ import { InvestmentOption } from "@/components/data/missions";
 import { FinancialEvent } from "@/components/data/events";
 import { TeachingDialogue } from "@/components/mission/TeachingDialogue";
 import { aiCoaches, AICoach } from "@/components/data/coaches";
+import { getRandomHopeMessage, type HopeMessage } from "@/components/data/wealthWisdom";
 
 interface MissionResultProps {
   selectedOption: InvestmentOption;
@@ -71,6 +72,12 @@ export function MissionResult({
   onXpEarned,
 }: MissionResultProps) {
   const [showConfetti, setShowConfetti] = useState(true);
+  const [wisdomTip, setWisdomTip] = useState<HopeMessage | null>(null);
+
+  // Load a hope message on mount
+  useEffect(() => {
+    setWisdomTip(getRandomHopeMessage());
+  }, []);
 
   // Pre-compute confetti particles for consistent rendering
   const confettiParticles = useMemo(() => {
@@ -98,6 +105,19 @@ export function MissionResult({
           {confettiParticles.map((particle) => (
             <ConfettiParticle key={particle.id} {...particle} />
           ))}
+        </div>
+      )}
+
+      {/* Wisdom Tip Banner - Shows after confetti settles */}
+      {wisdomTip && !showConfetti && (
+        <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg p-4 mb-4 animate-bounce-in">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">✨</span>
+            <div>
+              <h4 className="font-semibold text-amber-300 text-sm mb-1">{wisdomTip.title}</h4>
+              <p className="text-xs text-slate-300 leading-relaxed">{wisdomTip.callToAction}</p>
+            </div>
+          </div>
         </div>
       )}
 

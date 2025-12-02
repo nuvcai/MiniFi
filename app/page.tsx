@@ -12,10 +12,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, GraduationCap, ExternalLink, Rocket } from "lucide-react";
+import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, GraduationCap, ExternalLink, Rocket, Mail, Crown, Lock } from "lucide-react";
 import { aiCoaches } from "@/components/data/coaches";
 import { UpcomingFeatures } from "@/components/features/UpcomingFeatures";
 import { AssetClassMastery } from "@/components/features/AssetClassMastery";
+import { SupportTeaser } from "@/components/marketing/SupportTeaser";
+import { NewsletterSignup } from "@/components/marketing/NewsletterSignup";
 import { DailyWisdom } from "@/components/library/DailyWisdom";
 import { BookOpen } from "lucide-react";
 
@@ -544,6 +546,29 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Premium Experience Teaser */}
+          <div className={`mt-8 transition-all duration-1000 delay-850 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {/* Premium Teaser */}
+              <SupportTeaser variant="compact" />
+              
+              {/* Newsletter Signup */}
+              <NewsletterSignup variant="compact" source="homepage" />
+            </div>
+            
+            {/* Full Support Page Link */}
+            <div className="mt-4 text-center">
+              <Link 
+                href="/support"
+                className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-pink-400 transition-colors group"
+              >
+                <Crown className="h-4 w-4" />
+                <span>View all sponsor perks & benefits</span>
+                <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+
           {/* Footer / MVP Badge */}
           <div className={`mt-10 sm:mt-12 pb-6 transition-all duration-1000 delay-900 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="text-center space-y-4">
@@ -569,6 +594,8 @@ export default function HomePage() {
                 <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-slate-400 transition-colors">About NUVC</a>
                 <span>•</span>
                 <a href="https://wadeinstitute.org.au" target="_blank" rel="noopener noreferrer" className="hover:text-slate-400 transition-colors">Wade Institute</a>
+                <span>•</span>
+                <Link href="/support" className="hover:text-slate-400 transition-colors">Support Us</Link>
                 <span>•</span>
                 <a href="mailto:hello@nuvc.ai" className="hover:text-slate-400 transition-colors">Contact</a>
               </div>

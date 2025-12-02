@@ -128,12 +128,14 @@ export function FeedbackWidget({
         userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined
       };
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Submit to API
+      const response = await fetch('/api/feedback', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedbackData) 
+      });
       
-      // In production:
-      // await fetch('/api/feedback', { method: 'POST', body: JSON.stringify(feedbackData) });
-      
+      // Also call the onSubmit callback if provided
       onSubmit?.(feedbackData);
       setStatus("success");
       

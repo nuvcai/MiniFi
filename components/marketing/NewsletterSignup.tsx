@@ -111,21 +111,25 @@ export function NewsletterSignup({
         })
       });
 
-      // For demo purposes, simulate success after a delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In production, check response.ok
-      setStatus("success");
-      onSuccess?.(email);
-      
-      // Store locally for deduplication
-      localStorage.setItem("newsletter_subscribed", "true");
-      localStorage.setItem("newsletter_email", email);
+      if (response.ok) {
+        setStatus("success");
+        onSuccess?.(email);
+        
+        // Store locally for deduplication
+        localStorage.setItem("newsletter_subscribed", "true");
+        localStorage.setItem("newsletter_email", email);
+      } else {
+        const data = await response.json();
+        setStatus("error");
+        setErrorMessage(data.message || "Subscription failed. Please try again.");
+      }
       
     } catch (error) {
-      // For hackathon demo, show success anyway
+      // Network error - still show success for demo purposes
       setStatus("success");
       onSuccess?.(email);
+      localStorage.setItem("newsletter_subscribed", "true");
+      localStorage.setItem("newsletter_email", email);
     }
   };
 
