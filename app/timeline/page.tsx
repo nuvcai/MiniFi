@@ -22,6 +22,10 @@ import { RewardsModal } from "@/components/modals/RewardsModal";
 import { LevelUpCelebration } from "@/components/gamification/LevelUpCelebration";
 import { FOCertificationTeaser } from "@/components/features/FOCertificationTeaser";
 import { AssetClassMastery } from "@/components/features/AssetClassMastery";
+import { DailyWisdom } from "@/components/library/DailyWisdom";
+import Link from "next/link";
+import { BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Import data
 import { financialEvents, FinancialEvent } from "@/components/data/events";
@@ -280,6 +284,24 @@ export default function TimelinePage() {
             {/* FO Certification Teaser - Coming soon feature */}
             <div className="mt-4">
               <FOCertificationTeaser variant="compact" currentLevel={0} />
+            </div>
+
+            {/* Daily Wisdom - Compact version */}
+            <div className="mt-4">
+              <DailyWisdom compact showControls={false} />
+            </div>
+
+            {/* Wisdom Library Link */}
+            <div className="mt-4">
+              <Link href="/library">
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20 hover:text-amber-300"
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  📚 Explore Wealth Library
+                </Button>
+              </Link>
             </div>
           </div>
 

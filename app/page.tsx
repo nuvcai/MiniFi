@@ -16,6 +16,8 @@ import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Git
 import { aiCoaches } from "@/components/data/coaches";
 import { UpcomingFeatures } from "@/components/features/UpcomingFeatures";
 import { AssetClassMastery } from "@/components/features/AssetClassMastery";
+import { DailyWisdom } from "@/components/library/DailyWisdom";
+import { BookOpen } from "lucide-react";
 
 export default function HomePage() {
   const [selectedCoachIndex, setSelectedCoachIndex] = useState(0);
@@ -403,6 +405,26 @@ export default function HomePage() {
               {/* Asset Class Mastery Preview */}
               <div className="mt-6 pt-6 border-t border-slate-700/50">
                 <AssetClassMastery variant="compact" />
+              </div>
+
+              {/* Wisdom Library Teaser */}
+              <div className="mt-6 pt-6 border-t border-slate-700/50">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="flex-1">
+                    <DailyWisdom compact showControls={false} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Link href="/library">
+                      <button className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-amber-500/25">
+                        <BookOpen className="h-5 w-5" />
+                        Explore Wealth Library
+                      </button>
+                    </Link>
+                    <p className="text-xs text-slate-400 text-center">
+                      Learn from history&apos;s greatest investors
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
