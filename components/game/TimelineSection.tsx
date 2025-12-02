@@ -1,6 +1,10 @@
+/**
+ * TimelineSection - Light, fun design
+ * Teen-friendly with indigo/violet theme
+ */
+
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock } from "lucide-react";
+import { Clock, Sparkles } from "lucide-react";
 import { FinancialEvent } from "@/components/data/events";
 import { EventCard } from "./EventCard";
 import { CompetitionCard } from "./CompetitionCard";
@@ -19,39 +23,45 @@ export function TimelineSection({
   onStartCompetition 
 }: TimelineSectionProps) {
   return (
-    <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-slate-100">
-          <Clock className="h-5 w-5 text-cyan-400" />
-          Financial History Timeline
-        </CardTitle>
-        <CardDescription className="text-slate-400">
-          Travel through time and experience major financial events.
-          Click on events to start your investment missions!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="relative">
-          {/* Timeline Line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500/50 via-teal-500/50 to-cyan-500/50"></div>
-
-          {/* Timeline Events */}
-          <div className="space-y-8">
-            {events.map((event) => (
-              <EventCard
-                key={event.year}
-                event={event}
-                onEventClick={onEventClick}
-              />
-            ))}
-
-            <CompetitionCard
-              unlocked={competitionUnlocked}
-              onStartCompetition={onStartCompetition}
-            />
+    <div className="p-6 rounded-3xl bg-white shadow-xl shadow-indigo-100 border border-indigo-100">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100">
+            <Clock className="h-5 w-5 text-indigo-600" />
           </div>
+          <h2 className="text-xl font-bold text-gray-900">
+            Financial History Timeline
+          </h2>
+          <Sparkles className="h-5 w-5 text-amber-500" />
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-gray-500">
+          Travel through time and experience major financial events.
+          Click on events to start your investment missions! 🚀
+        </p>
+      </div>
+
+      {/* Timeline */}
+      <div className="relative">
+        {/* Timeline Line */}
+        <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-violet-300 to-purple-300 rounded-full"></div>
+
+        {/* Timeline Events */}
+        <div className="space-y-6">
+          {events.map((event) => (
+            <EventCard
+              key={event.year}
+              event={event}
+              onEventClick={onEventClick}
+            />
+          ))}
+
+          <CompetitionCard
+            unlocked={competitionUnlocked}
+            onStartCompetition={onStartCompetition}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

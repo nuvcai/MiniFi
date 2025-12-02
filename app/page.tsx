@@ -177,9 +177,9 @@ export default function HomePage() {
             </div>
 
             {/* Tagline */}
-            <p className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Not just another finance app. Mini.Fi brings <span className="text-white/80">250 years of wealth wisdom</span> from 
-              history's greatest investors and <span className="text-white/80">Family Office strategies</span> — 
+            <p className="text-lg sm:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+              Not just another finance app. Mini.Fi brings <span className="text-white font-medium">250 years of wealth wisdom</span> from 
+              history's greatest investors and <span className="text-white font-medium">Family Office strategies</span> — 
               all through an immersive game experience.
             </p>
 
@@ -192,8 +192,8 @@ export default function HomePage() {
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <div className="flex items-center gap-2 text-white/40 text-sm">
-                <Shield className="h-4 w-4" />
+              <div className="flex items-center gap-2 text-white/60 text-sm">
+                <Shield className="h-4 w-4 text-emerald-400" />
                 No sign-up required • 100% free
               </div>
             </div>

@@ -1,12 +1,15 @@
 /**
  * Mini.Fi Timeline Page
- * Light, fun game interface
+ * Light, fun game interface with all features
  * © 2025 NUVC.AI. All Rights Reserved.
  */
 
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { BookOpen, Trophy, Star, Zap, Target, ChevronRight } from "lucide-react";
 
 // Components
 import { GameHeader } from "@/components/game/GameHeader";
@@ -17,6 +20,8 @@ import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
 import { RewardsModal } from "@/components/modals/RewardsModal";
 import { LevelUpCelebration } from "@/components/gamification/LevelUpCelebration";
+import { DailyStreak } from "@/components/gamification/DailyStreak";
+import { DailyWisdom } from "@/components/library/DailyWisdom";
 
 // Data
 import { financialEvents, FinancialEvent } from "@/components/data/events";
@@ -172,6 +177,11 @@ export default function TimelinePage() {
     setTotalScore((prev) => prev + amount);
   };
 
+  const handleStreakBonus = (bonus: number) => {
+    setPlayerXP((prev) => prev + bonus);
+    setTotalScore((prev) => prev + bonus);
+  };
+
   const closeMissionModal = () => {
     setGameStarted(false);
     setMissionEvent(null);
@@ -184,12 +194,16 @@ export default function TimelinePage() {
     ? missionData[missionEvent.year as keyof typeof missionData]
     : null;
 
+  const completedCount = financialEvents.filter((e) => e.completed).length;
+  const availableCount = financialEvents.filter((e) => e.unlocked && !e.completed).length;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-violet-50">
       {/* Fun background blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 right-20 w-64 h-64 bg-indigo-200/30 rounded-full blur-3xl" />
         <div className="absolute bottom-40 left-10 w-80 h-80 bg-violet-200/30 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-purple-200/20 rounded-full blur-3xl" />
       </div>
       
       <div className="relative">
@@ -203,40 +217,105 @@ export default function TimelinePage() {
         <div className="container mx-auto px-4 sm:px-6 py-8">
           <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
             
-            {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-4">
+            {/* Sidebar - All Features */}
+            <div className="lg:col-span-1 space-y-5">
+              
+              {/* Coach Selection */}
               <CoachSidebar
                 coaches={aiCoaches}
                 selectedCoach={selectedCoach}
                 onCoachSelect={setSelectedCoach}
               />
 
-              {/* Progress Summary */}
-              <div className="p-5 rounded-2xl bg-white shadow-lg shadow-indigo-100 border border-indigo-100">
-                <h3 className="text-sm font-semibold text-gray-500 mb-4">📊 Progress</h3>
+              {/* Daily Streak */}
+              <DailyStreak onBonusClaimed={handleStreakBonus} />
+
+              {/* Progress Card */}
+              <div className="p-5 rounded-2xl bg-white shadow-xl shadow-indigo-100 border border-indigo-100">
+                <h3 className="text-sm font-semibold text-gray-500 mb-4 flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-amber-500" />
+                  Your Progress
+                </h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 text-sm">Completed</span>
-                    <span className="text-gray-900 font-bold">
-                      {financialEvents.filter((e) => e.completed).length} / {financialEvents.length}
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500 text-sm">Missions</span>
+                    <span className="font-bold text-gray-900">
+                      {completedCount} / {financialEvents.length}
                     </span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* Progress bar */}
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
+                      style={{ width: `${(completedCount / financialEvents.length) * 100}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-500 text-sm">Available</span>
-                    <span className="text-indigo-600 font-bold">
-                      {financialEvents.filter((e) => e.unlocked && !e.completed).length}
-                    </span>
+                    <span className="font-bold text-indigo-600">{availableCount} 🎮</span>
                   </div>
-                  <div className="h-px bg-gray-100 my-2" />
-                  <div className="flex justify-between">
+                  <div className="h-px bg-gray-100" />
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-500 text-sm">Total XP</span>
-                    <span className="text-violet-600 font-bold">{playerXP.toLocaleString()} ⭐</span>
+                    <span className="font-bold text-violet-600">{playerXP.toLocaleString()} ⭐</span>
                   </div>
                 </div>
               </div>
+
+              {/* Upcoming Features Teaser */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 shadow-lg shadow-purple-100">
+                <h3 className="text-sm font-semibold text-purple-700 mb-3 flex items-center gap-2">
+                  <Zap className="h-4 w-4" />
+                  Coming Soon 🚀
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 p-2 bg-white/60 rounded-lg border border-purple-100">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white text-sm">📈</div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-gray-800">Asset Mastery</p>
+                      <p className="text-[10px] text-gray-500">Track your skills</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-white/60 rounded-lg border border-purple-100">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-sm">🏆</div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-gray-800">Certifications</p>
+                      <p className="text-[10px] text-gray-500">Earn badges</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-white/60 rounded-lg border border-purple-100">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-sm">👥</div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-gray-800">Multiplayer</p>
+                      <p className="text-[10px] text-gray-500">Challenge friends</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Daily Wisdom - Compact */}
+              <DailyWisdom compact showControls={false} />
+
+              {/* Wisdom Library Link */}
+              <Link href="/library">
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 shadow-lg shadow-amber-100 hover:shadow-xl hover:shadow-amber-200 hover:-translate-y-1 transition-all cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                        <BookOpen className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">Wealth Library 📚</p>
+                        <p className="text-xs text-gray-500">Learn from the greats</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-amber-500" />
+                  </div>
+                </div>
+              </Link>
             </div>
 
-            {/* Timeline */}
+            {/* Timeline - Main Content */}
             <div className="lg:col-span-3">
               <TimelineSection
                 events={financialEvents}
@@ -247,6 +326,37 @@ export default function TimelinePage() {
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-12 border-t border-gray-100 bg-white/50 backdrop-blur">
+          <div className="container mx-auto px-6 py-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/favicon.png"
+                  alt="Mini.Fi"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
+                <span className="text-sm text-gray-500">
+                  Made with 💜 by{" "}
+                  <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline font-medium">
+                    NUVC.AI
+                  </a>
+                </span>
+              </div>
+              <div className="flex items-center gap-6 text-sm text-gray-500">
+                <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+                <Link href="/library" className="hover:text-indigo-600 transition-colors">Library</Link>
+                <Link href="/support" className="hover:text-indigo-600 transition-colors">Support</Link>
+                <a href="https://github.com/nuvcai/MiniFi" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors">
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
 
       {/* Modals */}
