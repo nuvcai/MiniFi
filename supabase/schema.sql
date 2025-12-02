@@ -32,6 +32,7 @@ CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at DESC);
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON leads;
 CREATE POLICY "Service role full access" ON leads
   FOR ALL
   TO service_role
@@ -63,6 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at DESC);
 ALTER TABLE feedback ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON feedback;
 CREATE POLICY "Service role full access" ON feedback
   FOR ALL
   TO service_role
@@ -70,6 +72,7 @@ CREATE POLICY "Service role full access" ON feedback
   WITH CHECK (true);
 
 -- Policy: Anonymous users can insert feedback
+DROP POLICY IF EXISTS "Anyone can submit feedback" ON feedback;
 CREATE POLICY "Anyone can submit feedback" ON feedback
   FOR INSERT
   TO anon
@@ -98,6 +101,7 @@ CREATE INDEX IF NOT EXISTS idx_activity_created_at ON user_activity(created_at D
 ALTER TABLE user_activity ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON user_activity;
 CREATE POLICY "Service role full access" ON user_activity
   FOR ALL
   TO service_role
@@ -105,6 +109,7 @@ CREATE POLICY "Service role full access" ON user_activity
   WITH CHECK (true);
 
 -- Policy: Anonymous users can insert activity
+DROP POLICY IF EXISTS "Anyone can track activity" ON user_activity;
 CREATE POLICY "Anyone can track activity" ON user_activity
   FOR INSERT
   TO anon
@@ -138,6 +143,7 @@ CREATE INDEX IF NOT EXISTS idx_sponsors_status ON sponsors(status);
 ALTER TABLE sponsors ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON sponsors;
 CREATE POLICY "Service role full access" ON sponsors
   FOR ALL
   TO service_role
@@ -214,6 +220,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_created ON user_profiles(created_at DESC
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON user_profiles;
 CREATE POLICY "Service role full access" ON user_profiles
   FOR ALL
   TO service_role
@@ -221,6 +228,7 @@ CREATE POLICY "Service role full access" ON user_profiles
   WITH CHECK (true);
 
 -- Policy: Anonymous users can insert their own profile
+DROP POLICY IF EXISTS "Anyone can create profile" ON user_profiles;
 CREATE POLICY "Anyone can create profile" ON user_profiles
   FOR INSERT
   TO anon
@@ -264,6 +272,7 @@ CREATE INDEX IF NOT EXISTS idx_streaks_last_claim ON daily_streaks(last_claim_da
 ALTER TABLE daily_streaks ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON daily_streaks;
 CREATE POLICY "Service role full access" ON daily_streaks
   FOR ALL
   TO service_role
@@ -271,6 +280,7 @@ CREATE POLICY "Service role full access" ON daily_streaks
   WITH CHECK (true);
 
 -- Policy: Anonymous users can insert/update their own streaks
+DROP POLICY IF EXISTS "Anyone can manage their streak" ON daily_streaks;
 CREATE POLICY "Anyone can manage their streak" ON daily_streaks
   FOR ALL
   TO anon
@@ -305,6 +315,7 @@ CREATE INDEX IF NOT EXISTS idx_claims_email ON streak_claims(email);
 ALTER TABLE streak_claims ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON streak_claims;
 CREATE POLICY "Service role full access" ON streak_claims
   FOR ALL
   TO service_role
@@ -312,6 +323,7 @@ CREATE POLICY "Service role full access" ON streak_claims
   WITH CHECK (true);
 
 -- Policy: Anonymous users can insert claims
+DROP POLICY IF EXISTS "Anyone can claim streak" ON streak_claims;
 CREATE POLICY "Anyone can claim streak" ON streak_claims
   FOR INSERT
   TO anon
@@ -339,6 +351,7 @@ CREATE INDEX IF NOT EXISTS idx_waitlist_email ON waitlist(email);
 ALTER TABLE waitlist ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything
+DROP POLICY IF EXISTS "Service role full access" ON waitlist;
 CREATE POLICY "Service role full access" ON waitlist
   FOR ALL
   TO service_role
@@ -346,6 +359,7 @@ CREATE POLICY "Service role full access" ON waitlist
   WITH CHECK (true);
 
 -- Policy: Anonymous users can join waitlist
+DROP POLICY IF EXISTS "Anyone can join waitlist" ON waitlist;
 CREATE POLICY "Anyone can join waitlist" ON waitlist
   FOR INSERT
   TO anon
