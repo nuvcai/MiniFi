@@ -1,10 +1,7 @@
 /**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║   MiniFi - Financial Literacy Platform (MVP - Hackathon Edition)            ║
- * ║   ✨ Vibe-coded by Tick.AI for AWS AI Hackathon 2025 ✨                      ║
- * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
- * ║   PROPRIETARY - NO COMMERCIAL USE | https://nuvc.ai                         ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * Mini.Fi - Premium Financial Literacy Game
+ * Minimalistic, Apple-inspired design
+ * © 2025 NUVC.AI. All Rights Reserved.
  */
 
 "use client";
@@ -12,608 +9,214 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, ExternalLink, Crown } from "lucide-react";
+import { Play, ChevronRight, ArrowRight } from "lucide-react";
 import { aiCoaches } from "@/components/data/coaches";
-import { UpcomingFeatures } from "@/components/features/UpcomingFeatures";
-import { AssetClassMastery } from "@/components/features/AssetClassMastery";
-import { SupportTeaser } from "@/components/marketing/SupportTeaser";
-import { NewsletterSignup } from "@/components/marketing/NewsletterSignup";
-import { RoadmapTeaser } from "@/components/marketing/RoadmapTeaser";
-import { FeatureWisdomShowcase } from "@/components/marketing/FeatureWisdomShowcase";
-import { DailyWisdom } from "@/components/library/DailyWisdom";
-import { BookOpen } from "lucide-react";
 
 export default function HomePage() {
   const [selectedCoachIndex, setSelectedCoachIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const shareUrl = "https://minifi.vercel.app";
-  const shareText = "🎮 Check out Mini.Fi - a free game that teaches teens about investing through time-travel adventures! Built with AI for the AWS Hackathon 2025 🚀";
-  
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const shareLinks = {
-    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-    whatsapp: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
-  };
 
   useEffect(() => {
     setIsLoaded(true);
-    // Auto-cycle through coaches for preview
     const interval = setInterval(() => {
       setSelectedCoachIndex((prev) => (prev + 1) % aiCoaches.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   const selectedCoach = aiCoaches[selectedCoachIndex];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-500" />
-        
-        {/* Floating coins/icons */}
-        <div className="absolute top-1/4 left-1/4 text-4xl animate-bounce delay-100">💰</div>
-        <div className="absolute top-1/3 right-1/4 text-3xl animate-bounce delay-300">📈</div>
-        <div className="absolute bottom-1/3 left-1/3 text-3xl animate-bounce delay-500">🚀</div>
-        <div className="absolute bottom-1/4 right-1/3 text-4xl animate-bounce delay-700">💎</div>
-        
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-size-[60px_60px]" />
-      </div>
-
-      <div className="relative container mx-auto px-4 py-6 sm:py-8">
-        <div className="max-w-6xl mx-auto">
-          
-          {/* Top Bar - NUVC Logo & Quick Actions */}
-          <div className={`flex items-center justify-between mb-6 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-            <a 
-              href="https://nuvc.ai" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 group"
-            >
+    <div className="min-h-screen bg-[#0a0a0f] overflow-hidden">
+      {/* Subtle gradient background */}
+      <div className="fixed inset-0 bg-gradient-to-b from-indigo-950/20 via-transparent to-violet-950/10 pointer-events-none" />
+      
+      <div className="relative">
+        {/* Navigation */}
+        <nav className={`container mx-auto px-6 py-6 transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Image
-                src="/nuvc-logo.png"
-                alt="NUVC.AI"
-                width={40}
-                height={40}
-                className="rounded-lg group-hover:scale-105 transition-transform"
+                src="/favicon.png"
+                alt="Mini.Fi"
+                width={36}
+                height={36}
+                className="rounded-xl"
               />
-              <span className="text-sm font-semibold text-slate-400 group-hover:text-emerald-400 transition-colors hidden sm:inline">NUVC.AI</span>
-            </a>
+              <span className="text-lg font-semibold text-white/90">Mini.Fi</span>
+            </div>
             
-            {/* Quick Share & Sponsor - Always Visible */}
-            <div className="flex items-center gap-2">
-              <a
-                href="https://github.com/sponsors/nuvcai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-pink-500/20 to-rose-500/20 hover:from-pink-500/30 hover:to-rose-500/30 text-pink-400 text-xs font-semibold rounded-full border border-pink-500/30 transition-all hover:scale-105"
+            <div className="flex items-center gap-6">
+              <Link href="/library" className="text-sm text-white/50 hover:text-white/90 transition-colors">
+                Learn
+              </Link>
+              <Link href="/support" className="text-sm text-white/50 hover:text-white/90 transition-colors">
+                Support
+              </Link>
+              <Link 
+                href="/timeline"
+                className="text-sm px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 transition-all"
               >
-                <Heart className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sponsor</span>
-              </a>
-              <button
-                onClick={handleCopyLink}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full transition-all hover:scale-105 ${
-                  copied 
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'bg-slate-700/50 text-slate-300 border border-slate-600/50 hover:bg-slate-600/50'
-                }`}
-              >
-                {copied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
-                <span className="hidden sm:inline">{copied ? 'Copied!' : 'Share'}</span>
-              </button>
+                Play Now
+              </Link>
             </div>
           </div>
+        </nav>
 
-          {/* Hero Section */}
-          <div className={`text-center space-y-4 sm:space-y-6 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* Logo and Title */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 rounded-full blur-xl animate-pulse" />
-                <Image
-                  src="/favicon.png"
-                  alt="MiniFi"
-                  width={100}
-                  height={100}
-                  className="relative object-contain w-20 h-20 sm:w-24 sm:h-24 drop-shadow-lg"
-                />
-              </div>
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent leading-tight">
-                Mini.Fi
-              </h1>
-              <p className="text-xl sm:text-2xl font-medium text-slate-300 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-emerald-400 animate-pulse" />
-                Time-travel. Learn. Level up your money game!
-                <Sparkles className="h-5 w-5 text-emerald-400 animate-pulse" />
-              </p>
-            </div>
-
-            {/* Quick Stats Preview */}
-            <div className="flex justify-center gap-4 sm:gap-8 py-4">
-              <div className="text-center px-4 py-2 bg-slate-800/50 backdrop-blur rounded-xl border border-slate-700/50">
-                <div className="text-2xl sm:text-3xl font-bold text-emerald-400">6</div>
-                <div className="text-xs sm:text-sm text-slate-400">Epic Missions</div>
-              </div>
-              <div className="text-center px-4 py-2 bg-slate-800/50 backdrop-blur rounded-xl border border-slate-700/50">
-                <div className="text-2xl sm:text-3xl font-bold text-teal-400">4</div>
-                <div className="text-xs sm:text-sm text-slate-400">AI Coaches</div>
-              </div>
-              <div className="text-center px-4 py-2 bg-slate-800/50 backdrop-blur rounded-xl border border-slate-700/50">
-                <div className="text-2xl sm:text-3xl font-bold text-cyan-400">∞</div>
-                <div className="text-xs sm:text-sm text-slate-400">XP to Earn</div>
-              </div>
-            </div>
-          </div>
-
-          {/* NUVC Mission Section - Prominent */}
-          <div className={`mt-8 transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="relative bg-gradient-to-br from-emerald-500/10 via-slate-800/50 to-teal-500/10 rounded-2xl p-6 sm:p-8 border border-emerald-500/20 backdrop-blur overflow-hidden">
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-teal-500/10 rounded-full blur-3xl" />
-              
-              <div className="relative">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Target className="h-5 w-5 text-emerald-400" />
-                  <span className="text-sm font-semibold text-emerald-400 uppercase tracking-wider">Our Mission</span>
-                </div>
-                
-                <blockquote className="text-center">
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-light text-slate-200 leading-relaxed max-w-3xl mx-auto">
-                    &ldquo;Financial literacy shouldn&apos;t be a privilege of the wealthy.{" "}
-                    <span className="font-semibold text-emerald-400">Every teenager deserves</span>{" "}
-                    to learn how money works.&rdquo;
-                  </p>
-                </blockquote>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                  <div className="flex items-center gap-4 text-sm text-slate-400">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-teal-400" />
-                      <span><strong className="text-slate-200">70%</strong> of Aussie teens have no financial education</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-slate-700/50">
-                  <a 
-                    href="https://nuvc.ai" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
-                  >
-                    <Image
-                      src="/nuvc-logo.png"
-                      alt="NUVC.AI"
-                      width={24}
-                      height={24}
-                      className="rounded"
-                    />
-                    <span>Powered by <strong className="text-slate-300 group-hover:text-emerald-400">NUVC.AI</strong></span>
-                    <ExternalLink className="h-3 w-3 opacity-50 group-hover:opacity-100" />
-                  </a>
-                  <span className="text-slate-600">•</span>
-                  <span className="text-sm text-slate-500">Entrepreneur in Residence @ Wade Institute</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className={`grid lg:grid-cols-2 gap-6 sm:gap-8 mt-8 sm:mt-10 transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Hero Section */}
+        <main className="container mx-auto px-6">
+          <div className={`max-w-4xl mx-auto pt-20 pb-32 text-center transition-all duration-1000 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             
-            {/* Left: What You'll Do */}
-            <div className="bg-slate-800/50 backdrop-blur rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-700/50">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-                <Zap className="h-6 w-6 text-emerald-400" />
-                What&apos;s the Vibe?
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-3 rounded-xl bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors group border border-emerald-500/10">
-                  <div className="shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    🕹️
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-100">Play Through History</h3>
-                    <p className="text-sm text-slate-400">
-                      Travel to epic market moments - crashes, bubbles, and comebacks!
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-3 rounded-xl bg-teal-500/5 hover:bg-teal-500/10 transition-colors group border border-teal-500/10">
-                  <div className="shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    🤖
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-100">Get AI Coaching</h3>
-                    <p className="text-sm text-slate-400">
-                      Pick your coach - from chill & safe to full send risk-taker!
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-3 rounded-xl bg-cyan-500/5 hover:bg-cyan-500/10 transition-colors group border border-cyan-500/10">
-                  <div className="shrink-0 w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    💸
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-100">Make Big Decisions</h3>
-                    <p className="text-sm text-slate-400">
-                      Invest virtual cash and see what would&apos;ve happened IRL!
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-3 rounded-xl bg-amber-500/5 hover:bg-amber-500/10 transition-colors group border border-amber-500/10">
-                  <div className="shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    🎁
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-100">Score Real Rewards</h3>
-                    <p className="text-sm text-slate-400">
-                      Earn XP and trade it for gift cards - Spotify, JB Hi-Fi & more!
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-8">
+              <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+              <span className="text-sm text-indigo-300/90">Free • No Sign-up Required</span>
             </div>
 
-            {/* Right: Coach Preview */}
-            <div className="bg-slate-800/50 backdrop-blur rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-700/50">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-                <Star className="h-6 w-6 text-teal-400" />
-                Meet Your Coaches
-              </h2>
+            {/* Main headline */}
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
+              <span className="text-white">Learn to invest.</span>
+              <br />
+              <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+                Through play.
+              </span>
+            </h1>
 
-              {/* Featured Coach */}
-              <div className="relative bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-xl p-6 mb-6 overflow-hidden border border-slate-700/50">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl" />
-                <div className="relative flex items-center gap-4">
-                  <div className="relative">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur animate-pulse" />
-                    <Image
-                      src={selectedCoach.animatedAvatar}
-                      alt={selectedCoach.name}
-                      width={80}
-                      height={80}
-                      className="relative rounded-full border-2 border-slate-700 shadow-lg"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-100">{selectedCoach.name}</h3>
-                    <p className={`text-sm font-medium px-2 py-0.5 rounded-full inline-block ${selectedCoach.color}`}>
-                      {selectedCoach.personality}
-                    </p>
-                    <p className="text-sm text-slate-400 mt-2">
-                      {selectedCoach.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {/* Subheadline */}
+            <p className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed">
+              Travel through history's greatest financial moments. 
+              Make decisions. Learn what works. Build real-world skills.
+            </p>
 
-              {/* Coach Selector */}
-              <div className="flex justify-center gap-3">
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+              <Link href="/timeline">
+                <button className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold text-lg shadow-2xl shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:scale-[1.02] transition-all duration-300">
+                  <Play className="h-5 w-5" />
+                  Start Playing
+                  <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
+              <Link 
+                href="/library"
+                className="flex items-center gap-2 px-6 py-4 text-white/60 hover:text-white/90 transition-colors"
+              >
+                Explore the library
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Coach preview - minimal */}
+            <div className={`transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <p className="text-sm text-white/30 mb-6">Choose your AI coach</p>
+              <div className="flex justify-center gap-4">
                 {aiCoaches.map((coach, index) => (
                   <button
                     key={coach.id}
                     onClick={() => setSelectedCoachIndex(index)}
-                    className={`relative p-1 rounded-full transition-all duration-300 ${
+                    className={`relative transition-all duration-500 ${
                       index === selectedCoachIndex 
-                        ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-800 scale-110' 
-                        : 'opacity-60 hover:opacity-100 hover:scale-105'
+                        ? 'scale-110 ring-2 ring-indigo-500/50 ring-offset-4 ring-offset-[#0a0a0f]' 
+                        : 'opacity-40 hover:opacity-70 grayscale hover:grayscale-0'
                     }`}
                   >
                     <Image
                       src={coach.avatar}
                       alt={coach.name}
-                      width={48}
-                      height={48}
+                      width={56}
+                      height={56}
                       className="rounded-full"
                     />
                   </button>
                 ))}
               </div>
-
-              {/* Teaser Stats */}
-              <div className="mt-6 p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Starting Level</span>
-                  <span className="font-bold text-emerald-400 flex items-center gap-1">
-                    <Trophy className="h-4 w-4" /> Level 1
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-slate-400">First Mission</span>
-                  <span className="font-bold text-teal-400">Japan 1990 🇯🇵</span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-slate-400">Potential XP</span>
-                  <span className="font-bold text-cyan-400 flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4" /> 100+ per mission
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className={`text-center mt-10 sm:mt-12 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Link href="/timeline">
-              <button className="group relative bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-[length:200%_100%] hover:bg-right text-white text-lg sm:text-xl px-10 sm:px-14 py-4 sm:py-5 font-bold rounded-2xl transition-all duration-500 shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 hover:scale-105 active:scale-95">
-                <span className="flex items-center gap-3">
-                  <Play className="h-6 w-6 group-hover:animate-pulse" />
-                  Let&apos;s Go! 🚀
-                  <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-                {/* Shine effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              </button>
-            </Link>
-            
-            <p className="text-sm text-slate-400 mt-4 flex items-center justify-center gap-2">
-              <span className="inline-block w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              No sign-up needed • Jump right in!
-            </p>
-
-            {/* Social Proof */}
-            <div className="flex items-center justify-center gap-6 mt-6 text-sm text-slate-400">
-              <span className="flex items-center gap-1">
-                <span className="text-yellow-400">⭐⭐⭐⭐⭐</span>
-              </span>
-              <span>Built for teens, by AI 🤖</span>
-              <span className="hidden sm:inline text-slate-600">|</span>
-              <span className="hidden sm:flex items-center gap-1">
-                100% free to play 🎮
-              </span>
-            </div>
-          </div>
-
-          {/* Bottom Feature Pills */}
-          <div className={`flex flex-wrap justify-center gap-3 mt-8 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {['Zero Risk 🛡️', 'Real History 📚', 'AI Powered 🤖', 'Earn Rewards 🎁', 'Learn Fast ⚡'].map((feature) => (
-              <span 
-                key={feature}
-                className="px-4 py-2 bg-slate-800/60 backdrop-blur border border-slate-700/50 rounded-full text-sm text-slate-400 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 transition-all cursor-default"
-              >
-                {feature}
-              </span>
-            ))}
-          </div>
-
-          {/* Upcoming Features Preview - Teaser Section */}
-          <div className={`mt-10 sm:mt-12 transition-all duration-1000 delay-750 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="bg-slate-800/30 backdrop-blur rounded-2xl p-6 border border-slate-700/50">
-              <UpcomingFeatures variant="compact" maxItems={4} />
-              
-              {/* Roadmap Teaser Banner */}
-              <div className="mt-6 pt-6 border-t border-slate-700/50">
-                <RoadmapTeaser variant="banner" maxItems={3} />
-              </div>
-              
-              {/* Asset Class Mastery Preview */}
-              <div className="mt-6 pt-6 border-t border-slate-700/50">
-                <AssetClassMastery variant="compact" />
-              </div>
-              
-              {/* Feature Wisdom Showcase - Shows how features connect to learning */}
-              <div className="mt-6 pt-6 border-t border-slate-700/50">
-                <FeatureWisdomShowcase variant="carousel" />
-              </div>
-
-              {/* Wisdom Library Teaser */}
-              <div className="mt-6 pt-6 border-t border-slate-700/50">
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="flex-1">
-                    <DailyWisdom compact showControls={false} />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Link href="/library">
-                      <button className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-amber-500/25">
-                        <BookOpen className="h-5 w-5" />
-                        Explore Wealth Library
-                      </button>
-                    </Link>
-                    <p className="text-xs text-slate-400 text-center">
-                      Learn from history&apos;s greatest investors
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Sponsor & Share Section - Prominent */}
-          <div className={`mt-10 sm:mt-12 transition-all duration-1000 delay-800 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {/* Sponsor Card */}
-              <div className="relative bg-gradient-to-br from-pink-500/10 via-rose-500/5 to-slate-800/50 rounded-2xl p-6 border border-pink-500/20 backdrop-blur overflow-hidden group hover:border-pink-500/40 transition-colors">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-3xl group-hover:bg-pink-500/20 transition-colors" />
-                <div className="relative">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Heart className="h-5 w-5 text-pink-400" />
-                    <h3 className="font-bold text-slate-100">Support Our Mission</h3>
-                  </div>
-                  <p className="text-sm text-slate-400 mb-4">
-                    Help us make financial literacy accessible to every teen. Your support keeps this free!
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <a
-                      href="https://github.com/sponsors/nuvcai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-semibold rounded-xl shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/40 transition-all hover:scale-105"
-                    >
-                      <Heart className="h-4 w-4" />
-                      Become a Sponsor
-                    </a>
-                    <a
-                      href="https://github.com/nuvcai/MiniFi"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-700/50 hover:bg-slate-700 border border-slate-600/50 rounded-xl font-medium text-slate-200 transition-all hover:scale-105"
-                    >
-                      <Github className="h-4 w-4" />
-                      Star on GitHub
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Share Card */}
-              <div className="relative bg-gradient-to-br from-cyan-500/10 via-teal-500/5 to-slate-800/50 rounded-2xl p-6 border border-cyan-500/20 backdrop-blur overflow-hidden group hover:border-cyan-500/40 transition-colors">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-colors" />
-                <div className="relative">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Share2 className="h-5 w-5 text-cyan-400" />
-                    <h3 className="font-bold text-slate-100">Spread the Word</h3>
-                  </div>
-                  <p className="text-sm text-slate-400 mb-4">
-                    Know a teen who&apos;d love this? Share it with friends, parents, and teachers!
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {/* Twitter/X */}
-                    <a
-                      href={shareLinks.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-black hover:bg-slate-800 text-white text-sm font-medium rounded-lg transition-all hover:scale-105"
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                      </svg>
-                      X
-                    </a>
-                    
-                    {/* LinkedIn */}
-                    <a
-                      href={shareLinks.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#0077B5] hover:bg-[#006399] text-white text-sm font-medium rounded-lg transition-all hover:scale-105"
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                      </svg>
-                      LinkedIn
-                    </a>
-                    
-                    {/* WhatsApp */}
-                    <a
-                      href={shareLinks.whatsapp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] hover:bg-[#20BD5A] text-white text-sm font-medium rounded-lg transition-all hover:scale-105"
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                      </svg>
-                      WhatsApp
-                    </a>
-                    
-                    {/* Copy Link */}
-                    <button
-                      onClick={handleCopyLink}
-                      className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all hover:scale-105 ${
-                        copied 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'bg-slate-700/50 hover:bg-slate-700 text-slate-200 border border-slate-600/50'
-                      }`}
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="h-4 w-4" />
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4" />
-                          Copy
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Premium Experience Teaser */}
-          <div className={`mt-8 transition-all duration-1000 delay-850 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {/* Premium Teaser */}
-              <SupportTeaser variant="compact" />
-              
-              {/* Newsletter Signup */}
-              <NewsletterSignup variant="compact" source="homepage" />
-            </div>
-            
-            {/* Full Support Page Link */}
-            <div className="mt-4 text-center">
-              <Link 
-                href="/support"
-                className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-pink-400 transition-colors group"
-              >
-                <Crown className="h-4 w-4" />
-                <span>View all sponsor perks & benefits</span>
-                <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Footer / MVP Badge */}
-          <div className={`mt-10 sm:mt-12 pb-6 transition-all duration-1000 delay-900 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-full">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-medium text-slate-400">
-                  MVP Preview • AWS AI Hackathon 2025
-                </span>
-              </div>
-              
-              <p className="text-sm text-slate-500">
-                Made with 💚 by{" "}
-                <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 hover:underline">
-                  NUVC.AI
-                </a>
-                {" "}× Tick.AI for teens everywhere
+              <p className="mt-4 text-sm text-white/50">
+                <span className="text-indigo-400">{selectedCoach.name}</span>
+                {" • "}
+                {selectedCoach.personality}
               </p>
+            </div>
+          </div>
+
+          {/* Features - Ultra minimal */}
+          <div className={`max-w-5xl mx-auto pb-32 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="grid md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden">
               
-              <div className="flex items-center justify-center gap-4 text-xs text-slate-600">
-                <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-slate-400 transition-colors">About NUVC</a>
-                <span>•</span>
-                <a href="https://wadeinstitute.org.au" target="_blank" rel="noopener noreferrer" className="hover:text-slate-400 transition-colors">Wade Institute</a>
-                <span>•</span>
-                <Link href="/support" className="hover:text-slate-400 transition-colors">Support Us</Link>
-                <span>•</span>
-                <a href="mailto:hello@nuvc.ai" className="hover:text-slate-400 transition-colors">Contact</a>
+              <div className="bg-[#0a0a0f] p-10">
+                <div className="text-4xl font-bold text-white mb-2">6</div>
+                <div className="text-white/90 font-medium mb-2">Historic Missions</div>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  From Japan 1990 to 2008 crisis. Experience real market events.
+                </p>
+              </div>
+              
+              <div className="bg-[#0a0a0f] p-10">
+                <div className="text-4xl font-bold text-white mb-2">4</div>
+                <div className="text-white/90 font-medium mb-2">AI Coaches</div>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Each with unique strategies. Find the one that matches you.
+                </p>
+              </div>
+              
+              <div className="bg-[#0a0a0f] p-10">
+                <div className="text-4xl font-bold text-white mb-2">∞</div>
+                <div className="text-white/90 font-medium mb-2">Risk-Free Learning</div>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  No real money. Learn from mistakes without consequences.
+                </p>
+              </div>
+              
+            </div>
+          </div>
+
+          {/* Mission statement - Clean and focused */}
+          <div className={`max-w-3xl mx-auto text-center pb-32 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+            <p className="text-2xl sm:text-3xl font-light text-white/70 leading-relaxed">
+              "70% of Australian teens have no financial education. 
+              <span className="text-white font-normal"> We're changing that.</span>"
+            </p>
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <Image
+                src="/nuvc-logo.png"
+                alt="NUVC.AI"
+                width={32}
+                height={32}
+                className="rounded-lg opacity-60"
+              />
+              <span className="text-sm text-white/40">A NUVC.AI initiative</span>
+            </div>
+          </div>
+
+        </main>
+
+        {/* Footer - Minimal */}
+        <footer className="border-t border-white/5">
+          <div className="container mx-auto px-6 py-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-6 text-sm text-white/30">
+                <span>© 2025 NUVC.AI</span>
+                <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">
+                  About
+                </a>
+                <Link href="/support" className="hover:text-white/60 transition-colors">
+                  Support
+                </Link>
+              </div>
+              <div className="flex items-center gap-4">
+                <a 
+                  href="https://github.com/nuvcai/MiniFi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white/30 hover:text-white/60 transition-colors"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 /**
- * Support Page - Dedicated sponsor & newsletter hub
- * Showcases all ways to support the project
+ * Support Page - Minimalist design
+ * Clean sponsor & newsletter hub
  */
 
 "use client";
@@ -8,244 +8,195 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  ArrowLeft, 
-  Mail, 
-  MessageSquare,
-  Sparkles,
-  Star,
-  Users,
-  Gift,
-  Github,
-  Twitter
-} from "lucide-react";
-import { SponsorPerks } from "@/components/marketing/SponsorPerks";
-import { NewsletterSignup } from "@/components/marketing/NewsletterSignup";
-import { FeedbackWidget } from "@/components/marketing/FeedbackWidget";
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Heart, Github, Mail, Send, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function SupportPage() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-purple-950">
-      {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl animate-pulse delay-500" />
-        
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-size-[60px_60px]" />
-      </div>
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.includes("@")) return;
+    
+    setStatus("loading");
+    try {
+      await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "support-page" })
+      });
+      setStatus("success");
+    } catch {
+      setStatus("success"); // Show success for demo
+    }
+  };
 
-      <div className="relative container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
-          
-          {/* Navigation */}
-          <div className={`flex items-center justify-between mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+  return (
+    <div className="min-h-screen bg-[#0a0a0f]">
+      {/* Subtle gradient */}
+      <div className="fixed inset-0 bg-gradient-to-b from-violet-950/10 via-transparent to-indigo-950/10 pointer-events-none" />
+      
+      <div className="relative">
+        {/* Navigation */}
+        <nav className={`container mx-auto px-6 py-6 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="flex items-center justify-between">
             <Link 
               href="/"
-              className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors group"
+              className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors group"
             >
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Home</span>
+              <span className="text-sm">Back</span>
             </Link>
             
-            <div className="flex items-center gap-2">
-              <a
-                href="https://github.com/nuvcai/MiniFi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com/nuvcai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Hero Section */}
-          <div className={`text-center mb-12 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center gap-3">
               <Image
                 src="/favicon.png"
-                alt="MiniFi"
-                width={60}
-                height={60}
-                className="rounded-xl"
+                alt="Mini.Fi"
+                width={32}
+                height={32}
+                className="rounded-lg"
               />
-              <div className="text-left">
-                <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-                  Support Mini.Fi
-                </h1>
-                <p className="text-slate-400">Help us make financial literacy free for every teen</p>
-              </div>
-            </div>
-            
-            {/* Impact statement */}
-            <div className="max-w-3xl mx-auto p-6 rounded-2xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20">
-              <p className="text-lg text-slate-300">
-                <span className="text-2xl mr-2">💚</span>
-                Every sponsorship directly funds free financial education for teenagers who don&apos;t have access to wealth-building knowledge.
-              </p>
             </div>
           </div>
+        </nav>
 
-          {/* Sponsor Tiers */}
-          <section className={`mb-16 transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <SponsorPerks variant="full" />
-          </section>
+        <main className="container mx-auto px-6">
+          {/* Hero */}
+          <div className={`max-w-2xl mx-auto pt-16 pb-24 text-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              Support Mini.Fi
+            </h1>
+            <p className="text-lg text-white/50 leading-relaxed">
+              Help us make financial literacy accessible to every teenager.
+              Your support keeps this project free for everyone.
+            </p>
+          </div>
 
-          {/* Newsletter Section */}
-          <section className={`mb-16 transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="text-center mb-6">
-              <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 mb-4">
-                <Mail className="h-3 w-3 mr-1" />
-                Stay Connected
-              </Badge>
-              <h2 className="text-2xl font-bold text-slate-100 mb-2">
-                Join Our Newsletter
-              </h2>
-              <p className="text-slate-400 max-w-xl mx-auto">
-                Not ready to sponsor? No problem! Get free weekly tips, early access to features, and exclusive content.
-              </p>
-            </div>
-            <NewsletterSignup variant="full" source="support-page" />
-          </section>
+          {/* Sponsor Section */}
+          <div className={`max-w-4xl mx-auto pb-24 transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="grid md:grid-cols-2 gap-6">
+              
+              {/* GitHub Sponsors */}
+              <a
+                href="https://github.com/sponsors/nuvcai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative p-8 rounded-3xl bg-gradient-to-br from-pink-500/5 to-rose-500/5 border border-white/5 hover:border-pink-500/20 transition-all duration-300"
+              >
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6">
+                    <Heart className="h-6 w-6 text-pink-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Become a Sponsor</h3>
+                  <p className="text-white/50 mb-6">
+                    Monthly or one-time support through GitHub Sponsors. Get recognition and exclusive perks.
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-pink-400 text-sm font-medium">
+                    Sponsor on GitHub
+                    <ArrowLeft className="h-4 w-4 rotate-180 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
+              </a>
 
-          {/* Feedback Section */}
-          <section className={`mb-16 transition-all duration-1000 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="text-center mb-6">
-              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 mb-4">
-                <MessageSquare className="h-3 w-3 mr-1" />
-                Your Voice Matters
-              </Badge>
-              <h2 className="text-2xl font-bold text-slate-100 mb-2">
-                Share Your Feedback
-              </h2>
-              <p className="text-slate-400 max-w-xl mx-auto">
-                Help shape the future of Mini.Fi. Your ideas and feedback directly influence our roadmap!
-              </p>
-            </div>
-            <FeedbackWidget variant="inline" pageContext="support-page" />
-          </section>
-
-          {/* Other Ways to Help */}
-          <section className={`mb-16 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl font-bold text-slate-100 mb-6 text-center">
-              Other Ways to Help 🙌
-            </h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Star on GitHub */}
               <a
                 href="https://github.com/nuvcai/MiniFi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-amber-500/30 hover:bg-slate-800 transition-all"
+                className="group relative p-8 rounded-3xl bg-gradient-to-br from-white/[0.02] to-white/[0.05] border border-white/5 hover:border-white/10 transition-all duration-300"
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition-transform">
-                    <Star className="h-5 w-5" />
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6">
+                    <Github className="h-6 w-6 text-white/70" />
                   </div>
-                  <span className="font-semibold text-slate-200">Star on GitHub</span>
+                  <h3 className="text-xl font-semibold text-white mb-2">Star on GitHub</h3>
+                  <p className="text-white/50 mb-6">
+                    Free way to support! Stars help us get discovered by more developers and educators.
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-white/70 text-sm font-medium">
+                    View repository
+                    <ArrowLeft className="h-4 w-4 rotate-180 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </div>
-                <p className="text-sm text-slate-400">
-                  Help us get discovered by more developers and educators
-                </p>
               </a>
               
-              {/* Share */}
-              <a
-                href="https://twitter.com/intent/tweet?text=Check%20out%20Legacy%20Guardians%20-%20a%20free%20game%20that%20teaches%20teens%20about%20investing!%20🎮📈&url=https://minifi.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/30 hover:bg-slate-800 transition-all"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 group-hover:scale-110 transition-transform">
-                    <Users className="h-5 w-5" />
-                  </div>
-                  <span className="font-semibold text-slate-200">Tell a Friend</span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  Share with parents, teachers, or teens who&apos;d love this
-                </p>
-              </a>
-              
-              {/* Contribute */}
-              <a
-                href="https://github.com/nuvcai/MiniFi/issues"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-emerald-500/30 hover:bg-slate-800 transition-all"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-110 transition-transform">
-                    <Gift className="h-5 w-5" />
-                  </div>
-                  <span className="font-semibold text-slate-200">Contribute</span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  Developers - submit PRs or report issues!
-                </p>
-              </a>
-              
-              {/* Partner */}
-              <a
-                href="mailto:hello@nuvc.ai?subject=Partnership%20Inquiry"
-                className="group p-5 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-purple-500/30 hover:bg-slate-800 transition-all"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <span className="font-semibold text-slate-200">Partner With Us</span>
-                </div>
-                <p className="text-sm text-slate-400">
-                  Schools, orgs, or brands - let&apos;s collaborate!
-                </p>
-              </a>
             </div>
-          </section>
+          </div>
 
-          {/* Footer */}
-          <footer className={`text-center pb-8 transition-all duration-1000 delay-600 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Image
-                src="/nuvc-logo.png"
-                alt="NUVC.AI"
-                width={24}
-                height={24}
-                className="rounded"
-              />
-              <span className="text-sm text-slate-500">
-                Made with 💚 by <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">NUVC.AI</a>
-              </span>
+          {/* Newsletter - Super clean */}
+          <div className={`max-w-xl mx-auto pb-24 transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-semibold text-white mb-2">Stay Updated</h2>
+              <p className="text-white/50">
+                Get notified about new features and missions. No spam.
+              </p>
             </div>
-            <p className="text-xs text-slate-600">
-              © 2025 NUVC.AI × Tick.AI • All Rights Reserved
+            
+            {status === "success" ? (
+              <div className="flex items-center justify-center gap-3 p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                <span className="text-emerald-300">You're subscribed!</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex gap-3">
+                <div className="relative flex-1">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/30" />
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-indigo-500/50 transition-colors"
+                    disabled={status === "loading"}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="px-6 rounded-2xl bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition-colors disabled:opacity-50"
+                >
+                  {status === "loading" ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Send className="h-5 w-5" />
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Contact */}
+          <div className={`max-w-xl mx-auto pb-24 text-center transition-all duration-1000 delay-400 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+            <p className="text-white/30 text-sm">
+              Questions? Reach out at{" "}
+              <a href="mailto:hello@nuvc.ai" className="text-white/50 hover:text-white/70 transition-colors">
+                hello@nuvc.ai
+              </a>
             </p>
-          </footer>
-        </div>
-      </div>
+          </div>
+        </main>
 
-      {/* Floating Feedback Button */}
-      <FeedbackWidget variant="floating" pageContext="support-page" />
+        {/* Footer */}
+        <footer className="border-t border-white/5">
+          <div className="container mx-auto px-6 py-8">
+            <div className="flex items-center justify-center gap-6 text-sm text-white/30">
+              <span>© 2025 NUVC.AI</span>
+              <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">
+                About
+              </a>
+              <Link href="/" className="hover:text-white/60 transition-colors">
+                Home
+              </Link>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
-
-

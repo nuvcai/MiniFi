@@ -1,10 +1,6 @@
 /**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║   MiniFi - Financial Literacy Platform (MVP - Hackathon Edition)            ║
- * ║   ✨ Vibe-coded by Tick.AI for AWS AI Hackathon 2025 ✨                      ║
- * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
- * ║   PROPRIETARY - NO COMMERCIAL USE | https://nuvc.ai                         ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * Mini.Fi - Root Layout
+ * © 2025 NUVC.AI. All Rights Reserved.
  */
 
 import type React from "react";
@@ -12,15 +8,15 @@ import type { Metadata } from "next";
 import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-// Outfit - Modern geometric sans for headings, bold and youthful
+// Outfit - Modern geometric sans for headings
 const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-outfit",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-// Plus Jakarta Sans - Contemporary rounded sans for body, friendly and readable
+// Plus Jakarta Sans - Clean sans for body
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
@@ -29,16 +25,15 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mini.Fi by NUVC.AI - Financial Literacy Platform",
-  description: "Empowering Australian teens with AI-powered investment education through gamified learning. © 2025 NUVC.AI / Tick.AI",
+  title: "Mini.Fi - Learn to Invest Through Play",
+  description: "A free game that teaches teens about investing through time-travel adventures. Built by NUVC.AI for the AWS AI Hackathon 2025.",
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',
   },
-  authors: [{ name: "NUVC.AI / Tick.AI", url: "https://nuvc.ai" }],
+  authors: [{ name: "NUVC.AI", url: "https://nuvc.ai" }],
   creator: "NUVC.AI",
-  publisher: "Tick.AI",
-  keywords: ["financial literacy", "investment education", "AI coaching", "NUVC.AI", "Tick.AI", "Australian teens"],
+  keywords: ["financial literacy", "investment education", "game", "teens", "AI"],
 };
 
 export default function RootLayout({
@@ -51,16 +46,11 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${plusJakarta.variable} antialiased`}
     >
-      <body className="font-sans min-h-screen flex flex-col bg-slate-950" suppressHydrationWarning={true}>
-        <main className="flex-1">
-          {children}
-        </main>
-        {/* NUVC.AI Watermark Footer */}
-        <footer className="w-full py-3 px-4 text-center text-xs text-slate-500 border-t border-slate-800/50 bg-slate-950/80 backdrop-blur">
-          <p>
-            ✨ Vibe-coded by <a href="https://tick.ai" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors font-medium">Tick.AI</a> • MVP for AWS AI Hackathon 2025 • © <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">NUVC.AI</a>
-          </p>
-        </footer>
+      <body 
+        className="font-sans min-h-screen bg-[#0a0a0f] text-white" 
+        suppressHydrationWarning={true}
+      >
+        {children}
       </body>
     </html>
   );
