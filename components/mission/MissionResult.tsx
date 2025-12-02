@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect, useMemo } from "react";
 import { InvestmentOption } from "@/components/data/missions";
 import { FinancialEvent } from "@/components/data/events";
 import { TeachingDialogue } from "@/components/mission/TeachingDialogue";
@@ -19,6 +21,41 @@ interface MissionResultProps {
   onXpEarned?: (amount: number) => void;
 }
 
+// Confetti particle colors
+const CONFETTI_COLORS = [
+  "bg-emerald-500",
+  "bg-teal-500",
+  "bg-amber-500",
+  "bg-pink-500",
+  "bg-purple-500",
+  "bg-blue-500",
+  "bg-cyan-500",
+  "bg-yellow-400",
+];
+
+// Individual confetti particle
+function ConfettiParticle({ delay, left, color, size, rotation }: {
+  delay: number;
+  left: number;
+  color: string;
+  size: number;
+  rotation: number;
+}) {
+  return (
+    <div
+      className={`absolute ${color} rounded-sm opacity-90 pointer-events-none`}
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        left: `${left}%`,
+        top: "-20px",
+        transform: `rotate(${rotation}deg)`,
+        animation: `confetti-fall 3s ease-out ${delay}s forwards`,
+      }}
+    />
+  );
+}
+
 export function MissionResult({
   selectedOption,
   actualReturn,
@@ -33,8 +70,37 @@ export function MissionResult({
   onComplete,
   onXpEarned,
 }: MissionResultProps) {
+  const [showConfetti, setShowConfetti] = useState(true);
+
+  // Pre-compute confetti particles for consistent rendering
+  const confettiParticles = useMemo(() => {
+    return Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      delay: (i * 0.02) % 0.6,
+      left: (i * 2.5) % 100,
+      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      size: 6 + (i % 6),
+      rotation: (i * 9) % 360,
+    }));
+  }, []);
+
+  // Auto-hide confetti after animation
+  useEffect(() => {
+    const timer = setTimeout(() => setShowConfetti(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Celebration Confetti */}
+      {showConfetti && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-50">
+          {confettiParticles.map((particle) => (
+            <ConfettiParticle key={particle.id} {...particle} />
+          ))}
+        </div>
+      )}
+
       {/* Teaching AI Coach Dialogue */}
       <div className="mt-6">
         <TeachingDialogue
@@ -50,6 +116,20 @@ export function MissionResult({
           onXpEarned={onXpEarned}
         />
       </div>
+
+      {/* CSS for confetti animation */}
+      <style jsx>{`
+        @keyframes confetti-fall {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(500px) rotate(720deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }

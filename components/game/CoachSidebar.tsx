@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Card,
@@ -7,8 +9,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Users } from "lucide-react";
+import { Users, Quote, Sparkles } from "lucide-react";
 import { AICoach } from "@/components/data/coaches";
+
+// Coach-specific inspirational quotes
+const coachQuotes: Record<string, string[]> = {
+  "steady-sam": [
+    "Slow and steady wins the race! 🐢",
+    "Capital preservation is the first rule of wealth.",
+    "Don't chase returns - let them come to you!",
+    "A boring portfolio is a beautiful portfolio.",
+    "Sleep well at night > chase maximum returns",
+    "When in doubt, diversify it out! 🛡️",
+  ],
+  "growth-guru": [
+    "Balance is the key to long-term success! ⚖️",
+    "Diversification: the only free lunch in investing.",
+    "Time in the market beats timing the market.",
+    "Stay the course through volatility!",
+    "Rebalance quarterly, stress never! 📊",
+    "Growth AND stability - why not both?",
+  ],
+  "adventure-alex": [
+    "Fortune favors the BOLD! 🚀",
+    "No risk, no reward - let's GO!",
+    "The best time to invest was yesterday. Second best? NOW!",
+    "Big dreams require big moves! ⚡",
+    "Volatility is opportunity in disguise.",
+    "Winners take calculated risks!",
+  ],
+  "yield-yoda": [
+    "Let your money work while you sleep! 💰",
+    "Dividends: the gift that keeps giving.",
+    "Passive income is the path to freedom.",
+    "Compound interest is the 8th wonder! ✨",
+    "Income today, wealth tomorrow.",
+    "Patient investors harvest the richest rewards.",
+  ],
+};
 
 interface CoachSidebarProps {
   coaches: AICoach[];
@@ -21,6 +59,28 @@ export function CoachSidebar({
   selectedCoach,
   onCoachSelect,
 }: CoachSidebarProps) {
+  const [currentQuote, setCurrentQuote] = useState("");
+  const [isQuoteAnimating, setIsQuoteAnimating] = useState(false);
+
+  // Get quotes for the selected coach
+  const quotes = coachQuotes[selectedCoach.id] || coachQuotes["growth-guru"];
+
+  // Rotate quotes every 8 seconds
+  useEffect(() => {
+    const getRandomQuote = () => quotes[Math.floor(Math.random() * quotes.length)];
+    setCurrentQuote(getRandomQuote());
+
+    const interval = setInterval(() => {
+      setIsQuoteAnimating(true);
+      setTimeout(() => {
+        setCurrentQuote(getRandomQuote());
+        setIsQuoteAnimating(false);
+      }, 300);
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, [selectedCoach.id, quotes]);
+
   return (
     <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur">
       <CardHeader>
@@ -31,6 +91,31 @@ export function CoachSidebar({
         <CardDescription className="text-slate-400">Pick your vibe - who&apos;s got your back?</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
+        {/* Coach Quote Banner */}
+        <div className="relative p-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 mb-4">
+          <Quote className="absolute top-2 left-2 h-3 w-3 text-emerald-500/50" />
+          <div className="flex items-start gap-2 pl-4">
+            <Image
+              src={selectedCoach.avatar}
+              alt={selectedCoach.name}
+              width={24}
+              height={24}
+              className="rounded-full flex-shrink-0 mt-0.5"
+            />
+            <div className="flex-1 min-w-0">
+              <p className={`text-xs text-emerald-300 italic transition-opacity duration-300 ${
+                isQuoteAnimating ? "opacity-0" : "opacity-100"
+              }`}>
+                "{currentQuote}"
+              </p>
+              <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
+                <Sparkles className="h-2.5 w-2.5" />
+                {selectedCoach.name}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {coaches.map((coach) => (
           <div
             key={coach.id}

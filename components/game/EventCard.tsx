@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge, StatusType } from "@/components/shared/StatusBadge";
+import { DifficultyMeter } from "./DifficultyMeter";
 import {
   TrendingUp,
   TrendingDown,
@@ -109,7 +110,11 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
                     {event.title}
                   </CardDescription>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-3">
+                  <DifficultyMeter 
+                    difficulty={event.difficulty as "beginner" | "intermediate" | "advanced" | "expert"} 
+                    size="sm"
+                  />
                   <StatusBadge
                     status={
                       event.completed
@@ -119,7 +124,6 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
                         : "locked"
                     }
                   />
-                  <StatusBadge status={event.difficulty as StatusType} />
                 </div>
               </div>
             </CardHeader>
