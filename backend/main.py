@@ -238,7 +238,7 @@ async def health_check(db: sqlite3.Connection = Depends(get_db)):
         cursor.execute("SELECT 1")
         health_status["services"]["database"] = "connected"
     except Exception as db_error:
-        print(f"❌ Database health check failed: {db_error}")
+        logger.error(f"Database health check failed: {db_error}")
         health_status["services"]["database"] = "disconnected"
         health_status["status"] = "degraded"
     
@@ -746,8 +746,8 @@ async def redeem_reward(request: RewardRedeemRequest):
 # CRON ENDPOINTS (called by Render Cron Jobs)
 # =============================================================================
 
-# Secret token to protect cron endpoints
-CRON_SECRET = os.getenv("CRON_SECRET", "dev-secret-change-in-prod")
+# Secret token to protect cron endpoints - NO FALLBACK for security
+CRON_SECRET = os.getenv("CRON_SECRET")
 
 
 @app.post("/cron/newsletter")
@@ -763,11 +763,16 @@ async def trigger_weekly_newsletter(
     Usage from Render Cron Job:
     curl -X POST "https://your-api.onrender.com/cron/newsletter?secret=YOUR_SECRET"
     """
-    # Validate secret (skip in dev)
-    if os.getenv("ENV") == "production" and secret != CRON_SECRET:
-        raise HTTPException(status_code=403, detail="Invalid cron secret")
+    # Validate secret - require in production
+    is_production = os.getenv("ENV") == "production"
+    if is_production:
+        if not CRON_SECRET:
+            logger.error("CRON_SECRET not configured in production")
+            raise HTTPException(status_code=500, detail="Server configuration error")
+        if secret != CRON_SECRET:
+            raise HTTPException(status_code=403, detail="Invalid cron secret")
     
-    print("📰 Cron job triggered: Weekly Newsletter")
+    logger.info("Cron job triggered: Weekly Newsletter")
     
     try:
         result = await cron_weekly_newsletter()
@@ -778,8 +783,8 @@ async def trigger_weekly_newsletter(
             "result": result
         }
     except Exception as e:
-        print(f"❌ Newsletter cron failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Newsletter cron failed: {e}")
+        raise HTTPException(status_code=500, detail="Newsletter cron job failed")
 
 
 @app.post("/cron/reengagement")
@@ -792,10 +797,15 @@ async def trigger_reengagement(
     Schedule: Daily at 9am UTC
     Cron Expression: 0 9 * * *
     """
-    if os.getenv("ENV") == "production" and secret != CRON_SECRET:
-        raise HTTPException(status_code=403, detail="Invalid cron secret")
+    is_production = os.getenv("ENV") == "production"
+    if is_production:
+        if not CRON_SECRET:
+            logger.error("CRON_SECRET not configured in production")
+            raise HTTPException(status_code=500, detail="Server configuration error")
+        if secret != CRON_SECRET:
+            raise HTTPException(status_code=403, detail="Invalid cron secret")
     
-    print("💤 Cron job triggered: Re-engagement Check")
+    logger.info("Cron job triggered: Re-engagement Check")
     
     try:
         result = await cron_reengagement_check()
@@ -806,8 +816,8 @@ async def trigger_reengagement(
             "result": result
         }
     except Exception as e:
-        print(f"❌ Re-engagement cron failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Re-engagement cron failed: {e}")
+        raise HTTPException(status_code=500, detail="Re-engagement cron job failed")
 
 
 @app.get("/cron/newsletter/preview")
@@ -832,8 +842,8 @@ async def newsletter_subscribe(email: str, first_name: str = None):
             "result": result
         }
     except Exception as e:
-        print(f"❌ Newsletter subscribe failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Newsletter subscribe failed: {e}")
+        raise HTTPException(status_code=500, detail="Newsletter subscription failed")
 
 
 if __name__ == "__main__":
