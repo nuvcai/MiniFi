@@ -18,8 +18,8 @@ import {
   NewsletterType,
   NEWSLETTER_TEMPLATES 
 } from '@/lib/newsletter-generator';
-import { substack, medium, whatsapp, resend } from '@/lib/marketing-stack';
-import { leadsService, isSupabaseConfigured } from '@/lib/supabase';
+import { substack, medium, whatsapp } from '@/lib/marketing-stack';
+import { leadsService } from '@/lib/supabase';
 import { secureCompare } from '@/lib/validation';
 
 // Admin key check - NO FALLBACK VALUES for security

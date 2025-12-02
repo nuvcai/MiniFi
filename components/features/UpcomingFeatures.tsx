@@ -9,10 +9,7 @@ import React, { useState } from "react";
 import { 
   Sparkles, 
   Lock, 
-  TrendingUp, 
   Target, 
-  Zap, 
-  Trophy,
   ChevronRight,
   Calendar,
   Gamepad2,

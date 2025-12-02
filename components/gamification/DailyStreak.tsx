@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import {
   Flame,
-  Calendar,
   Gift,
   Sparkles,
   Trophy,

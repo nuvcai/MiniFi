@@ -8,11 +8,9 @@
 import React from "react";
 import { 
   GraduationCap, 
-  Award,
   Lock,
   CheckCircle2,
   ChevronRight,
-  Star,
   Sparkles
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

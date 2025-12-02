@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, Home } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { WisdomLibrary } from "@/components/library/WisdomLibrary";
 import { DailyWisdom } from "@/components/library/DailyWisdom";

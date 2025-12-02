@@ -12,7 +12,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, GraduationCap, ExternalLink, Rocket, Mail, Crown, Lock } from "lucide-react";
+import { Play, Sparkles, TrendingUp, Trophy, Zap, ChevronRight, Star, Heart, Github, Share2, Copy, Check, Target, Users, ExternalLink, Crown } from "lucide-react";
 import { aiCoaches } from "@/components/data/coaches";
 import { UpcomingFeatures } from "@/components/features/UpcomingFeatures";
 import { AssetClassMastery } from "@/components/features/AssetClassMastery";

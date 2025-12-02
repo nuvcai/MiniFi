@@ -8,7 +8,6 @@
 import React, { useState } from "react";
 import { 
   TrendingUp, 
-  TrendingDown,
   AlertTriangle,
   Shield,
   Info

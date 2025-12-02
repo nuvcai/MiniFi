@@ -10,17 +10,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   ArrowLeft, 
-  Heart, 
   Mail, 
   MessageSquare,
   Sparkles,
   Star,
   Users,
   Gift,
-  ExternalLink,
   Github,
-  Twitter,
-  CheckCircle2
+  Twitter
 } from "lucide-react";
 import { SponsorPerks } from "@/components/marketing/SponsorPerks";
 import { NewsletterSignup } from "@/components/marketing/NewsletterSignup";
