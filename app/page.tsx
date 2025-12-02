@@ -112,15 +112,14 @@ export default function HomePage() {
         {/* Navigation */}
         <nav className={`container mx-auto px-6 py-6 transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Image
-                src="/favicon.png"
+                src="/minifi-header-logo.png"
                 alt="Mini.Fi"
-                width={40}
+                width={120}
                 height={40}
-                className="rounded-xl"
+                className="h-10 w-auto"
               />
-              <span className="text-xl font-bold text-white tracking-tight">Mini.Fi</span>
             </div>
             
             <div className="flex items-center gap-6">

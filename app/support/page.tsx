@@ -56,13 +56,13 @@ export default function SupportPage() {
               <span className="text-sm font-medium">Back</span>
             </Link>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Image
-                src="/favicon.png"
+                src="/minifi-header-logo.png"
                 alt="Mini.Fi"
-                width={36}
+                width={100}
                 height={36}
-                className="rounded-xl shadow-lg"
+                className="h-9 w-auto"
               />
               <span className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                 Support

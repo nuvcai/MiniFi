@@ -159,23 +159,14 @@ export function GameHeader({
         <div className="flex items-center justify-between">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
-              <Image
-                src="/favicon.png"
-                alt="Mini.Fi"
-                width={44}
-                height={44}
-                className="relative rounded-xl shadow-lg group-hover:scale-110 transition-transform"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-xl font-black bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
-                Mini.Fi
-              </span>
-              <p className="text-[10px] text-gray-500 -mt-0.5">Learn • Play • Invest</p>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/minifi-header-logo.png"
+              alt="Mini.Fi"
+              width={120}
+              height={44}
+              className="h-11 w-auto group-hover:scale-105 transition-transform"
+            />
           </Link>
           
           {/* Desktop Stats */}

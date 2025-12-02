@@ -496,8 +496,8 @@ export default function TimelinePage() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Image
-                  src="/favicon.png"
-                  alt="Mini.Fi"
+                  src="/nuvc-logo.png"
+                  alt="NUVC.AI"
                   width={32}
                   height={32}
                   className="rounded-lg"
