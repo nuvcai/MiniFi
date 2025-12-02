@@ -9,4 +9,5 @@ export { FeedbackWidget } from './FeedbackWidget';
 export { SponsorPerks } from './SponsorPerks';
 export { RoadmapTeaser } from './RoadmapTeaser';
 export { FeatureWisdomShowcase } from './FeatureWisdomShowcase';
+export { ViralSharePrompt, useViralShare } from './ViralSharePrompt';
 

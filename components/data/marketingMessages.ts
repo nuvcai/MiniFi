@@ -8,6 +8,7 @@
  */
 
 import { wealthPillars, wealthEras, investorWisdom, hopeMessages, foPrinciples } from "./wealthWisdom";
+import { MARKETING_EVENTS } from "./marketingData";
 
 // ============================================================================
 // MARKETING VALUE PROPOSITIONS
@@ -437,5 +438,421 @@ export const getUpcomingTeasers = (limit: number = 4): FutureFeatureTeaser[] => 
 export const getWisdomContextForFeature = (featureId: string): string => {
   const feature = futureFeatureTeasers.find(f => f.id === featureId);
   return feature?.wisdomConnection || "";
+};
+
+// ============================================================================
+// 🚀 VIRAL MARKETING INTEGRATION
+// Links Quick Wins to Viral Triggers, Sharing Moments, and Referral System
+// ============================================================================
+
+export interface ViralTrigger {
+  featureId: string;
+  featureName: string;
+  triggerMoment: string;
+  trackingEvent: string;
+  shareableContent: ShareableContent;
+  referralHook: string;
+  viralCoefficient: "high" | "medium" | "low";
+  socialProof: string;
+}
+
+export interface ShareableContent {
+  headline: string;
+  body: string;
+  hashtags: string[];
+  imagePrompt: string;
+  platforms: ("twitter" | "tiktok" | "instagram" | "linkedin" | "whatsapp")[];
+}
+
+/**
+ * Maps each Quick Win to its viral marketing trigger
+ * Connects to MARKETING_EVENTS from marketingData.ts
+ */
+export const viralTriggers: ViralTrigger[] = [
+  {
+    featureId: "level-up-celebration",
+    featureName: "Level-Up Celebrations",
+    triggerMoment: "When player levels up with confetti animation",
+    trackingEvent: MARKETING_EVENTS.LEVEL_UP,
+    shareableContent: {
+      headline: "🎉 I just leveled up to Level {{level}} in Legacy Guardians!",
+      body: "Learning to invest like a Family Office - one mission at a time. {{totalXp}} XP earned so far!",
+      hashtags: ["#LegacyGuardians", "#FinancialLiteracy", "#GenZ", "#Investing"],
+      imagePrompt: "Level badge with confetti, showing level number",
+      platforms: ["twitter", "instagram", "tiktok"]
+    },
+    referralHook: "Invite a friend to level up together - both get bonus XP! 🎁",
+    viralCoefficient: "high",
+    socialProof: "Join {{userCount}}+ teens building wealth knowledge"
+  },
+  {
+    featureId: "daily-streak",
+    featureName: "Daily Streak Milestones",
+    triggerMoment: "At 7, 14, 30, 100 day streak milestones",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    shareableContent: {
+      headline: "🔥 {{streakDays}}-day streak! Consistency is my superpower",
+      body: "Warren Buffett says compound interest is the 8th wonder of the world. I'm compounding my knowledge daily! 📈",
+      hashtags: ["#StreakGoals", "#DailyHabits", "#FinancialEducation", "#LegacyGuardians"],
+      imagePrompt: "Flame streak badge with day count",
+      platforms: ["twitter", "instagram", "tiktok"]
+    },
+    referralHook: "Challenge a friend to a streak competition! 🏆",
+    viralCoefficient: "high",
+    socialProof: "{{streakLeaders}} players have 30+ day streaks"
+  },
+  {
+    featureId: "mission-confetti",
+    featureName: "Mission Complete Celebrations",
+    triggerMoment: "After completing any historical mission with celebration screen",
+    trackingEvent: MARKETING_EVENTS.MISSION_COMPLETED,
+    shareableContent: {
+      headline: "📚 Just survived the {{missionName}}!",
+      body: "Learned what happened when {{historicalContext}} - now I know how to handle it! {{lessonLearned}}",
+      hashtags: ["#FinancialHistory", "#LearnFromThePast", "#LegacyGuardians", "#Investing101"],
+      imagePrompt: "Historical mission card with completion badge",
+      platforms: ["twitter", "linkedin", "instagram"]
+    },
+    referralHook: "Think your friends could've done better? Challenge them! 💪",
+    viralCoefficient: "medium",
+    socialProof: "This mission completed by {{completionCount}} players"
+  },
+  {
+    featureId: "courage-xp",
+    featureName: "Courage XP Awards",
+    triggerMoment: "When player earns XP for taking calculated risks",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    shareableContent: {
+      headline: "⚡ Earned '{{badgeName}}' badge for taking smart risks!",
+      body: "Legacy Guardians rewards TRYING, not just winning. Real investors learn from bold moves! 🎯",
+      hashtags: ["#CourageNotFear", "#RiskTaking", "#FinancialLiteracy", "#LegacyGuardians"],
+      imagePrompt: "Courage badge with lightning bolt and XP amount",
+      platforms: ["twitter", "tiktok", "instagram"]
+    },
+    referralHook: "Show your friends you're braver than them! 😈",
+    viralCoefficient: "medium",
+    socialProof: "{{courageXpTotal}} Courage XP earned by players this week"
+  },
+  {
+    featureId: "wealth-wisdom",
+    featureName: "Wealth Wisdom Discoveries",
+    triggerMoment: "When player reads a powerful investor quote or FO principle",
+    trackingEvent: MARKETING_EVENTS.WISDOM_READ,
+    shareableContent: {
+      headline: "💡 \"{{quote}}\" - {{investor}}",
+      body: "Wisdom from Legacy Guardians. The wealthy teach their kids differently. Now I know their secrets! 🏛️",
+      hashtags: ["#InvestorWisdom", "#WealthBuilding", "#FinancialEducation", "#FOSecrets"],
+      imagePrompt: "Quote card with investor portrait and Legacy Guardians branding",
+      platforms: ["twitter", "linkedin", "instagram", "whatsapp"]
+    },
+    referralHook: "Share wisdom with a friend who needs to hear this 📖",
+    viralCoefficient: "high",
+    socialProof: "This wisdom shared {{shareCount}} times"
+  },
+  {
+    featureId: "coach-quotes",
+    featureName: "AI Coach Moments",
+    triggerMoment: "When AI coach delivers memorable advice",
+    trackingEvent: MARKETING_EVENTS.COACH_CHAT_OPENED,
+    shareableContent: {
+      headline: "🤖 My AI coach {{coachName}} just said: \"{{coachQuote}}\"",
+      body: "Getting personalized investment coaching for FREE. {{coachPersonality}} energy! #AICoaching",
+      hashtags: ["#AICoach", "#FinancialAdvice", "#LegacyGuardians", "#PersonalizedLearning"],
+      imagePrompt: "Coach avatar with speech bubble containing quote",
+      platforms: ["twitter", "tiktok", "instagram"]
+    },
+    referralHook: "Find out which AI coach matches YOUR personality! 🎯",
+    viralCoefficient: "medium",
+    socialProof: "{{coachName}} has helped {{helpedCount}} players"
+  },
+  {
+    featureId: "asset-class-mastery",
+    featureName: "Asset Class Badge Unlocks",
+    triggerMoment: "When player completes all missions in an asset class",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    shareableContent: {
+      headline: "🏆 Mastered {{assetClass}}! Badge unlocked!",
+      body: "One of 6 asset classes Family Offices use. Building my diversified knowledge portfolio! 📊",
+      hashtags: ["#AssetMastery", "#Diversification", "#FOEducation", "#LegacyGuardians"],
+      imagePrompt: "Asset class badge with mastery glow effect",
+      platforms: ["twitter", "linkedin", "instagram"]
+    },
+    referralHook: "Can your friends master all 6 asset classes? 🎓",
+    viralCoefficient: "high",
+    socialProof: "Only {{masteryPercent}}% of players have mastered this class"
+  },
+  {
+    featureId: "loss-aversion-reframe",
+    featureName: "Learning from Losses",
+    triggerMoment: "When player loses but receives encouraging lesson",
+    trackingEvent: MARKETING_EVENTS.MISSION_COMPLETED,
+    shareableContent: {
+      headline: "📉 Lost {{lossPercent}}% but learned THIS: {{lesson}}",
+      body: "Ray Dalio says 'Pain + Reflection = Progress'. Legacy Guardians lets me fail safely! 💪",
+      hashtags: ["#LearnFromLosses", "#GrowthMindset", "#InvestingLessons", "#LegacyGuardians"],
+      imagePrompt: "Resilience badge with upward arrow emerging from dip",
+      platforms: ["twitter", "tiktok", "linkedin"]
+    },
+    referralHook: "Learn from losses without losing real money! 🛡️",
+    viralCoefficient: "medium",
+    socialProof: "{{lessonsLearned}} lessons learned from losses this month"
+  }
+];
+
+// ============================================================================
+// REFERRAL REWARD TIERS (Viral Loop)
+// ============================================================================
+
+export interface ReferralReward {
+  tier: number;
+  referralsRequired: number;
+  reward: string;
+  xpBonus: number;
+  badge: string;
+  description: string;
+}
+
+export const referralRewards: ReferralReward[] = [
+  {
+    tier: 1,
+    referralsRequired: 1,
+    reward: "Early Investor Badge",
+    xpBonus: 100,
+    badge: "🌱",
+    description: "You planted your first seed of knowledge sharing!"
+  },
+  {
+    tier: 2,
+    referralsRequired: 3,
+    reward: "Squad Builder Badge",
+    xpBonus: 300,
+    badge: "👥",
+    description: "You're building a squad of future investors!"
+  },
+  {
+    tier: 3,
+    referralsRequired: 5,
+    reward: "Wealth Spreader Badge + Exclusive Coach Skin",
+    xpBonus: 500,
+    badge: "🌟",
+    description: "Financial literacy champion - spreading wealth wisdom!"
+  },
+  {
+    tier: 4,
+    referralsRequired: 10,
+    reward: "Legacy Builder Badge + Premium Week Trial",
+    xpBonus: 1000,
+    badge: "🏛️",
+    description: "Building a legacy of financial education!"
+  },
+  {
+    tier: 5,
+    referralsRequired: 25,
+    reward: "FO Ambassador Badge + Lifetime Premium",
+    xpBonus: 2500,
+    badge: "👑",
+    description: "You ARE the next generation of wealth educators!"
+  }
+];
+
+// ============================================================================
+// SHARE TEMPLATES (Pre-formatted for each platform)
+// ============================================================================
+
+export interface ShareTemplate {
+  platform: "twitter" | "tiktok" | "instagram" | "linkedin" | "whatsapp" | "email";
+  template: string;
+  maxLength?: number;
+  includeImage: boolean;
+  cta: string;
+}
+
+export const shareTemplates: Record<string, ShareTemplate[]> = {
+  levelUp: [
+    {
+      platform: "twitter",
+      template: "🎉 Level {{level}} unlocked in @LegacyGuardians! Learning to invest like a Family Office. Who wants to join me? {{referralLink}} #FinancialLiteracy #GenZ",
+      maxLength: 280,
+      includeImage: true,
+      cta: "Play Free"
+    },
+    {
+      platform: "tiktok",
+      template: "POV: You just leveled up in Legacy Guardians and now you understand the stock market better than most adults 😎📈 #FinTok #MoneyTips #LegacyGuardians",
+      includeImage: true,
+      cta: "Link in bio"
+    },
+    {
+      platform: "whatsapp",
+      template: "Hey! I've been playing this game called Legacy Guardians that teaches investing through historical missions. Just hit Level {{level}}! You should try it: {{referralLink}}",
+      includeImage: false,
+      cta: "Try it!"
+    }
+  ],
+  streak: [
+    {
+      platform: "twitter",
+      template: "🔥 {{days}}-day streak! Building investing habits one day at a time. @LegacyGuardians makes financial literacy addictive 📚 {{referralLink}}",
+      maxLength: 280,
+      includeImage: true,
+      cta: "Start your streak"
+    },
+    {
+      platform: "instagram",
+      template: "Day {{days}} of learning to invest like a Family Office 🔥\n\nStreak status: UNBROKEN 💪\n\n#LegacyGuardians #FinancialEducation #StreakGoals #Investing",
+      includeImage: true,
+      cta: "Join the challenge"
+    }
+  ],
+  achievement: [
+    {
+      platform: "twitter",
+      template: "🏆 Just earned the '{{badge}}' badge in @LegacyGuardians! {{achievementDesc}} Free game that actually teaches investing: {{referralLink}}",
+      maxLength: 280,
+      includeImage: true,
+      cta: "Earn yours"
+    },
+    {
+      platform: "linkedin",
+      template: "Investing in my financial education! 📊\n\nJust earned the '{{badge}}' achievement in Legacy Guardians - a game that teaches Family Office investment strategies.\n\n{{achievementDesc}}\n\nIt's never too early to learn wealth building. Check it out: {{referralLink}}\n\n#FinancialLiteracy #Education #Investing #GenZ",
+      includeImage: true,
+      cta: "Learn more"
+    }
+  ],
+  wisdom: [
+    {
+      platform: "twitter",
+      template: "💡 \"{{quote}}\" - {{investor}}\n\nLearned this in @LegacyGuardians. This game teaches what schools don't 📚 {{referralLink}}",
+      maxLength: 280,
+      includeImage: true,
+      cta: "Get smart"
+    },
+    {
+      platform: "whatsapp",
+      template: "Check out this investing wisdom:\n\n\"{{quote}}\"\n- {{investor}}\n\nLearned it from Legacy Guardians. You should try it! {{referralLink}}",
+      includeImage: false,
+      cta: "Try it"
+    }
+  ]
+};
+
+// ============================================================================
+// VIRAL MOMENTS - When to prompt sharing
+// ============================================================================
+
+export interface ViralMoment {
+  trigger: string;
+  timing: "immediate" | "delayed_5s" | "end_of_session";
+  sharePrompt: string;
+  referralPrompt: string;
+  trackingEvent: string;
+  conversionGoal: string;
+}
+
+export const viralMoments: ViralMoment[] = [
+  {
+    trigger: "first_mission_complete",
+    timing: "immediate",
+    sharePrompt: "🎉 You survived your first market crisis! Share your victory?",
+    referralPrompt: "Know someone who should learn this? Invite them and both get 50 bonus XP!",
+    trackingEvent: MARKETING_EVENTS.MISSION_COMPLETED,
+    conversionGoal: "referral_link_created"
+  },
+  {
+    trigger: "level_up",
+    timing: "delayed_5s",
+    sharePrompt: "Level {{level}} unlocked! Show off your progress?",
+    referralPrompt: "Level up faster with friends! Each referral = 100 XP",
+    trackingEvent: MARKETING_EVENTS.LEVEL_UP,
+    conversionGoal: "share_clicked"
+  },
+  {
+    trigger: "streak_milestone",
+    timing: "immediate",
+    sharePrompt: "🔥 {{days}}-day streak! That's dedication!",
+    referralPrompt: "Challenge a friend to beat your streak!",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    conversionGoal: "referral_link_shared"
+  },
+  {
+    trigger: "asset_class_mastered",
+    timing: "immediate",
+    sharePrompt: "🏆 {{assetClass}} MASTERED! You're officially an expert!",
+    referralPrompt: "Only {{percent}}% of players reach this. Help a friend start their journey!",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    conversionGoal: "referral_converted"
+  },
+  {
+    trigger: "fo_certification_earned",
+    timing: "immediate",
+    sharePrompt: "👑 FO FELLOW CERTIFIED! Share your credential!",
+    referralPrompt: "You've mastered everything. Now teach others - 500 XP per referral!",
+    trackingEvent: MARKETING_EVENTS.ACHIEVEMENT_EARNED,
+    conversionGoal: "premium_viewed"
+  },
+  {
+    trigger: "loss_lesson_learned",
+    timing: "delayed_5s",
+    sharePrompt: "📈 Lost money but gained wisdom! Share what you learned?",
+    referralPrompt: "Help friends learn from losses without real consequences!",
+    trackingEvent: MARKETING_EVENTS.MISSION_COMPLETED,
+    conversionGoal: "referral_link_shared"
+  },
+  {
+    trigger: "wisdom_bookmarked",
+    timing: "end_of_session",
+    sharePrompt: "💡 Great wisdom saved! Share it with someone who needs to hear it?",
+    referralPrompt: "Spread financial wisdom - knowledge shared is knowledge multiplied!",
+    trackingEvent: MARKETING_EVENTS.WISDOM_READ,
+    conversionGoal: "share_clicked"
+  }
+];
+
+// ============================================================================
+// VIRAL HELPER FUNCTIONS
+// ============================================================================
+
+export const getViralTriggerForFeature = (featureId: string): ViralTrigger | undefined => {
+  return viralTriggers.find(vt => vt.featureId === featureId);
+};
+
+export const getShareTemplatesForPlatform = (platform: string): ShareTemplate[] => {
+  const templates: ShareTemplate[] = [];
+  Object.values(shareTemplates).forEach(platformTemplates => {
+    templates.push(...platformTemplates.filter(t => t.platform === platform));
+  });
+  return templates;
+};
+
+export const getReferralRewardForCount = (referralCount: number): ReferralReward | undefined => {
+  return [...referralRewards]
+    .reverse()
+    .find(r => referralCount >= r.referralsRequired);
+};
+
+export const getNextReferralMilestone = (referralCount: number): ReferralReward | undefined => {
+  return referralRewards.find(r => r.referralsRequired > referralCount);
+};
+
+export const getViralMomentByTrigger = (trigger: string): ViralMoment | undefined => {
+  return viralMoments.find(vm => vm.trigger === trigger);
+};
+
+// Generate shareable URL with referral code
+export const generateShareUrl = (referralCode: string, platform: string): string => {
+  const baseUrl = "https://minifi.app";
+  return `${baseUrl}?ref=${referralCode}&utm_source=${platform}&utm_medium=referral&utm_campaign=viral_share`;
+};
+
+// Calculate viral coefficient estimate
+export const estimateViralCoefficient = (
+  totalUsers: number,
+  referralSignups: number,
+  shareRate: number
+): number => {
+  if (totalUsers === 0) return 0;
+  const inviteRate = referralSignups / totalUsers;
+  const conversionRate = shareRate; // Assuming share → signup conversion
+  return inviteRate * conversionRate;
 };
 
