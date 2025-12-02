@@ -7,20 +7,9 @@
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
 
-// Asset Class Categories - aligned with Family Office standards
-export type AssetClass = 
-  | "equities"           // Stocks, shares, equity funds
-  | "fixed_income"       // Bonds, treasuries, fixed-rate securities
-  | "commodities"        // Gold, oil, agricultural products
-  | "alternatives"       // Real estate, private equity, hedge funds
-  | "cash"               // Cash, money market, short-term deposits
-  | "cryptocurrency";    // Digital assets (high-risk alternative)
-
-// Investment Time Horizons
-export type TimeHorizon = 
-  | "short"    // 0-1 years - ideal for capital preservation
-  | "medium"   // 1-5 years - balanced growth and stability
-  | "long";    // 5+ years - wealth building, can ride out volatility
+// Import and re-export shared types from assetClasses for backwards compatibility
+import type { AssetClass, TimeHorizon } from './assetClasses';
+export type { AssetClass, TimeHorizon } from './assetClasses';
 
 // Risk/Return Profile aligned with FO standards
 export interface RiskReturnProfile {
@@ -630,5 +619,25 @@ export const missionData: Record<number, MissionData> = {
     },
     outcome:
       "This is happening RIGHT NOW! 🎬 Your investment choices will shape your future wealth. There's no crystal ball - make your best call!",
+    wealthLesson: "🎓 WEALTH LESSON: You are living through YOUR generation's transformative moment! AI is this era's Industrial Revolution, Internet, and smartphone combined. Every generation has a defining technology - AI and robotics are YOURS.",
+    foWisdom: "🏛️ FAMILY OFFICE WISDOM: The smartest FOs are allocating 15-30% to AI-related investments while maintaining diversification. They're buying the 'picks and shovels' (NVIDIA, cloud providers) AND promising AI applications. But they NEVER go all-in on any single bet.",
+    historicalOpportunity: "💡 THE OPPORTUNITY: You're witnessing the early stages of the AI revolution - like being in 1995 for the internet or 2007 for smartphones. The companies that will dominate 2035 are being built RIGHT NOW. Understanding AI gives you an edge most investors don't have!",
+    hopeMessage: "✨ FOR YOU: This isn't just an investment opportunity - it's YOUR moment in history! Carnegie had steel, Ford had automobiles, Gates had software, Bezos had e-commerce. What will YOU build or invest in during the AI era? The biggest fortunes of the next 30 years are being created NOW! 🤖🚀"
   },
+};
+
+// ============================================================================
+// EDUCATIONAL EXPORT - Key Lessons Across All Eras
+// ============================================================================
+
+export const generationalWealthLessons = {
+  overarchingTruth: "Every generation has their moment to build wealth. The Industrial Revolution, electricity, automobiles, computers, internet, mobile, and now AI - each era created new fortunes for those who recognized the shift early.",
+  
+  patternToWatch: "Look for technologies that multiply human capability. Steam multiplied physical labor. Electricity multiplied factories. Computers multiplied calculation. AI multiplies human intelligence. These multipliers create enormous wealth.",
+  
+  hopeForYoungInvestors: "You don't need to be rich to start investing. Carnegie arrived in America as a poor immigrant. Buffett bought his first stock with paper route money. Bezos left a good job to sell books from his garage. Starting matters more than starting big.",
+  
+  timingTruth: "The best time to invest was 20 years ago. The second best time is NOW. Your greatest advantage is TIME - use it!",
+  
+  familyOfficePrinciple: "Wealthy families think in generations, not quarters. They diversify to preserve wealth, invest in trends to grow it, and pass down knowledge more valuable than money itself."
 };

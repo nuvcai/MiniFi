@@ -73,6 +73,12 @@ export interface AssetClassInfo {
   
   // Teen-friendly explanation
   teenExplanation: string;
+  
+  // Generational Wealth Wisdom (FO Perspective)
+  generationalWealthRole: string;
+  historicalPerspective: string;
+  opportunityForTeens: string;
+  foWisdomSnippet: string;
 }
 
 // ============================================================================
@@ -132,7 +138,13 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "Emotional decision-making risk"
     ],
     
-    teenExplanation: "Stocks are like owning a slice of your favorite companies! 🍕 When Apple sells more iPhones, your slice of Apple becomes worth more. But be patient - stocks go up and down like a rollercoaster. The trick is to stay on the ride long enough to see the big gains!"
+    teenExplanation: "Stocks are like owning a slice of your favorite companies! 🍕 When Apple sells more iPhones, your slice of Apple becomes worth more. But be patient - stocks go up and down like a rollercoaster. The trick is to stay on the ride long enough to see the big gains!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Equities are the PRIMARY engine of wealth creation. Every major fortune - Rockefeller, Carnegie, Gates, Bezos - was built through equity ownership. The stock market has turned ordinary people into millionaires more than any other asset class.",
+    historicalPerspective: "Since 1926, US stocks have returned about 10% annually - doubling every 7 years! $1,000 invested in 1926 would be worth $10+ million today. No other asset class has matched this long-term wealth creation power.",
+    opportunityForTeens: "As a young investor, stocks are your BEST friend because you have TIME. Market crashes (which WILL happen) become buying opportunities when you have 40+ years to wait. Your parents wish they'd started at your age!",
+    foWisdomSnippet: "Family Offices typically keep 40-60% in equities for growth, but they NEVER sell during crashes. They BUY more. That's how old money stays old money."
   },
   
   fixed_income: {
@@ -187,7 +199,13 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "Less exciting (but that's okay!)"
     ],
     
-    teenExplanation: "Bonds are the 'chill friend' of investing 😌 They don't party as hard as stocks, but they're reliable. Imagine lending money to the government - they HAVE to pay you back with interest. It's like a guaranteed side hustle for your money!"
+    teenExplanation: "Bonds are the 'chill friend' of investing 😌 They don't party as hard as stocks, but they're reliable. Imagine lending money to the government - they HAVE to pay you back with interest. It's like a guaranteed side hustle for your money!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Bonds are the PRESERVERS of wealth. While stocks build fortunes, bonds protect them. The wealthiest families always have 20-40% in bonds because when stocks crash 50%, bonds often RISE. This cushion lets them buy cheap stocks without selling at a loss.",
+    historicalPerspective: "During the 2008 crash, stocks fell 50%. But Treasury bonds ROSE 20%+! Investors who had bonds could rebalance - selling high (bonds) to buy low (stocks). This is how sophisticated investors outperform.",
+    opportunityForTeens: "You might think bonds are 'boring old people stuff' - but they're a secret weapon! Having 20-30% in bonds means when the NEXT crash happens, you'll have money to buy stocks at discount prices. Smart, not boring!",
+    foWisdomSnippet: "Family Offices NEVER go 100% stocks, even with infinite time horizon. Why? Because bonds let them REBALANCE during crashes - sell bonds high, buy stocks low. It's mathematically proven to boost returns."
   },
   
   commodities: {
@@ -242,7 +260,13 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "Affected by global supply/demand"
     ],
     
-    teenExplanation: "Gold is like the OG of money - people have valued it for thousands of years! 🥇 When everything else seems crazy (inflation, market crashes), gold tends to hold its value. It's like having a financial security blanket!"
+    teenExplanation: "Gold is like the OG of money - people have valued it for thousands of years! 🥇 When everything else seems crazy (inflation, market crashes), gold tends to hold its value. It's like having a financial security blanket!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Gold is the INSURANCE policy of wealth. For 5,000+ years, gold has been valuable across every civilization. When currencies collapse, governments fail, or markets crash - gold holds its value. That's why wealthy families always keep 5-10%.",
+    historicalPerspective: "During the 2008 financial crisis, gold rose 25% while stocks crashed 50%. In the 1970s inflation crisis, gold went up 2,300%! It's not a growth asset - it's a PROTECTION asset against chaos.",
+    opportunityForTeens: "Gold might seem old-fashioned, but it teaches an important lesson: TRUE diversification means owning things that behave DIFFERENTLY. When stocks crash and people panic, gold often shines. That's portfolio insurance!",
+    foWisdomSnippet: "Every major Family Office holds 5-10% in gold or commodities. Not because they expect huge returns, but because when everything else fails, gold is the last asset standing. It's been true for 5,000 years."
   },
   
   alternatives: {
@@ -297,7 +321,13 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "May require higher minimums"
     ],
     
-    teenExplanation: "Alternatives are like the VIP section of investing! 🎪 REITs let you own pieces of shopping malls, apartments, and office buildings without buying the whole thing. Family Offices love alternatives because they don't move the same way as stocks!"
+    teenExplanation: "Alternatives are like the VIP section of investing! 🎪 REITs let you own pieces of shopping malls, apartments, and office buildings without buying the whole thing. Family Offices love alternatives because they don't move the same way as stocks!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Alternatives are how wealthy families ACCESS unique opportunities. Real estate has created more millionaires than any other asset except stocks. REITs let regular investors own pieces of billion-dollar properties. This used to be 'rich people only' - now everyone can play!",
+    historicalPerspective: "The Yale Endowment revolutionized investing by putting 30%+ into alternatives. Their returns beat 99% of other universities for 30 years! They proved that diversifying BEYOND stocks and bonds creates superior long-term wealth.",
+    opportunityForTeens: "REITs are your gateway to real estate investing without needing hundreds of thousands for a down payment. You can own pieces of Amazon warehouses, Apple stores, and data centers with just $100! That's generational wealth building made accessible.",
+    foWisdomSnippet: "Family Offices typically hold 15-25% in alternatives (real estate, private equity, infrastructure). These assets generate INCOME (rent, dividends) while providing diversification. It's why old money stays diversified - they've seen what happens when you don't."
   },
   
   cash: {
@@ -352,7 +382,13 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "Not a wealth-building tool"
     ],
     
-    teenExplanation: "Cash is your 'sleep well at night' money 😴 It's boring but essential! Everyone needs an emergency fund - usually 3-6 months of expenses. Just don't keep TOO much in cash, or inflation will slowly eat away at what it can buy!"
+    teenExplanation: "Cash is your 'sleep well at night' money 😴 It's boring but essential! Everyone needs an emergency fund - usually 3-6 months of expenses. Just don't keep TOO much in cash, or inflation will slowly eat away at what it can buy!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Cash is your OPPORTUNITY fund. Warren Buffett kept $150 BILLION in cash waiting for the right moment. When markets crashed in 2008 and 2020, he was ready to buy while others were panic selling. Cash isn't just safety - it's ammunition!",
+    historicalPerspective: "In 2008, investors with cash could buy Bank of America at $3 (now $35), Apple at $3 (now $180+), and Amazon at $35 (now $180+). Those without cash could only watch. Having dry powder during crises is how fortunes are made.",
+    opportunityForTeens: "Don't keep ALL your money in cash (inflation will eat it), but ALWAYS keep some ready. The next market crash will happen - that's 100% certain. When it does, those with cash become wealthy, while those fully invested can only hold on.",
+    foWisdomSnippet: "Family Offices ALWAYS maintain 5-15% in cash or cash equivalents. Not because they're scared, but because they're READY. When blood is in the streets, they're the ones shopping for deals."
   },
   
   cryptocurrency: {
@@ -408,9 +444,27 @@ export const assetClassData: Record<AssetClass, AssetClassInfo> = {
       "Highly speculative"
     ],
     
-    teenExplanation: "Crypto is the 'wild west' of investing! 🤠 Bitcoin went from $0 to $69,000 to $16,000 and back up. Some people got rich, many lost everything. The rule? Only invest what you'd be okay losing COMPLETELY. Family Offices keep crypto at 0-5% max!"
+    teenExplanation: "Crypto is the 'wild west' of investing! 🤠 Bitcoin went from $0 to $69,000 to $16,000 and back up. Some people got rich, many lost everything. The rule? Only invest what you'd be okay losing COMPLETELY. Family Offices keep crypto at 0-5% max!",
+    
+    // NEW: Generational Wealth Context
+    generationalWealthRole: "Cryptocurrency is the SPECULATIVE frontier. Like the early Internet, it might transform finance - or it might fade away. The key is position sizing: never more than 0-5% of your portfolio. It's a lottery ticket with decent odds, not a retirement plan.",
+    historicalPerspective: "Bitcoin has been the best-performing asset of the 2010s, turning $100 into $1M+ for early holders. But it's also crashed 80%+ four times! The people who got rich either got in early OR had the stomach to hold through terrifying crashes.",
+    opportunityForTeens: "Here's the truth: If crypto is transformational (big IF), you want some exposure. But if you put 50% of your money there and it crashes 80%, you need a 400% gain just to break even. Small positions, maximum 5%, lets you participate without risking your future.",
+    foWisdomSnippet: "Most Family Offices now have 0-5% in crypto - enough to participate if it moons, not enough to matter if it crashes. The key insight: No single asset should ever be big enough to ruin you if it goes to zero. Especially one this volatile!"
   }
 };
+
+// ============================================================================
+// GENERATIONAL WEALTH WISDOM - UPDATED INTERFACES
+// ============================================================================
+
+// Update the AssetClassInfo interface to include new fields
+export interface ExtendedAssetClassInfo extends AssetClassInfo {
+  generationalWealthRole: string;
+  historicalPerspective: string;
+  opportunityForTeens: string;
+  foWisdomSnippet: string;
+}
 
 // ============================================================================
 // RISK LEVEL INFORMATION
