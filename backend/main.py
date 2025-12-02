@@ -128,8 +128,10 @@ async def add_request_headers(request: Request, call_next):
 # CORS middleware for frontend integration
 # Note: In production, restrict to specific domains only
 ALLOWED_ORIGINS = [
-    "https://minifi.vercel.app",  # Primary production
-    "https://minifi-tick-ai.vercel.app",  # Team production
+    "https://minifi-app.vercel.app",  # Primary production
+    "https://minifi.vercel.app",
+    "https://minifi-tick-ai.vercel.app",
+    "https://*.vercel.app",  # Allow all Vercel preview deployments
 ]
 
 # Add localhost only in development
@@ -142,6 +144,7 @@ if os.getenv("DEBUG") == "true" or os.getenv("NODE_ENV") != "production":
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",  # Allow all Vercel preview deployments
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
