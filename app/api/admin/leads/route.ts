@@ -7,19 +7,32 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { leadsService, feedbackService, isSupabaseConfigured, supabaseAdmin } from '@/lib/supabase';
+import { isValidApiKey, secureCompare } from '@/lib/validation';
+import { serverLogger } from '@/lib/logger';
 
-// Simple admin key check (replace with proper auth in production)
-const ADMIN_KEY = process.env.ADMIN_API_KEY || 'dev-admin-key';
+// Admin key from environment - NO FALLBACK for security
+const ADMIN_KEY = process.env.ADMIN_API_KEY;
 
 function isAuthorized(request: NextRequest): boolean {
+  // Fail secure if admin key not configured
+  if (!ADMIN_KEY || !isValidApiKey(ADMIN_KEY)) {
+    serverLogger.error('ADMIN_API_KEY not configured or invalid');
+    return false;
+  }
+  
   const authHeader = request.headers.get('authorization');
   const apiKey = request.headers.get('x-api-key');
   
-  // Check Bearer token or API key
+  // Check Bearer token or API key using timing-safe comparison
   if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.slice(7) === ADMIN_KEY;
+    return secureCompare(authHeader.slice(7), ADMIN_KEY);
   }
-  return apiKey === ADMIN_KEY;
+  
+  if (apiKey) {
+    return secureCompare(apiKey, ADMIN_KEY);
+  }
+  
+  return false;
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -183,7 +196,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }, { status: 400 });
 
   } catch (error) {
-    console.error('Admin API error:', error);
+    serverLogger.error('Admin API error', error);
     return NextResponse.json(
       { success: false, message: 'An error occurred' },
       { status: 500 }
@@ -265,7 +278,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }, { status: 400 });
 
   } catch (error) {
-    console.error('Admin POST error:', error);
+    serverLogger.error('Admin POST error', error);
     return NextResponse.json(
       { success: false, message: 'An error occurred' },
       { status: 500 }

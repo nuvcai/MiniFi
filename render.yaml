@@ -13,6 +13,54 @@ services:
         sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: ENV
+        value: production
+      # Newsletter / Loops.so
+      - key: LOOPS_API_KEY
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      # Optional: Transactional email IDs from Loops dashboard
+      - key: LOOPS_WEEKLY_DIGEST_ID
+        sync: false
+      - key: LOOPS_WELCOME_ID
+        sync: false
     healthCheckPath: /health
     autoDeploy: true
 
+# =============================================================================
+# CRON JOBS - Automatic newsletter generation and sending
+# =============================================================================
+# Note: Render's free tier does NOT include cron jobs.
+# You need a paid plan OR use external cron services like:
+# - cron-job.org (free)
+# - EasyCron (free tier)
+# - GitHub Actions (free)
+# - Vercel Cron (if you have Vercel frontend)
+#
+# These cron jobs are configured for when you upgrade to paid:
+# =============================================================================
+
+  - type: cron
+    name: weekly-newsletter
+    runtime: python
+    plan: starter  # Cron jobs require paid plan
+    schedule: "0 10 * * 2"  # Every Tuesday at 10:00 AM UTC
+    buildCommand: pip install httpx
+    # Use curl to call your API endpoint
+    command: |
+      curl -X POST "https://minifi-backend.onrender.com/cron/newsletter?secret=$CRON_SECRET"
+    envVars:
+      - key: CRON_SECRET
+        sync: false
+
+  - type: cron
+    name: reengagement-check
+    runtime: python
+    plan: starter
+    schedule: "0 9 * * *"  # Daily at 9:00 AM UTC
+    command: |
+      curl -X POST "https://minifi-backend.onrender.com/cron/reengagement?secret=$CRON_SECRET"
+    envVars:
+      - key: CRON_SECRET
+        sync: false

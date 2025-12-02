@@ -5,56 +5,33 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
+import { waitlistSchema, validate, VALID_FEATURES } from '@/lib/validation';
+import { serverLogger } from '@/lib/logger';
 
 // Types
-interface WaitlistRequest {
-  email: string;
-  feature: string;
-}
-
 interface WaitlistResponse {
   success: boolean;
   message: string;
   position?: number;
 }
 
-// Email validation regex
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Valid features for waitlist
-const validFeatures = [
-  'risk-quiz',
-  'portfolio-builder',
-  'risk-roulette',
-  'fo-certification',
-  'ai-mentor',
-  'premium-missions',
-  'discord-community',
-  'mobile-app'
-];
-
 export async function POST(request: NextRequest): Promise<NextResponse<WaitlistResponse>> {
+  const log = serverLogger.withRequest(request.headers.get('x-request-id') || undefined);
+  
   try {
-    const body: WaitlistRequest = await request.json();
-    const { email, feature } = body;
+    const body = await request.json();
 
-    // Validate email
-    if (!email || !emailRegex.test(email)) {
+    // Validate input using centralized schema
+    const validation = validate(waitlistSchema, body);
+    if (!validation.success) {
+      log.warn('Waitlist validation failed', { errors: validation.errors });
       return NextResponse.json(
-        { success: false, message: 'Invalid email address' },
+        { success: false, message: validation.errors[0] || 'Invalid input' },
         { status: 400 }
       );
     }
 
-    // Validate feature
-    if (!feature || !validFeatures.includes(feature)) {
-      return NextResponse.json(
-        { success: false, message: `Invalid feature. Valid options: ${validFeatures.join(', ')}` },
-        { status: 400 }
-      );
-    }
-
-    const normalizedEmail = email.toLowerCase().trim();
+    const { email: normalizedEmail, feature } = validation.data;
 
     if (!isSupabaseConfigured()) {
       // Return success for demo purposes
@@ -99,7 +76,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<WaitlistR
       });
 
     if (error) {
-      console.error('Waitlist insert error:', error);
+      log.error('Waitlist insert error', error);
       return NextResponse.json(
         { success: false, message: 'Failed to join waitlist' },
         { status: 500 }
@@ -142,11 +119,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<WaitlistR
           }),
         });
       } catch (webhookError) {
-        console.warn('Discord webhook failed:', webhookError);
+        log.warn('Discord webhook failed', { error: webhookError });
       }
     }
 
-    console.log(`🎯 New waitlist signup: ${normalizedEmail} for ${feature}`);
+    log.info('New waitlist signup', { email: normalizedEmail, feature });
 
     return NextResponse.json({
       success: true,
@@ -155,7 +132,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<WaitlistR
     });
 
   } catch (error) {
-    console.error('Waitlist error:', error);
+    log.error('Waitlist error', error);
     return NextResponse.json(
       { success: false, message: 'An error occurred. Please try again.' },
       { status: 500 }
@@ -172,7 +149,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!isSupabaseConfigured()) {
     return NextResponse.json({
       success: true,
-      features: validFeatures,
+      features: VALID_FEATURES,
       message: 'Waitlist API is running (Supabase not configured)'
     });
   }
@@ -181,7 +158,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!feature && !email) {
     const stats: Record<string, number> = {};
     
-    for (const f of validFeatures) {
+    for (const f of VALID_FEATURES) {
       const { count } = await supabaseAdmin
         .from('waitlist')
         .select('*', { count: 'exact', head: true })
@@ -191,7 +168,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       success: true,
-      features: validFeatures,
+      features: VALID_FEATURES,
       stats
     });
   }
@@ -243,7 +220,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json({
     success: true,
-    features: validFeatures
+    features: VALID_FEATURES
   });
 }
 

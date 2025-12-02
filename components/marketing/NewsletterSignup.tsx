@@ -100,14 +100,30 @@ export function NewsletterSignup({
       // - ConvertKit
       // - Your own backend /api/newsletter endpoint
       
+      // Collect UTM parameters from URL for attribution
+      const urlParams = new URLSearchParams(window.location.search);
+      const utmSource = urlParams.get('utm_source');
+      const utmMedium = urlParams.get('utm_medium');
+      const utmCampaign = urlParams.get('utm_campaign');
+      const referralCode = urlParams.get('ref');
+
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           email, 
           firstName,
-          source,
-          timestamp: new Date().toISOString()
+          source: utmSource || source,
+          medium: utmMedium,
+          campaign: utmCampaign,
+          referralCode,
+          timestamp: new Date().toISOString(),
+          // Marketing data collection
+          pageUrl: window.location.href,
+          pageTitle: document.title,
+          referrer: document.referrer || undefined,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          locale: navigator.language
         })
       });
 

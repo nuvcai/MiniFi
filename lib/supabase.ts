@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { logger } from '@/lib/logger';
 
 // Environment variables for Supabase connection
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -63,7 +64,7 @@ export const leadsService = {
    */
   async subscribe(email: string, firstName?: string, source: string = 'website'): Promise<{ success: boolean; error?: string; data?: Lead }> {
     if (!isSupabaseConfigured()) {
-      console.warn('Supabase not configured, skipping database write');
+      logger.debug('Supabase not configured, skipping database write');
       return { success: true, data: { email, source, status: 'subscribed', subscribed_at: new Date().toISOString() } };
     }
 
@@ -109,7 +110,7 @@ export const leadsService = {
       return { success: true, data };
 
     } catch (error) {
-      console.error('Lead subscription error:', error);
+      logger.error('Lead subscription error', error);
       return { success: false, error: 'Failed to subscribe' };
     }
   },
@@ -132,7 +133,7 @@ export const leadsService = {
       return { success: true };
 
     } catch (error) {
-      console.error('Lead unsubscribe error:', error);
+      logger.error('Lead unsubscribe error', error);
       return { success: false, error: 'Failed to unsubscribe' };
     }
   },
@@ -164,7 +165,7 @@ export const leadsService = {
       return data || [];
 
     } catch (error) {
-      console.error('Get leads error:', error);
+      logger.error('Get leads error', error);
       return [];
     }
   },
@@ -197,7 +198,7 @@ export const leadsService = {
       return stats;
 
     } catch (error) {
-      console.error('Get stats error:', error);
+      logger.error('Get stats error', error);
       return { total: 0, subscribed: 0, bySource: {} };
     }
   }
@@ -210,7 +211,7 @@ export const feedbackService = {
    */
   async submit(feedback: Omit<Feedback, 'id' | 'created_at' | 'status'>): Promise<{ success: boolean; error?: string; id?: string }> {
     if (!isSupabaseConfigured()) {
-      console.warn('Supabase not configured, skipping database write');
+      logger.debug('Supabase not configured, skipping database write');
       return { success: true, id: `local_${Date.now()}` };
     }
 
@@ -229,7 +230,7 @@ export const feedbackService = {
       return { success: true, id: data?.id };
 
     } catch (error) {
-      console.error('Feedback submission error:', error);
+      logger.error('Feedback submission error', error);
       return { success: false, error: 'Failed to submit feedback' };
     }
   },
@@ -261,7 +262,7 @@ export const feedbackService = {
       return data || [];
 
     } catch (error) {
-      console.error('Get feedback error:', error);
+      logger.error('Get feedback error', error);
       return [];
     }
   },
@@ -282,7 +283,7 @@ export const feedbackService = {
       return { success: true };
 
     } catch (error) {
-      console.error('Update feedback error:', error);
+      logger.error('Update feedback error', error);
       return { success: false };
     }
   },
@@ -324,7 +325,7 @@ export const feedbackService = {
       return stats;
 
     } catch (error) {
-      console.error('Get feedback stats error:', error);
+      logger.error('Get feedback stats error', error);
       return { total: 0, byType: {}, avgRating: 0 };
     }
   }
@@ -346,7 +347,7 @@ export const activityService = {
           created_at: new Date().toISOString()
         });
     } catch (error) {
-      console.error('Activity tracking error:', error);
+      logger.error('Activity tracking error', error);
     }
   }
 };

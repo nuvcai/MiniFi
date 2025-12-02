@@ -1,19 +1,18 @@
 /**
  * Newsletter Subscription API Endpoint
  * Stores leads in Supabase for marketing automation
+ * Syncs with Loops.so for automated email sequences
+ * Integrates with marketing data collection
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { leadsService, isSupabaseConfigured } from '@/lib/supabase';
+import { subscribeSchema, validate } from '@/lib/validation';
+import { serverLogger } from '@/lib/logger';
+import { loopsHelpers } from '@/lib/loops';
+import { MARKETING_EVENTS } from '@/components/data/marketingData';
 
 // Types
-interface SubscribeRequest {
-  email: string;
-  firstName?: string;
-  source?: string;
-  timestamp?: string;
-}
-
 interface SubscribeResponse {
   success: boolean;
   message: string;
@@ -23,24 +22,23 @@ interface SubscribeResponse {
   };
 }
 
-// Email validation regex
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export async function POST(request: NextRequest): Promise<NextResponse<SubscribeResponse>> {
+  const log = serverLogger.withRequest(request.headers.get('x-request-id') || undefined);
+  
   try {
-    const body: SubscribeRequest = await request.json();
-    const { email, firstName, source } = body;
-
-    // Validate email
-    if (!email || !emailRegex.test(email)) {
+    const body = await request.json();
+    
+    // Validate input using centralized schema
+    const validation = validate(subscribeSchema, body);
+    if (!validation.success) {
+      log.warn('Newsletter subscription validation failed', { errors: validation.errors });
       return NextResponse.json(
-        { success: false, message: 'Invalid email address' },
+        { success: false, message: validation.errors[0] || 'Invalid input' },
         { status: 400 }
       );
     }
 
-    // Normalize email
-    const normalizedEmail = email.toLowerCase().trim();
+    const { email: normalizedEmail, firstName, source } = validation.data;
 
     // Store in Supabase
     const result = await leadsService.subscribe(normalizedEmail, firstName, source || 'website');
@@ -51,6 +49,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<Subscribe
         { status: 500 }
       );
     }
+
+    // Sync with Loops.so for email automation
+    try {
+      await loopsHelpers.subscribe(normalizedEmail, {
+        firstName,
+        source: source || 'website'
+      });
+      log.info('Synced to Loops.so', { email: normalizedEmail });
+    } catch (loopsError) {
+      // Don't fail the subscription if Loops sync fails
+      log.warn('Loops.so sync failed', { error: loopsError });
+    }
+
+    // Track marketing event
+    log.info('Marketing event', { 
+      event: MARKETING_EVENTS.SIGNUP_COMPLETED,
+      email: normalizedEmail,
+      source: source || 'website'
+    });
 
     // Send Discord notification if configured
     if (process.env.DISCORD_WEBHOOK_URL) {
@@ -72,11 +89,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<Subscribe
           }),
         });
       } catch (webhookError) {
-        console.warn('Discord webhook failed:', webhookError);
+        log.warn('Discord webhook failed', { error: webhookError });
       }
     }
 
-    console.log(`✅ New subscriber: ${normalizedEmail} from ${source || 'website'} | Supabase: ${isSupabaseConfigured() ? 'yes' : 'no'}`);
+    log.info('New subscriber', { 
+      email: normalizedEmail, 
+      source: source || 'website', 
+      supabaseConfigured: isSupabaseConfigured() 
+    });
 
     return NextResponse.json({
       success: true,
@@ -88,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Subscribe
     });
 
   } catch (error) {
-    console.error('Newsletter subscription error:', error);
+    log.error('Newsletter subscription error', error);
     return NextResponse.json(
       { success: false, message: 'An error occurred. Please try again.' },
       { status: 500 }
