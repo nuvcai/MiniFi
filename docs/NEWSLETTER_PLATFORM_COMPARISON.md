@@ -4,36 +4,45 @@
 
 ---
 
-## ✅ YOUR CHOSEN STACK
+## ✅ YOUR CHOSEN STACK (Updated with Loops.so!)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                   YOUR MARKETING STACK                               │
+│              YOUR MARKETING STACK (AUTOMATED!)                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│   📱 WhatsApp          📰 Substack         📝 Medium        📧 Resend│
-│   ──────────          ──────────          ───────         ─────────│
-│   • Viral sharing     • Newsletter        • Discovery     • Welcome │
-│   • Community         • Free unlimited    • SEO           • Alerts  │
-│   • Referrals         • Own your list     • Credibility   • Reminders│
-│   • Support           • Notes feature     • Cross-post              │
+│   🔄 Loops.so    📱 WhatsApp    📰 Substack    📝 Medium             │
+│   ──────────    ──────────    ──────────    ───────                │
+│   • AUTO SEND!  • Viral       • Newsletter   • Discovery            │
+│   • Sequences   • Community   • Archive      • SEO                  │
+│   • Triggers    • Referrals   • Own list     • Cross-post           │
+│   • Analytics   • Support     • Notes                               │
 │                                                                      │
-│   COST: $0/month until you hit Resend limits (3K free)              │
+│   COST: $0/month (Loops free: 1K contacts, 2K emails)               │
+│   AUTOMATION: 100% - Backend triggers emails automatically!          │
 │                                                                      │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### Weekly Workflow
+### Why Loops.so + Substack + Medium + WhatsApp?
 
-| Day | Action | Platform | Time |
-|-----|--------|----------|------|
-| **Mon** | Auto-generate content | System | 0 min |
-| **Tue** | Publish newsletter | Substack | 5 min (review + send) |
-| **Wed** | Cross-post to Medium | Medium | 10 min (copy-paste) |
-| **Thu** | Share via WhatsApp | WhatsApp | 5 min |
-| **Fri** | Engage comments | All | 10 min |
+| Platform | Role | Why It's Great |
+|----------|------|----------------|
+| **Loops.so** | 🔄 Automation engine | Backend triggers emails, sequences, digest |
+| **Substack** | 📰 Newsletter archive | Free, own your list, community |
+| **Medium** | 📝 Discovery | SEO, built-in audience |
+| **WhatsApp** | 📱 Viral sharing | Free, teens love it |
 
-**Total founder time: ~30 min/week** (or less with automation)
+### Fully Automated Weekly Workflow
+
+| Day | What Happens | Who Does It | Time |
+|-----|--------------|-------------|------|
+| **Tue 10am** | Newsletter auto-generates & sends | **Loops.so** | 0 min |
+| **Tue 10am** | Copy auto-posted to Substack archive | **You (optional)** | 2 min |
+| **Wed** | Cross-post to Medium | **You (optional)** | 5 min |
+| **Thu** | WhatsApp share links ready | **System** | 0 min |
+
+**Total founder time: 0-7 min/week** 🎉
 
 ---
 
@@ -822,16 +831,195 @@ async function onAchievement(userId: string, achievement: string, xp: number) {
 
 ---
 
+## 🔄 Loops.so - The Automation Engine
+
+### Why Loops.so is Perfect for You
+
+| Feature | Benefit |
+|---------|---------|
+| **API-First** | Your backend calls API → Email sends automatically |
+| **Event Triggers** | User completes mission → Celebration email |
+| **Sequences** | Signup → Welcome series (4 emails over 7 days) |
+| **Scheduled Digests** | Weekly newsletter at set time, auto-generated |
+| **SaaS-Focused** | Built for apps like Legacy Guardians |
+| **Free Tier** | 1,000 contacts, 2,000 emails/month |
+
+### Pricing
+
+| Plan | Contacts | Emails/Month | Price |
+|------|----------|--------------|-------|
+| **Free** | 1,000 | 2,000 | $0 |
+| Basic | 5,000 | 50,000 | $49/mo |
+| Pro | 15,000 | Unlimited | $149/mo |
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                  LOOPS.SO AUTOMATION FLOW                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│   YOUR APP                    LOOPS.SO                  USER         │
+│   ────────                    ────────                  ────         │
+│                                                                      │
+│   User signs up ──────────►  Event: app_signup                      │
+│                                    │                                 │
+│                                    ▼                                 │
+│                              Welcome Sequence ──────► 📧 Welcome!   │
+│                              (Day 0, 2, 5, 7)         📧 Tips       │
+│                                                       📧 Invite     │
+│                                                                      │
+│   Mission complete ───────►  Event: mission_completed               │
+│                                    │                                 │
+│                                    ▼                                 │
+│                              Celebration Email ─────► 📧 Nice work! │
+│                              (with share links)                      │
+│                                                                      │
+│   Tuesday 10am ───────────►  Scheduled Digest                       │
+│   (Cron triggers)                  │                                 │
+│                                    ▼                                 │
+│                              Weekly Newsletter ─────► 📧 This week  │
+│                              (auto-generated)                        │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Integration Code
+
+```typescript
+import { loopsHelpers } from '@/lib/loops';
+
+// When user signs up to app
+await loopsHelpers.onAppSignup('user@email.com', {
+  firstName: 'Alex',
+  coach: 'balanced'
+});
+// → Triggers 4-email welcome sequence automatically!
+
+// When user completes mission
+await loopsHelpers.onMissionComplete('user@email.com', 'Japan 1990', 15.5);
+// → Sends celebration email with WhatsApp share link!
+
+// When user earns achievement
+await loopsHelpers.onAchievement('user@email.com', 'First Million', 100);
+// → Sends achievement email!
+
+// User inactive for 7 days (call from cron)
+await loopsHelpers.onInactive('user@email.com', 7);
+// → Triggers re-engagement sequence!
+```
+
+### Automated Email Sequences (Set Up in Loops Dashboard)
+
+#### 1. Welcome Sequence (Trigger: `app_signup`)
+```
+Day 0: "Welcome to Legacy Guardians! 🎮"
+       - First mission CTA
+       - Meet your coach
+
+Day 2: "Your AI Coach is Ready!"
+       - Coach introduction
+       - Tips for first mission
+
+Day 5: "How's Your Portfolio Doing?"
+       - Progress check
+       - Helpful tips
+
+Day 7: "Share the Adventure! 🚀"
+       - Invite friends CTA
+       - Referral rewards
+```
+
+#### 2. Achievement Celebration (Trigger: `achievement_earned`)
+```
+Immediate: "🏆 Achievement Unlocked!"
+          - What they earned
+          - XP gained
+          - WhatsApp share button
+```
+
+#### 3. Re-engagement (Trigger: `user_inactive`)
+```
+Day 7:  "We Miss You! 👋"
+Day 14: "New Features You've Missed!"
+Day 21: "Last Chance: Special XP Bonus"
+```
+
+#### 4. Weekly Digest (Scheduled: Tuesdays 10am)
+```
+Auto-generated content:
+- Wealth wisdom of the week
+- Investor spotlight
+- Tip of the week
+- Play CTA
+```
+
+### Loops.so vs Alternatives
+
+| Feature | Loops.so | Resend | Mailchimp | Beehiiv |
+|---------|----------|--------|-----------|---------|
+| **API automation** | ✅ Excellent | ✅ Good | ⚠️ Complex | ❌ Limited |
+| **Event triggers** | ✅ Built-in | ❌ DIY | ⚠️ Complex | ❌ No |
+| **Sequences** | ✅ Visual builder | ❌ DIY | ✅ Yes | ❌ No |
+| **Free tier** | 1K contacts | 3K emails | 500 contacts | 2.5K contacts |
+| **Newsletter** | ✅ Via API | ❌ Manual | ✅ Yes | ✅ Yes |
+| **Best for** | **Automation** | Transactional | Marketing | Creator newsletters |
+
+**Winner for your use case: Loops.so** 🏆
+
+### Environment Variables
+
+```bash
+# Loops.so (required for automation)
+LOOPS_API_KEY=your_loops_api_key
+
+# Optional: Keep these for specific uses
+RESEND_API_KEY=re_xxx          # If you need custom transactional
+SUBSTACK_URL=https://legacyguardians.substack.com  # For archive links
+```
+
+### Setup Steps
+
+1. **Sign up**: https://loops.so (free)
+2. **Get API key**: Dashboard → Settings → API
+3. **Add to env**: `LOOPS_API_KEY=xxx`
+4. **Create sequences** in Loops dashboard
+5. **Deploy** - your app now auto-emails!
+
+---
+
 ## 📋 Quick Setup Checklist
 
-- [ ] Create Substack publication
-- [ ] Create Medium account
-- [ ] Get Resend API key (free)
-- [ ] Add env variables to Vercel
+### Loops.so (Automation - Priority!)
+- [ ] Sign up at https://loops.so (free tier)
+- [ ] Get API key from Dashboard → Settings → API
+- [ ] Add `LOOPS_API_KEY` to Vercel env vars
+- [ ] Create Welcome sequence (4 emails)
+- [ ] Create Achievement celebration template
+- [ ] Create Re-engagement sequence
+- [ ] Set up Weekly Digest schedule (Tuesday 10am)
+
+### Substack (Archive)
+- [ ] Create publication at https://substack.com
 - [ ] Add Substack embed to website
-- [ ] Add WhatsApp share buttons to app
-- [ ] Write first newsletter
-- [ ] Send it! 🚀
+- [ ] Enable Notes feature
+
+### Medium (Discovery)
+- [ ] Create Medium account
+- [ ] Set up publication
+- [ ] Plan cross-post schedule
+
+### WhatsApp (Viral)
+- [ ] WhatsApp share buttons already in app ✅
+- [ ] Test share links work
+
+### Integration
+- [ ] Add Loops calls to signup flow
+- [ ] Add Loops calls to mission completion
+- [ ] Add Loops calls to achievement system
+- [ ] Deploy & test!
+
+**Total setup time: ~2 hours** (then it's automated forever!)
 
 ---
 
