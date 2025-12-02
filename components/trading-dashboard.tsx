@@ -425,13 +425,48 @@ export default function TradingDashboard({
 
       typeIntoMessage(pendingId, reply ?? "Updated.");
     } catch (error: any) {
-      // 4) If there is an error, replace it with the error message
+      // 4) If there is an error, provide a helpful fallback response instead of error
+      const fallbackResponses = {
+        "Conservative Coach": [
+          "Great effort exploring your portfolio! Remember, family offices think in generations, not days. Keep building that diversified foundation! 🛡️",
+          "I love your curiosity! Steady progress wins the race. Consider bonds and defensive stocks for stability. 💎",
+          "You're thinking like a wealth manager! Capital preservation is key - keep exploring different asset classes."
+        ],
+        "Balanced Coach": [
+          "Fantastic strategic thinking! Balance is the key to family office success. Mix growth with stability. ⚖️",
+          "You're exploring like a family office CIO! Try mixing 2-3 different asset classes for better diversification.",
+          "Great effort! Family offices master asset allocation. Keep experimenting with different combinations! 📊"
+        ],
+        "Aggressive Coach": [
+          "Bold move! Family offices built wealth by exploring new frontiers early. Keep that growth mindset! 🚀",
+          "I like your courage! Innovation comes from trying new things. Explore tech and emerging markets!",
+          "You're thinking ahead! Family offices weren't afraid to take calculated risks. Keep exploring! 💪"
+        ],
+        "Tech Coach": [
+          "Excellent tech exploration! The future belongs to those who embrace innovation. Keep learning! 💻",
+          "Great effort in the tech space! Diversify within tech sectors for better resilience. 🔮",
+          "You're building knowledge like the best tech investors! Keep exploring AI, cloud, and emerging tech!"
+        ]
+      };
+      
+      const coachStyle = selectedCoach.style || selectedCoach.name || "Balanced Coach";
+      const responses = fallbackResponses[coachStyle as keyof typeof fallbackResponses] || fallbackResponses["Balanced Coach"];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      
+      // Add context about the action if there was one
+      let fallbackMessage = randomResponse;
+      if (action) {
+        fallbackMessage = `${action.type === "buy" ? "Nice buy" : "Smart sell"} on ${action.asset}! ${randomResponse}`;
+      }
+      
       updateChatMessageById(pendingId, (old) => ({
         ...old,
-        message:
-          handleApiError(error) || "Something went wrong. Please try again.",
+        message: fallbackMessage,
         timestamp: new Date(),
       }));
+      
+      // Log the actual error for debugging
+      console.error("Coach chat error (using fallback):", handleApiError(error));
     }
   }
 

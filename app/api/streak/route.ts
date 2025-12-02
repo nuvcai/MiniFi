@@ -119,6 +119,14 @@ export async function POST(request: NextRequest) {
 
 // Handle claiming daily streak
 async function handleClaimStreak(email?: string, sessionId?: string) {
+  // Require either email or sessionId to persist streak claims
+  if (!email && !sessionId) {
+    return NextResponse.json(
+      { success: false, error: 'Email or session ID required to claim streak' },
+      { status: 400 }
+    );
+  }
+
   if (!isSupabaseConfigured()) {
     return NextResponse.json({
       success: true,

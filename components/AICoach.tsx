@@ -93,7 +93,37 @@ export function AICoach({
       setAdvice(response);
       onAdviceReceived?.(response);
     } catch (err: any) {
-      setError(err.message || "Failed to get coach advice");
+      console.error("AI Coach error (using fallback):", err.message);
+      
+      // Provide fallback advice so the game can continue
+      const fallbackAdvice: CoachResponse = {
+        advice: playerLevel === "beginner" 
+          ? "Welcome to your investment journey! Diversification is the cornerstone of smart investing - spread your investments across different asset classes."
+          : playerLevel === "intermediate"
+          ? "You're developing strong investment instincts! Focus on balancing growth and stability in your portfolio."
+          : "You're ready for advanced strategies! Consider optimizing your risk-adjusted returns across multiple asset classes.",
+        recommendations: [
+          "Explore different asset classes like stocks, bonds, ETFs, and commodities",
+          "Think long-term - family offices plan for generations",
+          "Learn from both profits and losses - they're equally valuable teachers",
+          "Regularly review and rebalance your portfolio"
+        ],
+        next_steps: [
+          "Try investing in an asset class you haven't explored yet",
+          "Complete more missions to unlock advanced strategies",
+          "Study how different assets perform in various market conditions"
+        ],
+        risk_assessment: "Your risk tolerance and investment goals should guide your decisions. Every investment carries risk, but understanding it is key to success.",
+        educational_insights: [
+          "Family offices diversify across 4-6+ asset classes minimum",
+          "Time in the market beats timing the market",
+          "Compound interest is your best friend for long-term wealth"
+        ],
+        encouragement: "You're building valuable investment skills! Keep exploring, keep learning, and remember - every great investor started exactly where you are now. 🚀"
+      };
+      
+      setAdvice(fallbackAdvice);
+      onAdviceReceived?.(fallbackAdvice);
     } finally {
       setLoading(false);
     }

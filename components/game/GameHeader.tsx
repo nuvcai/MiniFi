@@ -17,8 +17,20 @@ import {
   Trophy,
   Flame,
   Sparkles,
+  Mail,
+  LogIn,
+  LogOut,
+  User,
+  Check,
 } from "lucide-react";
 import { levelTitles } from "@/components/gamification/LevelUpCelebration";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface GameHeaderProps {
   playerLevel: number;
@@ -42,6 +54,68 @@ export function GameHeader({
   const [animatedScore, setAnimatedScore] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Auth state
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [signInEmail, setSignInEmail] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [signInError, setSignInError] = useState("");
+  const [signInSuccess, setSignInSuccess] = useState(false);
+
+  // Load user email on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('minifi_user_email');
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    }
+  }, []);
+
+  // Handle sign in
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signInEmail || isSigningIn) return;
+    
+    setIsSigningIn(true);
+    setSignInError("");
+    
+    try {
+      const response = await fetch(`/api/streak?email=${encodeURIComponent(signInEmail.toLowerCase())}`);
+      const result = await response.json();
+      
+      if (result.success && result.data && (result.data.totalXP > 0 || result.data.currentStreak > 0)) {
+        setUserEmail(signInEmail.toLowerCase());
+        localStorage.setItem('minifi_user_email', signInEmail.toLowerCase());
+        localStorage.setItem('minifi_streak_data', JSON.stringify({
+          currentStreak: result.data.currentStreak || 0,
+          todayClaimed: result.data.todayClaimed,
+          totalXP: result.data.totalXP || 0,
+          lastClaimDate: result.data.lastClaimDate,
+        }));
+        setSignInSuccess(true);
+        setTimeout(() => {
+          setShowSignInModal(false);
+          setSignInSuccess(false);
+          setSignInEmail("");
+          // Reload to sync progress
+          window.location.reload();
+        }, 1500);
+      } else {
+        setSignInError("No saved progress found. Start playing to save your progress!");
+      }
+    } catch (error) {
+      setSignInError("Unable to sign in. Please try again.");
+    }
+    
+    setIsSigningIn(false);
+  };
+
+  // Handle sign out
+  const handleSignOut = () => {
+    setUserEmail(null);
+    localStorage.removeItem('minifi_user_email');
+    setShowMobileMenu(false);
+  };
 
   // Animate numbers on mount and when they change
   useEffect(() => {
@@ -106,6 +180,29 @@ export function GameHeader({
           
           {/* Desktop Stats */}
           <div className="hidden md:flex items-center gap-3">
+            
+            {/* Sign In / User Status */}
+            {userEmail ? (
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200">
+                <Check className="h-4 w-4 text-emerald-500" />
+                <span className="text-xs text-emerald-700 font-medium truncate max-w-[100px]">{userEmail}</span>
+                <button
+                  onClick={handleSignOut}
+                  className="p-1 rounded-md hover:bg-emerald-100 text-emerald-500 transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowSignInModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 text-indigo-600 hover:shadow-lg hover:shadow-indigo-100 hover:scale-105 hover:border-indigo-300 transition-all group"
+              >
+                <LogIn className="h-4 w-4" />
+                <span className="text-sm font-medium">Sign In</span>
+              </button>
+            )}
             
             {/* Rewards Button */}
             {onRewardsClick && (
@@ -237,6 +334,33 @@ export function GameHeader({
               </div>
             </div>
             
+            {/* Sign In / User Status - Mobile */}
+            {userEmail ? (
+              <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-200 mb-3">
+                <div className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-emerald-500" />
+                  <span className="text-sm text-emerald-700 font-medium">{userEmail}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-600 text-sm font-medium hover:bg-emerald-200 transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowSignInModal(true);
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-bold shadow-lg hover:shadow-xl transition-all mb-3"
+              >
+                <LogIn className="h-5 w-5" />
+                <span>Sign In to Save Progress</span>
+              </button>
+            )}
+            
             {/* Rewards Button */}
             {onRewardsClick && (
               <button
@@ -254,6 +378,89 @@ export function GameHeader({
           </div>
         )}
       </div>
+      
+      {/* Sign In Modal */}
+      <Dialog open={showSignInModal} onOpenChange={(open) => {
+        setShowSignInModal(open);
+        if (!open) {
+          setSignInError("");
+          setSignInEmail("");
+          setSignInSuccess(false);
+        }
+      }}>
+        <DialogContent className="sm:max-w-md bg-gradient-to-br from-indigo-50 via-white to-violet-50 border-2 border-indigo-200">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Mail className="h-6 w-6 text-indigo-500" />
+                <span className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                  Welcome Back!
+                </span>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {signInSuccess ? (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <Check className="h-8 w-8 text-emerald-600" />
+                </div>
+                <p className="text-lg font-bold text-emerald-700">Signed In!</p>
+                <p className="text-sm text-gray-500">Loading your progress...</p>
+              </div>
+            ) : (
+              <>
+                <p className="text-center text-gray-600">
+                  Sign in with your email to retrieve your saved streak and XP progress.
+                </p>
+
+                {signInError && (
+                  <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                    <p className="text-red-600 text-sm text-center">{signInError}</p>
+                  </div>
+                )}
+
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <input
+                      type="email"
+                      value={signInEmail}
+                      onChange={(e) => setSignInEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                      disabled={isSigningIn}
+                      className="w-full pl-11 pr-4 py-3 rounded-xl bg-white border-2 border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 text-gray-900 placeholder-gray-400 outline-none transition-all disabled:opacity-50"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={isSigningIn || !signInEmail}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white font-bold text-lg shadow-lg shadow-indigo-200 disabled:opacity-50"
+                  >
+                    {isSigningIn ? (
+                      <span className="flex items-center gap-2">
+                        <span className="animate-spin">⏳</span>
+                        Signing In...
+                      </span>
+                    ) : (
+                      <>
+                        <LogIn className="h-5 w-5 mr-2" />
+                        Sign In
+                      </>
+                    )}
+                  </Button>
+                </form>
+
+                <p className="text-xs text-gray-500 text-center">
+                  New here? Just start playing and save your progress anytime!
+                </p>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }

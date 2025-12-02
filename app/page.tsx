@@ -715,6 +715,107 @@ export default function HomePage() {
           </div>
         )}
 
+        {/* Sign In Modal */}
+        {showSignInModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={() => {
+                setShowSignInModal(false);
+                setSignInError("");
+              }}
+            />
+            
+            {/* Modal */}
+            <div className="relative w-full max-w-md bg-[#0a0a12] rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+              {/* Header gradient */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-indigo-500/20 to-transparent" />
+              
+              <div className="relative p-8">
+                {/* Close button */}
+                <button 
+                  onClick={() => {
+                    setShowSignInModal(false);
+                    setSignInError("");
+                  }}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+
+                {/* Icon */}
+                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <Mail className="h-8 w-8 text-white" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-white text-center mb-2">
+                  Welcome Back! 👋
+                </h3>
+                <p className="text-white/70 text-center mb-8">
+                  Sign in with your email to retrieve your saved streak and XP progress.
+                </p>
+
+                {/* Error Message */}
+                {signInError && (
+                  <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
+                    <p className="text-red-300 text-sm text-center">{signInError}</p>
+                  </div>
+                )}
+
+                {/* Form */}
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
+                    <input
+                      type="email"
+                      value={signInEmail}
+                      onChange={(e) => setSignInEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                      disabled={isSigningIn}
+                      className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 text-white placeholder-white/40 outline-none transition-all disabled:opacity-50"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSigningIn || !signInEmail}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-indigo-500/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSigningIn ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="animate-spin">⏳</span>
+                        Signing In...
+                      </span>
+                    ) : (
+                      'Sign In'
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-6 pt-6 border-t border-white/10 space-y-3">
+                  <p className="text-white/50 text-sm text-center">
+                    Don't have an account?{" "}
+                    <button
+                      onClick={() => {
+                        setShowSignInModal(false);
+                        setSignInError("");
+                        setShowSignUpModal(true);
+                      }}
+                      className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+                    >
+                      Save your progress
+                    </button>
+                  </p>
+                  <p className="text-white/40 text-xs text-center">
+                    Or continue as guest - your progress is saved locally
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Hero Section - Mission First */}
         <main className="container mx-auto px-6">
           <div className={`max-w-5xl mx-auto pt-12 pb-20 text-center transition-all duration-1000 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>

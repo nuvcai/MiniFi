@@ -567,6 +567,32 @@ export function TeachingDialogue({
       markRequestInProgress(cacheKey); // Mark as in progress globally
       setLoadingAiAdvice(true);
 
+      // Set a timeout to fall back if API takes too long
+      const timeoutId = setTimeout(() => {
+        if (!hasFetchedAiAdvice.current) {
+          console.warn("AI coach advice timed out - using fallback");
+          const timeoutFallback: CoachResponse = {
+            advice: `Let's discuss your ${selectedOption.name} investment! You took action during ${event.title} - that's how real investors learn.`,
+            recommendations: [
+              "Diversify your portfolio across different asset classes",
+              "Think long-term like family offices do",
+              "Learn from each investment decision"
+            ],
+            next_steps: [
+              "Explore another mission to continue learning",
+              "Try a different investment strategy"
+            ],
+            risk_assessment: "Every investment carries risk - understanding this is key to becoming a smart investor.",
+            educational_insights: ["Family offices build wealth through patience and diversification"],
+            encouragement: "Keep investing and learning! You're on the path to thinking like a family office. 💪"
+          };
+          setAiCoachAdvice(timeoutFallback);
+          hasFetchedAiAdvice.current = true;
+          setLoadingAiAdvice(false);
+          markRequestCompleted(cacheKey);
+        }
+      }, 8000); // 8 second timeout
+
       try {
         const coachRequest: CoachRequest = {
           player_level: getPlayerLevel(
@@ -593,15 +619,39 @@ export function TeachingDialogue({
         };
 
         const advice = await api.getCoachAdvice(coachRequest);
+        clearTimeout(timeoutId); // Clear timeout on success
         setAiCoachAdvice(advice);
         hasFetchedAiAdvice.current = true; // Mark as fetched
 
         // Cache the advice for future use
         cacheAdvice(cacheKey, advice);
       } catch (error) {
+        clearTimeout(timeoutId); // Clear timeout on error
         console.error("Failed to fetch AI coach advice:", error);
         hasFetchedAiAdvice.current = true; // Mark as fetched even on error
-        // Fall back to static content
+        
+        // Set fallback AI advice so the game can continue
+        const fallbackAdvice: CoachResponse = {
+          advice: performance === "profit" 
+            ? `Great work on your ${selectedOption.name} investment! You showed courage by investing during ${event.title}. This is how family offices learn - by taking action and studying the results.`
+            : `Your ${selectedOption.name} investment during ${event.title} may not have gone as planned, but every great investor learns from challenges. Family offices build wealth by learning from every experience.`,
+          recommendations: [
+            "Diversify across multiple asset classes like family offices do",
+            "Consider your risk tolerance when choosing investments",
+            "Study how different assets perform during market events"
+          ],
+          next_steps: [
+            "Try a different asset class in your next mission",
+            "Explore how other investments performed during this event"
+          ],
+          risk_assessment: "Understanding risk is key to building long-term wealth. Each investment teaches valuable lessons.",
+          educational_insights: [
+            "Family offices diversify across 4-6+ asset classes",
+            "Past performance helps us understand market behavior"
+          ],
+          encouragement: "You're learning like a family office! Keep exploring different investments and building your knowledge. 🚀"
+        };
+        setAiCoachAdvice(fallbackAdvice);
       } finally {
         setLoadingAiAdvice(false);
         markRequestCompleted(cacheKey); // Mark as completed globally
