@@ -75,7 +75,7 @@ export const feedbackSchema = z.object({
     .string()
     .min(1, 'Message is required')
     .max(2000, 'Message too long')
-    .transform(sanitizeText),
+    .transform((val) => sanitizeText(val)),
   rating: z.number().int().min(1).max(5).optional(),
   pageContext: z.string().max(100).optional(),
   email: emailSchema.optional(),

@@ -1,7 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -11,129 +10,83 @@
      ═══════════════════════════════════════════════════════════════════════════ */
   
   /* Dark slate background - modern, gaming-inspired */
-  --background: oklch(0.13 0.02 260); /* Deep slate #0f172a */
-  --foreground: oklch(0.93 0.01 260); /* Light slate text #f1f5f9 */
-  --card: oklch(0.18 0.02 260); /* Slate card #1e293b */
-  --card-foreground: oklch(0.93 0.01 260);
-  --popover: oklch(0.18 0.02 260);
-  --popover-foreground: oklch(0.93 0.01 260);
+  --background: 222 47% 11%; /* Deep slate #0f172a */
+  --foreground: 210 40% 96%; /* Light slate text #f1f5f9 */
+  --card: 217 33% 17%; /* Slate card #1e293b */
+  --card-foreground: 210 40% 96%;
+  --popover: 217 33% 17%;
+  --popover-foreground: 210 40% 96%;
   
   /* Primary: Emerald - Growth & Success */
-  --primary: oklch(0.70 0.17 160); /* Emerald #10b981 */
-  --primary-foreground: oklch(0.98 0 0); /* White text */
+  --primary: 160 84% 39%; /* Emerald #10b981 */
+  --primary-foreground: 0 0% 100%; /* White text */
   
   /* Secondary: Teal - Trust & Innovation */
-  --secondary: oklch(0.68 0.14 175); /* Teal #14b8a6 */
-  --secondary-foreground: oklch(0.98 0 0);
+  --secondary: 168 76% 42%; /* Teal #14b8a6 */
+  --secondary-foreground: 0 0% 100%;
   
-  --muted: oklch(0.25 0.02 260); /* Slate muted #334155 */
-  --muted-foreground: oklch(0.60 0.01 260); /* Slate text #94a3b8 */
+  --muted: 217 19% 27%; /* Slate muted #334155 */
+  --muted-foreground: 215 16% 62%; /* Slate text #94a3b8 */
   
   /* Accent: Cyan - Energy & Excitement */
-  --accent: oklch(0.72 0.15 195); /* Cyan #06b6d4 */
-  --accent-foreground: oklch(0.13 0.02 260);
+  --accent: 189 95% 43%; /* Cyan #06b6d4 */
+  --accent-foreground: 222 47% 11%;
   
-  --destructive: oklch(0.60 0.22 25); /* Red #ef4444 */
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.30 0.02 260); /* Slate border #475569 */
-  --input: oklch(0.22 0.02 260); /* Slate input #334155 */
-  --ring: oklch(0.70 0.17 160); /* Emerald focus ring */
+  --destructive: 0 84% 60%; /* Red #ef4444 */
+  --destructive-foreground: 0 0% 100%;
+  --border: 215 14% 34%; /* Slate border #475569 */
+  --input: 217 19% 27%; /* Slate input #334155 */
+  --ring: 160 84% 39%; /* Emerald focus ring */
   
   /* Chart colors - Emerald/Teal themed */
-  --chart-1: oklch(0.70 0.17 160); /* Emerald for positive */
-  --chart-2: oklch(0.72 0.15 195); /* Cyan for highlights */
-  --chart-3: oklch(0.60 0.22 25); /* Red for negative */
-  --chart-4: oklch(0.68 0.14 175); /* Teal for neutral */
-  --chart-5: oklch(0.75 0.12 280); /* Purple accent */
+  --chart-1: 160 84% 39%; /* Emerald for positive */
+  --chart-2: 189 95% 43%; /* Cyan for highlights */
+  --chart-3: 0 84% 60%; /* Red for negative */
+  --chart-4: 168 76% 42%; /* Teal for neutral */
+  --chart-5: 270 60% 55%; /* Purple accent */
   
   --radius: 0.75rem; /* Rounded for friendly feel */
   
   /* Sidebar - Dark slate themed */
-  --sidebar: oklch(0.11 0.02 260); /* Darker slate */
-  --sidebar-foreground: oklch(0.93 0.01 260);
-  --sidebar-primary: oklch(0.70 0.17 160);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.25 0.02 260);
-  --sidebar-accent-foreground: oklch(0.93 0.01 260);
-  --sidebar-border: oklch(0.30 0.02 260);
-  --sidebar-ring: oklch(0.70 0.17 160);
-  
-  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
-  --font-outfit: "Outfit", sans-serif;
+  --sidebar-background: 222 47% 8%; /* Darker slate */
+  --sidebar-foreground: 210 40% 96%;
+  --sidebar-primary: 160 84% 39%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 19% 27%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-border: 215 14% 34%;
+  --sidebar-ring: 160 84% 39%;
 }
 
 /* Light mode (optional - can be enabled with class="light" on html) */
 .light {
-  --background: oklch(0.98 0.01 260);
-  --foreground: oklch(0.15 0.02 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 260);
-  --primary: oklch(0.60 0.17 160);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.58 0.14 175);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.95 0.01 260);
-  --muted-foreground: oklch(0.45 0.02 260);
-  --accent: oklch(0.62 0.15 195);
-  --accent-foreground: oklch(0.15 0.02 260);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.90 0.01 260);
-  --input: oklch(0.95 0.01 260);
-  --ring: oklch(0.60 0.17 160);
-}
-
-@theme inline {
-  --font-sans: var(--font-plus-jakarta); /* Plus Jakarta Sans for body - modern, friendly */
-  --font-heading: var(--font-outfit); /* Outfit for headings - bold, youthful */
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 160 84% 39%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 168 76% 42%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 189 95% 43%;
+  --accent-foreground: 222 47% 11%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 160 84% 39%;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
     font-feature-settings: "cv11", "ss01"; /* Enable stylistic alternates */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -141,7 +94,7 @@
   
   /* Apply Outfit to all headings - bold, modern, teen-friendly */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-outfit);
+    font-family: var(--font-outfit, 'Outfit', system-ui, sans-serif);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -154,7 +107,7 @@
 
 /* Utility class for heading font */
 .font-heading {
-  font-family: var(--font-outfit);
+  font-family: var(--font-outfit, 'Outfit', system-ui, sans-serif);
 }
 
 /* Fun text gradient utility */

@@ -243,10 +243,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Send test email
     if (testEmail) {
-      const result = await newsletterService.subscribe(testEmail, {
-        sendWelcome: false
-      });
-
       // Use Resend to send test
       if (process.env.RESEND_API_KEY) {
         await fetch('https://api.resend.com/emails', {
@@ -336,6 +332,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stats: { sent, total: subscribers.length }
       });
     }
+
+    // Default response
+    return NextResponse.json({
+      success: true,
+      message: 'Newsletter operation completed',
+      edition
+    });
 
   } catch (error) {
     console.error('Newsletter send error:', error);

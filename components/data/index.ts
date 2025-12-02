@@ -34,5 +34,22 @@ export * from './marketingData';
 export * from './marketingMessages';
 
 // Viral Marketing - Referrals, sharing, leaderboards, challenges
-export * from './viralMarketing';
+// Note: Some types overlap with marketingMessages, so we selectively export
+export {
+  // Types
+  type ReferralTier,
+  type ReferralStats,
+  type SharePlatform,
+  type ViralChallenge,
+  type SocialProofItem,
+  // Data
+  referralTiers,
+  shareTemplates,
+  viralChallenges,
+  socialProofItems,
+  // Functions
+  getShareTemplate,
+  calculateViralScore,
+  getNextReferralTier,
+} from './viralMarketing';
 

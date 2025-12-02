@@ -79,7 +79,7 @@ export function EventDetailModal({
             />
           </div>
 
-          <Card className="bg-linear-to-r from-primary/5 to-accent/5 border-primary/20">
+          <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
             <CardContent className="p-6">
               <div className="flex items-start gap-6">
                 <div className="shrink-0">

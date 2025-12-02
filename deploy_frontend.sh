@@ -53,3 +53,4 @@ echo "   3. Verify trading simulation works"
 echo ""
 
 
+

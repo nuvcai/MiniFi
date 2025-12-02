@@ -144,7 +144,7 @@ export function RewardsModal({
 
             <div className="space-y-4">
               {/* Current XP Display */}
-              <div className="bg-linear-to-r from-green-50 to-blue-50 p-3 sm:p-4 rounded-lg border">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 sm:p-4 rounded-lg border">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
                     <p className="text-sm text-muted-foreground">
