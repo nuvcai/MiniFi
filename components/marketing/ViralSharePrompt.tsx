@@ -5,30 +5,25 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { 
   Share2, 
   Gift, 
-  Users, 
   Copy, 
   Check, 
   X,
   Sparkles,
-  Zap,
   Trophy,
   ExternalLink
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { 
   viralMoments, 
-  shareTemplates,
   referralRewards,
   getReferralRewardForCount,
   getNextReferralMilestone,
-  generateShareUrl,
-  ViralMoment,
-  ReferralReward
+  generateShareUrl
 } from "@/components/data/marketingMessages";
 
 interface ViralSharePromptProps {
@@ -54,9 +49,23 @@ export function ViralSharePrompt({
   const [copied, setCopied] = useState(false);
   const [showReferralDetails, setShowReferralDetails] = useState(false);
 
-  const viralMoment = viralMoments.find(vm => vm.trigger === trigger);
-  const currentReward = getReferralRewardForCount(currentReferrals);
-  const nextReward = getNextReferralMilestone(currentReferrals);
+  // Memoize computed values
+  const viralMoment = useMemo(
+    () => viralMoments.find(vm => vm.trigger === trigger),
+    [trigger]
+  );
+  const currentReward = useMemo(
+    () => getReferralRewardForCount(currentReferrals),
+    [currentReferrals]
+  );
+  const nextReward = useMemo(
+    () => getNextReferralMilestone(currentReferrals),
+    [currentReferrals]
+  );
+  const shareUrl = useMemo(
+    () => generateShareUrl(referralCode, "copy"),
+    [referralCode]
+  );
 
   useEffect(() => {
     if (!viralMoment) return;
@@ -68,19 +77,17 @@ export function ViralSharePrompt({
     return () => clearTimeout(timer);
   }, [viralMoment]);
 
-  if (!viralMoment || !isVisible) return null;
-
-  // Replace placeholders in text
-  const replaceData = (text: string): string => {
+  // Memoized text replacement function
+  const replaceData = useCallback((text: string): string => {
     let result = text;
     Object.entries(data).forEach(([key, value]) => {
       result = result.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
     });
     return result;
-  };
+  }, [data]);
 
-  const handleCopyLink = async () => {
-    const shareUrl = generateShareUrl(referralCode, "copy");
+  // Handler functions
+  const handleCopyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
@@ -88,28 +95,33 @@ export function ViralSharePrompt({
     } catch (err) {
       console.error("Failed to copy:", err);
     }
-  };
+  }, [shareUrl]);
 
-  const handleShare = (platform: string) => {
-    const shareUrl = generateShareUrl(referralCode, platform);
+  const handleShare = useCallback((platform: string) => {
+    if (!viralMoment) return;
+    
+    const platformShareUrl = generateShareUrl(referralCode, platform);
     const shareText = replaceData(viralMoment.sharePrompt);
     
     const urls: Record<string, string> = {
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(platformShareUrl)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(platformShareUrl)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + platformShareUrl)}`,
     };
 
     if (urls[platform]) {
-      window.open(urls[platform], '_blank', 'width=600,height=400');
+      window.open(urls[platform], '_blank', 'noopener,noreferrer,width=600,height=400');
     }
     onShare?.(platform);
-  };
+  }, [viralMoment, referralCode, replaceData, onShare]);
 
-  const handleDismiss = () => {
+  const handleDismiss = useCallback(() => {
     setIsVisible(false);
     onDismiss?.();
-  };
+  }, [onDismiss]);
+
+  // Early return after hooks
+  if (!viralMoment || !isVisible) return null;
 
   // Banner variant
   if (variant === "banner") {
@@ -135,7 +147,11 @@ export function ViralSharePrompt({
               >
                 Share
               </button>
-              <button onClick={handleDismiss} className="p-1 text-white/70 hover:text-white">
+              <button 
+                onClick={handleDismiss} 
+                className="p-1 text-white/70 hover:text-white"
+                aria-label="Dismiss share banner"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -212,6 +228,7 @@ export function ViralSharePrompt({
           <button
             onClick={handleDismiss}
             className="absolute top-4 right-4 p-1 text-slate-400 hover:text-white z-10"
+            aria-label="Close share dialog"
           >
             <X className="h-5 w-5" />
           </button>
@@ -257,14 +274,18 @@ export function ViralSharePrompt({
 
             {/* Copy link */}
             <div className="flex items-center gap-2 p-3 bg-slate-700/50 rounded-xl mb-4">
+              <label htmlFor="share-url" className="sr-only">Share URL</label>
               <input
+                id="share-url"
                 type="text"
-                value={generateShareUrl(referralCode, "copy")}
+                value={shareUrl}
                 readOnly
                 className="flex-1 bg-transparent text-sm text-slate-300 outline-none"
+                aria-label="Referral link"
               />
               <button
                 onClick={handleCopyLink}
+                aria-label={copied ? "Link copied" : "Copy referral link"}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   copied 
                     ? 'bg-emerald-500 text-white' 

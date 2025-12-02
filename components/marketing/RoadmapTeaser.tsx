@@ -5,7 +5,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { 
   Sparkles, 
   Lock, 
@@ -14,7 +14,6 @@ import {
   Calendar,
   Zap,
   Star,
-  ArrowRight,
   Target,
   BookOpen
 } from "lucide-react";
@@ -23,7 +22,7 @@ import {
   futureFeatureTeasers, 
   getUpcomingTeasers,
   getRandomTagline,
-  MarketingTagline
+  type MarketingTagline
 } from "@/components/data/marketingMessages";
 
 interface RoadmapTeaserProps {
@@ -33,6 +32,25 @@ interface RoadmapTeaserProps {
   className?: string;
 }
 
+// Static mappings moved outside component to prevent re-creation
+const STATUS_COLORS: Record<string, string> = {
+  development: "from-emerald-500 to-green-600",
+  coming_soon: "from-purple-500 to-violet-600",
+  design: "from-blue-500 to-cyan-500",
+  research: "from-amber-500 to-orange-500",
+  beta: "from-pink-500 to-rose-500"
+} as const;
+
+const STATUS_LABELS: Record<string, string> = {
+  development: "In Development",
+  coming_soon: "Coming Soon",
+  design: "Designing",
+  research: "Researching",
+  beta: "Beta Testing"
+} as const;
+
+const TAGLINE_ROTATION_INTERVAL = 8000;
+
 export function RoadmapTeaser({ 
   variant = "compact", 
   maxItems = 4,
@@ -40,33 +58,23 @@ export function RoadmapTeaser({
   className = ""
 }: RoadmapTeaserProps) {
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
-  const [currentTagline, setCurrentTagline] = useState<MarketingTagline>(getRandomTagline());
+  const [currentTagline, setCurrentTagline] = useState<MarketingTagline>(() => getRandomTagline());
   
-  const upcomingFeatures = getUpcomingTeasers(maxItems);
+  // Memoize computed values
+  const upcomingFeatures = useMemo(() => getUpcomingTeasers(maxItems), [maxItems]);
 
-  // Rotate taglines
+  // Rotate taglines with stable interval
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTagline(getRandomTagline());
-    }, 8000);
+    }, TAGLINE_ROTATION_INTERVAL);
     return () => clearInterval(interval);
   }, []);
 
-  const statusColors: Record<string, string> = {
-    development: "from-emerald-500 to-green-600",
-    coming_soon: "from-purple-500 to-violet-600",
-    design: "from-blue-500 to-cyan-500",
-    research: "from-amber-500 to-orange-500",
-    beta: "from-pink-500 to-rose-500"
-  };
-
-  const statusLabels: Record<string, string> = {
-    development: "In Development",
-    coming_soon: "Coming Soon",
-    design: "Designing",
-    research: "Researching",
-    beta: "Beta Testing"
-  };
+  // Memoized handlers
+  const handleFeatureHover = useCallback((featureId: string | null) => {
+    setHoveredFeature(featureId);
+  }, []);
 
   // Compact banner version
   if (variant === "banner") {
@@ -148,7 +156,7 @@ export function RoadmapTeaser({
                 {/* Glow effect */}
                 <div className={`
                   absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 
-                  transition-opacity duration-300 bg-gradient-to-br ${statusColors[feature.status]}
+                  transition-opacity duration-300 bg-gradient-to-br ${STATUS_COLORS[feature.status]}
                 `} />
                 
                 <div className="relative">
@@ -170,9 +178,9 @@ export function RoadmapTeaser({
                       {feature.eta}
                     </div>
                     <Badge 
-                      className={`text-[8px] px-1.5 py-0.5 bg-gradient-to-r ${statusColors[feature.status]} text-white border-0`}
+                      className={`text-[8px] px-1.5 py-0.5 bg-gradient-to-r ${STATUS_COLORS[feature.status]} text-white border-0`}
                     >
-                      {statusLabels[feature.status]}
+                      {STATUS_LABELS[feature.status]}
                     </Badge>
                   </div>
                 </div>
@@ -241,14 +249,14 @@ export function RoadmapTeaser({
               {/* Animated background */}
               <div className={`
                 absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 
-                transition-opacity duration-300 bg-gradient-to-br ${statusColors[feature.status]}
+                transition-opacity duration-300 bg-gradient-to-br ${STATUS_COLORS[feature.status]}
               `} />
               
               <div className="relative flex gap-4">
                 {/* Icon and timeline */}
                 <div className="flex flex-col items-center">
                   <div className={`
-                    w-14 h-14 rounded-xl bg-gradient-to-br ${statusColors[feature.status]}
+                    w-14 h-14 rounded-xl bg-gradient-to-br ${STATUS_COLORS[feature.status]}
                     flex items-center justify-center text-2xl shadow-lg
                     group-hover:scale-110 transition-transform duration-300
                   `}>
@@ -270,9 +278,9 @@ export function RoadmapTeaser({
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge 
-                        className={`text-xs bg-gradient-to-r ${statusColors[feature.status]} text-white border-0`}
+                        className={`text-xs bg-gradient-to-r ${STATUS_COLORS[feature.status]} text-white border-0`}
                       >
-                        {statusLabels[feature.status]}
+                        {STATUS_LABELS[feature.status]}
                       </Badge>
                       <div className="flex items-center gap-1 text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-full">
                         <Calendar className="h-3 w-3" />

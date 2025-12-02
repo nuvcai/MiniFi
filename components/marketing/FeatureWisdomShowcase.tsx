@@ -5,13 +5,11 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { 
   Sparkles, 
   BookOpen,
   Zap,
-  Trophy,
-  Flame,
   Target,
   TrendingUp,
   Shield,
@@ -20,7 +18,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { featureBenefits, FeatureBenefit } from "@/components/data/marketingMessages";
+import { featureBenefits } from "@/components/data/marketingMessages";
 import { wealthPillars } from "@/components/data/wealthWisdom";
 
 interface FeatureWisdomShowcaseProps {
@@ -29,19 +27,20 @@ interface FeatureWisdomShowcaseProps {
   className?: string;
 }
 
-const pillarIcons: Record<string, React.ReactNode> = {
+// Static mappings moved outside component
+const PILLAR_ICONS: Record<string, React.ReactNode> = {
   accumulation: <TrendingUp className="h-4 w-4" />,
   preservation: <Shield className="h-4 w-4" />,
   growth: <Rocket className="h-4 w-4" />,
   transfer: <Gift className="h-4 w-4" />
-};
+} as const;
 
-const pillarColors: Record<string, string> = {
+const PILLAR_COLORS: Record<string, string> = {
   accumulation: "from-emerald-500 to-green-600",
   preservation: "from-blue-500 to-cyan-600",
   growth: "from-purple-500 to-pink-600",
   transfer: "from-amber-500 to-orange-600"
-};
+} as const;
 
 export function FeatureWisdomShowcase({ 
   variant = "grid",
@@ -51,14 +50,27 @@ export function FeatureWisdomShowcase({
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
   const [selectedPillar, setSelectedPillar] = useState<string | null>(null);
 
-  const filteredFeatures = selectedPillar 
-    ? featureBenefits.filter(f => f.wisdomPillar === selectedPillar)
-    : featureBenefits;
+  // Memoize filtered features
+  const filteredFeatures = useMemo(() => 
+    selectedPillar 
+      ? featureBenefits.filter(f => f.wisdomPillar === selectedPillar)
+      : featureBenefits,
+    [selectedPillar]
+  );
 
-  // Get pillar info
-  const getPillarInfo = (pillarId: string) => {
+  // Memoize pillar lookup
+  const getPillarInfo = useCallback((pillarId: string) => {
     return wealthPillars.find(p => p.id === pillarId);
-  };
+  }, []);
+  
+  // Memoized handlers
+  const handleFeatureHover = useCallback((featureId: string | null) => {
+    setHoveredFeature(featureId);
+  }, []);
+  
+  const handlePillarSelect = useCallback((pillarId: string | null) => {
+    setSelectedPillar(current => current === pillarId ? null : pillarId);
+  }, []);
 
   if (variant === "carousel") {
     return (
@@ -94,9 +106,9 @@ export function FeatureWisdomShowcase({
               </p>
               
               <Badge 
-                className={`text-[10px] bg-gradient-to-r ${pillarColors[feature.wisdomPillar]} text-white border-0`}
+                className={`text-[10px] bg-gradient-to-r ${PILLAR_COLORS[feature.wisdomPillar]} text-white border-0`}
               >
-                {pillarIcons[feature.wisdomPillar]}
+                {PILLAR_ICONS[feature.wisdomPillar]}
                 <span className="ml-1 capitalize">{feature.wisdomPillar}</span>
               </Badge>
             </div>
@@ -167,7 +179,7 @@ export function FeatureWisdomShowcase({
               onClick={() => setSelectedPillar(pillar.id === selectedPillar ? null : pillar.id)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1 ${
                 selectedPillar === pillar.id 
-                  ? `bg-gradient-to-r ${pillarColors[pillar.id]} text-white` 
+                  ? `bg-gradient-to-r ${PILLAR_COLORS[pillar.id]} text-white` 
                   : 'bg-slate-700/50 text-slate-400 hover:text-white'
               }`}
             >
@@ -180,7 +192,7 @@ export function FeatureWisdomShowcase({
 
       {/* Selected pillar context */}
       {showPillarContext && selectedPillar && (
-        <div className={`mb-6 p-4 rounded-xl border border-slate-700/50 bg-gradient-to-r ${pillarColors[selectedPillar].replace('from-', 'from-').replace('to-', 'to-')}/10`}>
+        <div className={`mb-6 p-4 rounded-xl border border-slate-700/50 bg-gradient-to-r ${PILLAR_COLORS[selectedPillar].replace('from-', 'from-').replace('to-', 'to-')}/10`}>
           {(() => {
             const pillarInfo = getPillarInfo(selectedPillar);
             if (!pillarInfo) return null;
@@ -216,7 +228,7 @@ export function FeatureWisdomShowcase({
               {/* Glow effect */}
               <div className={`
                 absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 
-                transition-opacity duration-300 bg-gradient-to-br ${pillarColors[feature.wisdomPillar]}
+                transition-opacity duration-300 bg-gradient-to-br ${PILLAR_COLORS[feature.wisdomPillar]}
               `} />
               
               <div className="relative">
@@ -226,9 +238,9 @@ export function FeatureWisdomShowcase({
                     {feature.emoji}
                   </span>
                   <Badge 
-                    className={`text-[10px] bg-gradient-to-r ${pillarColors[feature.wisdomPillar]} text-white border-0`}
+                    className={`text-[10px] bg-gradient-to-r ${PILLAR_COLORS[feature.wisdomPillar]} text-white border-0`}
                   >
-                    {pillarIcons[feature.wisdomPillar]}
+                    {PILLAR_ICONS[feature.wisdomPillar]}
                   </Badge>
                 </div>
                 
