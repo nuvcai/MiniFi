@@ -227,6 +227,97 @@ CREATE POLICY "Anyone can create profile" ON user_profiles
   WITH CHECK (true);
 
 -- =============================================================================
+-- DAILY_STREAKS TABLE - Track streak history and claims
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS daily_streaks (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES user_profiles(id) ON DELETE CASCADE,
+  email TEXT,
+  session_id TEXT,
+  
+  -- Streak data
+  current_streak INTEGER DEFAULT 0,
+  longest_streak INTEGER DEFAULT 0,
+  total_claims INTEGER DEFAULT 0,
+  
+  -- XP tracking
+  total_xp_from_streaks INTEGER DEFAULT 0,
+  last_bonus_earned INTEGER DEFAULT 0,
+  
+  -- Timestamps
+  last_claim_date DATE,
+  streak_started_at TIMESTAMPTZ,
+  
+  -- Metadata
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for daily_streaks
+CREATE INDEX IF NOT EXISTS idx_streaks_user ON daily_streaks(user_id);
+CREATE INDEX IF NOT EXISTS idx_streaks_email ON daily_streaks(email);
+CREATE INDEX IF NOT EXISTS idx_streaks_session ON daily_streaks(session_id);
+CREATE INDEX IF NOT EXISTS idx_streaks_last_claim ON daily_streaks(last_claim_date DESC);
+
+-- Enable Row Level Security
+ALTER TABLE daily_streaks ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Service role can do everything
+CREATE POLICY "Service role full access" ON daily_streaks
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
+-- Policy: Anonymous users can insert/update their own streaks
+CREATE POLICY "Anyone can manage their streak" ON daily_streaks
+  FOR ALL
+  TO anon
+  WITH CHECK (true);
+
+-- =============================================================================
+-- STREAK_CLAIMS TABLE - Individual claim history
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS streak_claims (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  streak_id UUID REFERENCES daily_streaks(id) ON DELETE CASCADE,
+  email TEXT,
+  session_id TEXT,
+  
+  -- Claim details
+  claim_date DATE NOT NULL,
+  streak_day INTEGER NOT NULL, -- Day number in current streak
+  xp_earned INTEGER DEFAULT 10,
+  bonus_earned INTEGER DEFAULT 0, -- Extra XP from milestones
+  
+  -- Metadata
+  claimed_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for streak_claims
+CREATE INDEX IF NOT EXISTS idx_claims_streak ON streak_claims(streak_id);
+CREATE INDEX IF NOT EXISTS idx_claims_date ON streak_claims(claim_date DESC);
+CREATE INDEX IF NOT EXISTS idx_claims_email ON streak_claims(email);
+
+-- Enable Row Level Security
+ALTER TABLE streak_claims ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Service role can do everything
+CREATE POLICY "Service role full access" ON streak_claims
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
+-- Policy: Anonymous users can insert claims
+CREATE POLICY "Anyone can claim streak" ON streak_claims
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- =============================================================================
 -- WAITLIST TABLE - Feature-specific waitlists
 -- =============================================================================
 
@@ -361,8 +452,12 @@ GRANT ALL ON user_activity TO service_role;
 GRANT ALL ON user_profiles TO service_role;
 GRANT ALL ON sponsors TO service_role;
 GRANT ALL ON waitlist TO service_role;
+GRANT ALL ON daily_streaks TO service_role;
+GRANT ALL ON streak_claims TO service_role;
 
 GRANT SELECT, INSERT ON user_profiles TO anon;
+GRANT SELECT, INSERT, UPDATE ON daily_streaks TO anon;
+GRANT SELECT, INSERT ON streak_claims TO anon;
 
 -- Grant view permissions
 GRANT SELECT ON lead_stats TO service_role;

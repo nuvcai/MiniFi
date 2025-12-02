@@ -12,10 +12,22 @@ import Image from "next/image";
 import { 
   Play, ChevronRight, ArrowRight, BookOpen, Target, 
   Shield, TrendingUp, Sparkles, Users, Clock, Award,
-  GraduationCap, Lightbulb, Building2, History
+  GraduationCap, Lightbulb, Building2, History, Flame,
+  Check, X, Mail, Lock, Zap, Gift, Calendar
 } from "lucide-react";
 import { aiCoaches } from "@/components/data/coaches";
 import { wealthEras, foPrinciples, investorWisdom } from "@/components/data/wealthWisdom";
+
+// Generate or get session ID for anonymous users
+const getSessionId = () => {
+  if (typeof window === 'undefined') return null;
+  let sessionId = localStorage.getItem('minifi_session_id');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('minifi_session_id', sessionId);
+  }
+  return sessionId;
+};
 
 export default function HomePage() {
   const [selectedCoachIndex, setSelectedCoachIndex] = useState(0);
@@ -24,6 +36,292 @@ export default function HomePage() {
   const [activePrincipleIndex, setActivePrincipleIndex] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  
+  // Daily Streak state
+  const [streakData, setStreakData] = useState({
+    currentStreak: 1,
+    todayClaimed: false,
+    totalXP: 0,
+    nextBonusIn: 6, // days until next bonus (7 - current streak)
+    bonusXP: 50,
+    lastClaimDate: null as string | null,
+  });
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signUpSubmitted, setSignUpSubmitted] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [signInError, setSignInError] = useState("");
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [streakClaiming, setStreakClaiming] = useState(false);
+
+  // Load streak data from localStorage or database
+  useEffect(() => {
+    const loadStreakData = async () => {
+      // Check localStorage first
+      const savedEmail = localStorage.getItem('minifi_user_email');
+      const savedStreak = localStorage.getItem('minifi_streak_data');
+      const sessionId = getSessionId();
+      
+      if (savedEmail) {
+        setUserEmail(savedEmail);
+      }
+
+      // Try to fetch from database
+      try {
+        const params = new URLSearchParams();
+        if (savedEmail) {
+          params.append('email', savedEmail);
+        } else if (sessionId) {
+          params.append('sessionId', sessionId);
+        }
+
+        const response = await fetch(`/api/streak?${params.toString()}`);
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const data = result.data;
+          const currentStreak = data.currentStreak || 1;
+          const nextBonus = 7 - (currentStreak % 7);
+          
+          setStreakData({
+            currentStreak,
+            todayClaimed: data.todayClaimed || false,
+            totalXP: data.totalXP || 0,
+            nextBonusIn: nextBonus === 0 ? 7 : nextBonus,
+            bonusXP: currentStreak < 7 ? 50 : 25, // 50 for first 7-day, 25 for weekly after
+            lastClaimDate: data.lastClaimDate,
+          });
+          
+          if (data.email) {
+            setUserEmail(data.email);
+            localStorage.setItem('minifi_user_email', data.email);
+          }
+          return;
+        }
+      } catch (error) {
+        console.log('Using localStorage fallback for streak');
+      }
+
+      // Fallback to localStorage
+      if (savedStreak) {
+        try {
+          const parsed = JSON.parse(savedStreak);
+          const today = new Date().toDateString();
+          const lastClaim = parsed.lastClaimDate ? new Date(parsed.lastClaimDate).toDateString() : null;
+          
+          // Check if streak is still valid (claimed yesterday or today)
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = yesterday.toDateString();
+          
+          let currentStreak = parsed.currentStreak || 0;
+          let todayClaimed = lastClaim === today;
+          
+          // If last claim wasn't today or yesterday, reset streak
+          if (lastClaim && lastClaim !== today && lastClaim !== yesterdayStr) {
+            currentStreak = 0;
+            todayClaimed = false;
+          }
+          
+          const nextBonus = 7 - (currentStreak % 7);
+          
+          setStreakData({
+            currentStreak,
+            todayClaimed,
+            totalXP: parsed.totalXP || 0,
+            nextBonusIn: nextBonus === 0 ? 7 : nextBonus,
+            bonusXP: currentStreak < 7 ? 50 : 25,
+            lastClaimDate: parsed.lastClaimDate,
+          });
+        } catch (e) {
+          // Initialize fresh streak
+          initializeStreak();
+        }
+      } else {
+        // Initialize fresh streak for new users
+        initializeStreak();
+      }
+    };
+
+    const initializeStreak = () => {
+      // Auto-claim first day for new users
+      const now = new Date().toISOString();
+      const newStreakData = {
+        currentStreak: 1,
+        todayClaimed: true,
+        totalXP: 10,
+        nextBonusIn: 6,
+        bonusXP: 50,
+        lastClaimDate: now,
+      };
+      setStreakData(newStreakData);
+      localStorage.setItem('minifi_streak_data', JSON.stringify(newStreakData));
+    };
+
+    loadStreakData();
+  }, []);
+
+  // Claim daily streak
+  const claimDailyStreak = async () => {
+    if (streakData.todayClaimed || streakClaiming) return;
+    
+    setStreakClaiming(true);
+    
+    try {
+      const sessionId = getSessionId();
+      const response = await fetch('/api/streak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'claim',
+          email: userEmail,
+          sessionId,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        const newStreak = result.data.currentStreak;
+        const nextBonus = 7 - (newStreak % 7);
+        
+        const newStreakData = {
+          currentStreak: newStreak,
+          todayClaimed: true,
+          totalXP: result.data.totalXP,
+          nextBonusIn: nextBonus === 0 ? 7 : nextBonus,
+          bonusXP: newStreak < 7 ? 50 : 25,
+          lastClaimDate: new Date().toISOString(),
+        };
+        
+        setStreakData(newStreakData);
+        localStorage.setItem('minifi_streak_data', JSON.stringify(newStreakData));
+      }
+    } catch (error) {
+      // Fallback: update locally
+      const newStreak = streakData.currentStreak + 1;
+      const nextBonus = 7 - (newStreak % 7);
+      
+      const newStreakData = {
+        currentStreak: newStreak,
+        todayClaimed: true,
+        totalXP: streakData.totalXP + 10,
+        nextBonusIn: nextBonus === 0 ? 7 : nextBonus,
+        bonusXP: newStreak < 7 ? 50 : 25,
+        lastClaimDate: new Date().toISOString(),
+      };
+      
+      setStreakData(newStreakData);
+      localStorage.setItem('minifi_streak_data', JSON.stringify(newStreakData));
+    }
+    
+    setStreakClaiming(false);
+  };
+
+  // Handle sign up submission
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signUpEmail || isSigningUp) return;
+    
+    setIsSigningUp(true);
+    
+    try {
+      const sessionId = getSessionId();
+      const response = await fetch('/api/streak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'signup',
+          email: signUpEmail.toLowerCase(),
+          streakData: {
+            currentStreak: streakData.currentStreak,
+            totalXP: streakData.totalXP,
+            sessionId,
+          },
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setUserEmail(signUpEmail.toLowerCase());
+        localStorage.setItem('minifi_user_email', signUpEmail.toLowerCase());
+        setSignUpSubmitted(true);
+      } else {
+        alert(result.error || 'Failed to save progress. Please try again.');
+      }
+    } catch (error) {
+      // Save locally as fallback
+      setUserEmail(signUpEmail.toLowerCase());
+      localStorage.setItem('minifi_user_email', signUpEmail.toLowerCase());
+      setSignUpSubmitted(true);
+    }
+    
+    setIsSigningUp(false);
+  };
+
+  // Handle sign in to retrieve saved progress
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signInEmail || isSigningIn) return;
+    
+    setIsSigningIn(true);
+    setSignInError("");
+    
+    try {
+      const response = await fetch(`/api/streak?email=${encodeURIComponent(signInEmail.toLowerCase())}`);
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        const data = result.data;
+        
+        // Check if user exists (has some progress)
+        if (data.totalXP > 0 || data.currentStreak > 0) {
+          const currentStreak = data.currentStreak || 0;
+          const nextBonus = 7 - (currentStreak % 7);
+          
+          setStreakData({
+            currentStreak,
+            todayClaimed: data.todayClaimed || false,
+            totalXP: data.totalXP || 0,
+            nextBonusIn: nextBonus === 0 ? 7 : nextBonus,
+            bonusXP: currentStreak < 7 ? 50 : 25,
+            lastClaimDate: data.lastClaimDate,
+          });
+          
+          setUserEmail(signInEmail.toLowerCase());
+          localStorage.setItem('minifi_user_email', signInEmail.toLowerCase());
+          localStorage.setItem('minifi_streak_data', JSON.stringify({
+            currentStreak,
+            todayClaimed: data.todayClaimed,
+            totalXP: data.totalXP,
+            lastClaimDate: data.lastClaimDate,
+          }));
+          
+          setShowSignInModal(false);
+          setSignInEmail("");
+        } else {
+          setSignInError("No saved progress found for this email. Try signing up instead!");
+        }
+      } else {
+        setSignInError("No saved progress found for this email. Try signing up instead!");
+      }
+    } catch (error) {
+      setSignInError("Unable to sign in. Please try again.");
+    }
+    
+    setIsSigningIn(false);
+  };
+
+  // Handle sign out
+  const handleSignOut = () => {
+    setUserEmail(null);
+    localStorage.removeItem('minifi_user_email');
+    // Keep local streak data so user doesn't lose progress
+  };
 
   useEffect(() => {
     setIsLoaded(true);
@@ -142,6 +440,281 @@ export default function HomePage() {
           </div>
         </nav>
 
+        {/* Daily Streak Banner */}
+        <div className={`container mx-auto px-6 mb-4 transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="max-w-4xl mx-auto">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500/20 via-amber-500/15 to-yellow-500/20 border border-orange-500/30 p-4 sm:p-5">
+              {/* Animated fire glow */}
+              <div className="absolute top-0 left-1/4 w-32 h-32 bg-orange-500/20 rounded-full blur-3xl animate-pulse" />
+              
+              <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4">
+                {/* Streak Info */}
+                <div className="flex items-center gap-4">
+                  {/* Fire Icon with Streak */}
+                  <div className="relative">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 ${!streakData.todayClaimed ? 'animate-pulse' : ''}`}>
+                      <Flame className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white text-orange-600 font-bold text-sm flex items-center justify-center shadow-md">
+                      {streakData.currentStreak}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-white">Day Streak 🔥</h3>
+                      {streakData.todayClaimed ? (
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-semibold">
+                          <Check className="h-3 w-3" />
+                          Claimed
+                        </span>
+                      ) : (
+                        <button
+                          onClick={claimDailyStreak}
+                          disabled={streakClaiming}
+                          className="flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-semibold transition-all hover:scale-105 disabled:opacity-50"
+                        >
+                          {streakClaiming ? (
+                            <span className="animate-pulse">Claiming...</span>
+                          ) : (
+                            <>
+                              <Zap className="h-3 w-3" />
+                              Claim +10 XP
+                            </>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-amber-200 text-sm sm:text-base">
+                      <span className="font-semibold">{streakData.nextBonusIn} day{streakData.nextBonusIn !== 1 ? 's' : ''}</span> to <span className="text-amber-300 font-bold">+{streakData.bonusXP} XP</span> bonus!
+                    </p>
+                  </div>
+                </div>
+
+                {/* XP Progress & Save Button */}
+                <div className="flex items-center gap-4">
+                  {/* Total XP Badge */}
+                  <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-black/30 border border-white/10">
+                    <Zap className="h-5 w-5 text-yellow-400" />
+                    <div>
+                      <div className="text-xs text-white/60">Total XP</div>
+                      <div className="text-lg font-bold text-white">{streakData.totalXP}</div>
+                    </div>
+                  </div>
+                  
+                  {/* Save Progress Button / User Status */}
+                  {userEmail ? (
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
+                        <Check className="h-5 w-5 text-emerald-400" />
+                        <div className="hidden sm:block">
+                          <div className="text-xs text-emerald-400/80">Signed in as</div>
+                          <div className="text-sm font-medium text-white truncate max-w-[120px]">{userEmail}</div>
+                        </div>
+                        <span className="sm:hidden text-sm text-emerald-400">Saved</span>
+                      </div>
+                      <button
+                        onClick={handleSignOut}
+                        className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs transition-all"
+                        title="Sign Out"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setShowSignInModal(true)}
+                        className="group flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/80 hover:text-white font-medium transition-all duration-300"
+                      >
+                        <Mail className="h-4 w-4" />
+                        <span className="hidden sm:inline">Sign In</span>
+                      </button>
+                      <button
+                        onClick={() => setShowSignUpModal(true)}
+                        className="group flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 text-white font-semibold transition-all duration-300 hover:scale-105"
+                      >
+                        <Gift className="h-5 w-5 text-amber-400 group-hover:animate-bounce" />
+                        <span className="hidden sm:inline">Save Progress</span>
+                        <span className="sm:hidden">Save</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Streak Progress Bar */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-white/60">Next milestone: 7-day streak</span>
+                  <span className="text-xs font-semibold text-amber-300">+50 XP bonus</span>
+                </div>
+                <div className="h-2 bg-black/30 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-orange-500 to-amber-400 rounded-full transition-all duration-500"
+                    style={{ width: `${(streakData.currentStreak / 7) * 100}%` }}
+                  />
+                </div>
+                <div className="flex justify-between mt-2">
+                  {[1, 2, 3, 4, 5, 6, 7].map((day) => (
+                    <div 
+                      key={day} 
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                        day <= streakData.currentStreak 
+                          ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30' 
+                          : 'bg-white/10 text-white/40'
+                      }`}
+                    >
+                      {day <= streakData.currentStreak ? <Check className="h-3 w-3" /> : day}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sign Up Modal */}
+        {showSignUpModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={() => setShowSignUpModal(false)}
+            />
+            
+            {/* Modal */}
+            <div className="relative w-full max-w-md bg-[#0a0a12] rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+              {/* Header gradient */}
+              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-indigo-500/20 to-transparent" />
+              
+              <div className="relative p-8">
+                {/* Close button */}
+                <button 
+                  onClick={() => setShowSignUpModal(false)}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+
+                {/* Icon */}
+                <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <Gift className="h-8 w-8 text-white" />
+                </div>
+
+                {!signUpSubmitted ? (
+                  <>
+                    <h3 className="text-2xl font-bold text-white text-center mb-2">
+                      Save Your Progress! 🎉
+                    </h3>
+                    <p className="text-white/70 text-center mb-8">
+                      Don't lose your {streakData.currentStreak}-day streak and {streakData.totalXP} XP! 
+                      Sign up to save your progress and unlock exclusive rewards.
+                    </p>
+
+                    {/* Benefits */}
+                    <div className="space-y-3 mb-8">
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                        <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center">
+                          <Flame className="h-5 w-5 text-orange-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white text-sm">Keep Your Streak</div>
+                          <div className="text-xs text-white/60">Never lose your progress again</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                          <Award className="h-5 w-5 text-emerald-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white text-sm">Leaderboard Access</div>
+                          <div className="text-xs text-white/60">Compete with other learners</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                        <div className="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
+                          <Calendar className="h-5 w-5 text-violet-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white text-sm">Weekly Rewards</div>
+                          <div className="text-xs text-white/60">Exclusive bonuses for members</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Form */}
+                    <form 
+                      onSubmit={handleSignUp}
+                      className="space-y-4"
+                    >
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
+                        <input
+                          type="email"
+                          value={signUpEmail}
+                          onChange={(e) => setSignUpEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          required
+                          disabled={isSigningUp}
+                          className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 text-white placeholder-white/40 outline-none transition-all disabled:opacity-50"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSigningUp || !signUpEmail}
+                        className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-indigo-500/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSigningUp ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="animate-spin">⏳</span>
+                            Saving...
+                          </span>
+                        ) : (
+                          'Save My Progress'
+                        )}
+                      </button>
+                    </form>
+
+                    <p className="text-xs text-white/40 text-center mt-4">
+                      By signing up, you agree to our Terms and Privacy Policy. 
+                      We'll never share your data.
+                    </p>
+                  </>
+                ) : (
+                  <div className="text-center py-4">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                      <Check className="h-10 w-10 text-emerald-400" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      You're All Set! 🎉
+                    </h3>
+                    <p className="text-white/70 mb-6">
+                      Check your email to confirm and start tracking your progress across devices.
+                    </p>
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 mb-6">
+                      <div className="flex items-center justify-center gap-3">
+                        <Flame className="h-6 w-6 text-orange-400" />
+                        <span className="text-lg font-bold text-white">{streakData.currentStreak}-Day Streak Saved!</span>
+                      </div>
+                      <p className="text-amber-200 text-sm mt-1">{streakData.totalXP} XP secured</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShowSignUpModal(false);
+                        setSignUpSubmitted(false);
+                      }}
+                      className="px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-all"
+                    >
+                      Continue Learning
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Hero Section - Mission First */}
         <main className="container mx-auto px-6">
           <div className={`max-w-5xl mx-auto pt-12 pb-20 text-center transition-all duration-1000 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -168,9 +741,9 @@ export default function HomePage() {
                   <span className="text-white/90">no financial education.</span>
                 </p>
                 <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 tracking-tight">
-                  <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
                     We're changing that.
-                  </span>
+              </span>
                   <span className="text-white/90">"</span>
                 </p>
               </blockquote>
@@ -346,25 +919,25 @@ export default function HomePage() {
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {aiCoaches.map((coach, index) => (
+                {aiCoaches.map((coach, index) => (
                 <div 
-                  key={coach.id}
-                  onClick={() => setSelectedCoachIndex(index)}
+                    key={coach.id}
+                    onClick={() => setSelectedCoachIndex(index)}
                   className={`relative p-6 rounded-3xl cursor-pointer transition-all duration-500 ${
-                    index === selectedCoachIndex
+                      index === selectedCoachIndex 
                       ? 'bg-gradient-to-br from-indigo-500/25 via-violet-500/15 to-transparent border-2 border-indigo-500/50 scale-[1.02] shadow-lg shadow-indigo-500/10'
                       : 'bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] hover:border-white/20'
-                  }`}
-                >
+                    }`}
+                  >
                   <div className="flex flex-col items-center text-center">
                     <div className={`relative mb-4 ${index === selectedCoachIndex ? 'scale-110' : ''} transition-transform duration-500`}>
-                      <Image
-                        src={coach.avatar}
-                        alt={coach.name}
+                    <Image
+                      src={coach.avatar}
+                      alt={coach.name}
                         width={80}
                         height={80}
-                        className="rounded-full"
-                      />
+                      className="rounded-full"
+                    />
                       {index === selectedCoachIndex && (
                         <div className="absolute inset-0 rounded-full ring-2 ring-indigo-400 ring-offset-2 ring-offset-[#050507]" />
                       )}
@@ -469,7 +1042,7 @@ export default function HomePage() {
               <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
                 From the World's Greatest Investors
               </h2>
-            </div>
+          </div>
 
             <div className="space-y-6">
               {investorWisdom.slice(0, 3).map((wisdom, index) => (
@@ -509,8 +1082,8 @@ export default function HomePage() {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-8">
                   <GraduationCap className="h-4 w-4 text-indigo-400" />
                   <span className="text-sm text-white font-medium">Your financial future starts now</span>
-                </div>
-
+              </div>
+              
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
                   Join the Next Generation
                   <br />
@@ -539,8 +1112,8 @@ export default function HomePage() {
                     <BookOpen className="h-5 w-5" />
                     Explore Wisdom Library
                   </Link>
-                </div>
-
+              </div>
+              
                 <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 mt-10 text-sm text-white/70">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-emerald-400" />
@@ -568,13 +1141,13 @@ export default function HomePage() {
                 <span className="text-white font-semibold">The second best time is NOW.</span>"
               </p>
               <div className="flex items-center justify-center gap-3">
-                <Image
-                  src="/nuvc-logo.png"
-                  alt="NUVC.AI"
-                  width={32}
-                  height={32}
+              <Image
+                src="/nuvc-logo.png"
+                alt="NUVC.AI"
+                width={32}
+                height={32}
                   className="rounded-lg"
-                />
+              />
                 <span className="text-sm text-white/60">A NUVC.AI initiative for financial literacy</span>
               </div>
             </div>
@@ -629,16 +1202,16 @@ export default function HomePage() {
               <div className="text-sm text-white/50">
                 © 2025 NUVC.AI. All Rights Reserved. Made with ❤️ for Australian teens.
               </div>
-              <a 
-                href="https://github.com/nuvcai/MiniFi" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                <a 
+                  href="https://github.com/nuvcai/MiniFi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
                 className="text-white/50 hover:text-white transition-colors"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-              </a>
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
             </div>
           </div>
         </footer>

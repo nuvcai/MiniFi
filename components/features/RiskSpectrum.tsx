@@ -175,9 +175,9 @@ export function RiskSpectrum({
         )}
         
         {/* Spectrum bar */}
-        <div className="relative h-16 rounded-xl bg-gradient-to-r from-green-500/10 via-yellow-500/10 via-orange-500/10 to-red-500/10 border border-slate-700/50 overflow-hidden">
+        <div className="relative h-16 rounded-xl bg-gradient-to-r from-green-500/10 via-amber-500/10 to-red-500/10 border border-slate-700/50 overflow-hidden">
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-yellow-500/5 via-orange-500/5 to-red-500/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-amber-500/5 to-red-500/5" />
           
           {/* Grid lines */}
           <div className="absolute inset-0 flex">
