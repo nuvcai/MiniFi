@@ -33,3 +33,6 @@ export * from './marketingData';
 // Marketing Messages - Value propositions, taglines, feature benefits, teasers
 export * from './marketingMessages';
 
+// Viral Marketing - Referrals, sharing, leaderboards, challenges
+export * from './viralMarketing';
+
