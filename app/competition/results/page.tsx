@@ -1,5 +1,6 @@
 /**
  * Mini.Fi Competition Results
+ * Light, fun design
  * © 2025 NUVC.AI. All Rights Reserved.
  */
 
@@ -51,8 +52,8 @@ function ResultsContent() {
     return (
       <div className="flex items-center justify-center pt-32">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-400 mx-auto mb-4" />
-          <p className="text-white/40">Loading results...</p>
+          <Loader2 className="h-10 w-10 animate-spin text-amber-500 mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">Loading results...</p>
         </div>
       </div>
     );
@@ -69,28 +70,33 @@ function ResultsContent() {
 
 export default function ResultsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      {/* Subtle gradient */}
-      <div className="fixed inset-0 bg-gradient-to-b from-indigo-950/10 via-transparent to-violet-950/5 pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-yellow-50">
+      {/* Background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-amber-200/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-yellow-200/40 rounded-full blur-3xl" />
+      </div>
       
       {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/timeline" className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors group">
+            <Link href="/timeline" className="flex items-center gap-2 text-gray-500 hover:text-amber-600 transition-colors group">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm">Back</span>
+              <span className="text-sm font-medium">Back</span>
             </Link>
             
             <div className="flex items-center gap-3">
               <Image
                 src="/favicon.png"
                 alt="Mini.Fi"
-                width={32}
-                height={32}
-                className="rounded-lg"
+                width={36}
+                height={36}
+                className="rounded-xl shadow-lg"
               />
-              <span className="text-white/70 font-medium">Results</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                Results 🏆
+              </span>
             </div>
             
             <div className="w-16" />
@@ -98,18 +104,20 @@ export default function ResultsPage() {
         </div>
       </nav>
 
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center pt-32">
-            <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-400 mx-auto mb-4" />
-              <p className="text-white/40">Loading...</p>
+      <div className="relative">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center pt-32">
+              <div className="text-center">
+                <Loader2 className="h-10 w-10 animate-spin text-amber-500 mx-auto mb-4" />
+                <p className="text-gray-500 font-medium">Loading...</p>
+              </div>
             </div>
-          </div>
-        }
-      >
-        <ResultsContent />
-      </Suspense>
+          }
+        >
+          <ResultsContent />
+        </Suspense>
+      </div>
     </div>
   );
 }

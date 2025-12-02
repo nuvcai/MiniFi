@@ -1,5 +1,6 @@
 /**
  * Mini.Fi Competition Page
+ * Light, fun design
  * © 2025 NUVC.AI. All Rights Reserved.
  */
 
@@ -26,39 +27,46 @@ export default function CompetitionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      {/* Subtle gradient */}
-      <div className="fixed inset-0 bg-gradient-to-b from-indigo-950/10 via-transparent to-violet-950/5 pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-teal-50">
+      {/* Background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-200/40 rounded-full blur-3xl" />
+      </div>
       
       {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/timeline" className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors group">
+            <Link href="/timeline" className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm">Back</span>
+              <span className="text-sm font-medium">Back</span>
             </Link>
             
             <div className="flex items-center gap-3">
               <Image
                 src="/favicon.png"
                 alt="Mini.Fi"
-                width={32}
-                height={32}
-                className="rounded-lg"
+                width={36}
+                height={36}
+                className="rounded-xl shadow-lg"
               />
-              <span className="text-white/70 font-medium">Competition</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                Competition
+              </span>
             </div>
             
-            <div className="w-16" /> {/* Spacer */}
+            <div className="w-16" />
           </div>
         </div>
       </nav>
 
-      <InvestmentCompetition
-        onBack={handleBack}
-        onStartTrading={handleStartTrading}
-      />
+      <div className="relative">
+        <InvestmentCompetition
+          onBack={handleBack}
+          onStartTrading={handleStartTrading}
+        />
+      </div>
     </div>
   );
 }

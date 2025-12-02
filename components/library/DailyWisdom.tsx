@@ -120,18 +120,38 @@ function getRandomWisdom(): DailyWisdomContent {
   }
 }
 
-const typeColors = {
-  pillar: "from-amber-500/20 to-orange-500/20 border-amber-500/30",
-  investor: "from-violet-500/20 to-purple-500/20 border-violet-500/30",
-  hope: "from-rose-500/20 to-pink-500/20 border-rose-500/30",
-  principle: "from-indigo-500/20 to-blue-500/20 border-indigo-500/30"
+const typeStyles = {
+  pillar: {
+    bg: "from-amber-50 to-orange-50",
+    border: "border-amber-200",
+    badge: "bg-amber-100 text-amber-700 border-amber-200",
+    accent: "text-amber-600"
+  },
+  investor: {
+    bg: "from-violet-50 to-purple-50",
+    border: "border-violet-200",
+    badge: "bg-violet-100 text-violet-700 border-violet-200",
+    accent: "text-violet-600"
+  },
+  hope: {
+    bg: "from-rose-50 to-pink-50",
+    border: "border-rose-200",
+    badge: "bg-rose-100 text-rose-700 border-rose-200",
+    accent: "text-rose-600"
+  },
+  principle: {
+    bg: "from-indigo-50 to-blue-50",
+    border: "border-indigo-200",
+    badge: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    accent: "text-indigo-600"
+  }
 };
 
 const typeLabels = {
-  pillar: "Wealth Pillar",
-  investor: "Investor Wisdom",
-  hope: "Daily Inspiration",
-  principle: "Principle"
+  pillar: "💰 Wealth Pillar",
+  investor: "🏆 Investor Wisdom",
+  hope: "✨ Daily Inspiration",
+  principle: "💡 Principle"
 };
 
 interface DailyWisdomProps {
@@ -154,18 +174,19 @@ export function DailyWisdom({ showControls = true, compact = false }: DailyWisdo
   
   if (!wisdom) return null;
   
+  const style = typeStyles[wisdom.type];
+  
   return (
-    <div className={`rounded-2xl bg-gradient-to-br ${typeColors[wisdom.type]} border p-5 ${compact ? "" : "p-6"}`}>
+    <div className={`rounded-2xl bg-gradient-to-br ${style.bg} border ${style.border} shadow-lg ${compact ? "p-4" : "p-6"}`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <Badge className="bg-white/10 text-white/70 border-white/10 mb-3 text-xs">
-            <Sparkles className="h-3 w-3 mr-1" />
+          <Badge className={`${style.badge} mb-3 text-xs font-semibold`}>
             {typeLabels[wisdom.type]}
           </Badge>
-          <h3 className="text-lg font-semibold text-white">{wisdom.title}</h3>
+          <h3 className="text-lg font-bold text-gray-900">{wisdom.title}</h3>
           {wisdom.source && (
-            <p className="text-white/50 text-sm mt-1">{wisdom.source}</p>
+            <p className="text-gray-500 text-sm mt-1">{wisdom.source}</p>
           )}
         </div>
         {showControls && (
@@ -173,7 +194,7 @@ export function DailyWisdom({ showControls = true, compact = false }: DailyWisdo
             <Button
               variant="ghost"
               size="sm"
-              className="text-white/50 hover:text-white hover:bg-white/10 h-8 w-8 p-0"
+              className="text-gray-400 hover:text-gray-600 hover:bg-white/50 h-8 w-8 p-0"
               onClick={refreshWisdom}
             >
               <RefreshCw className="h-4 w-4" />
@@ -181,7 +202,7 @@ export function DailyWisdom({ showControls = true, compact = false }: DailyWisdo
             <Button
               variant="ghost"
               size="sm"
-              className={`text-white/50 hover:text-white hover:bg-white/10 h-8 w-8 p-0 ${isBookmarked ? "text-white bg-white/10" : ""}`}
+              className={`text-gray-400 hover:text-gray-600 hover:bg-white/50 h-8 w-8 p-0 ${isBookmarked ? "text-amber-500 bg-amber-50" : ""}`}
               onClick={() => setIsBookmarked(!isBookmarked)}
             >
               <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`} />
@@ -191,15 +212,15 @@ export function DailyWisdom({ showControls = true, compact = false }: DailyWisdo
       </div>
       
       {/* Content */}
-      <p className={`text-white/80 ${wisdom.type === "investor" ? "italic" : ""} ${compact ? "text-sm" : ""}`}>
+      <p className={`text-gray-700 ${wisdom.type === "investor" ? "italic text-lg" : ""} ${compact ? "text-sm" : ""} leading-relaxed`}>
         {wisdom.content}
       </p>
       
       {/* For Teens */}
       {wisdom.forTeens && !compact && (
-        <div className="mt-4 pt-4 border-t border-white/10">
-          <p className="text-sm text-white/50">
-            <span className="text-white/70 font-medium">Takeaway: </span>
+        <div className="mt-4 pt-4 border-t border-gray-200/50">
+          <p className="text-sm text-gray-600">
+            <span className={`font-semibold ${style.accent}`}>🎯 Takeaway: </span>
             {wisdom.forTeens}
           </p>
         </div>

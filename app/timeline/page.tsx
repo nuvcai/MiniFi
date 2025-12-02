@@ -1,6 +1,6 @@
 /**
  * Mini.Fi Timeline Page
- * Minimalist game interface
+ * Light, fun game interface
  * © 2025 NUVC.AI. All Rights Reserved.
  */
 
@@ -185,9 +185,12 @@ export default function TimelinePage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      {/* Subtle gradient */}
-      <div className="fixed inset-0 bg-gradient-to-b from-indigo-950/10 via-transparent to-violet-950/5 pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-violet-50">
+      {/* Fun background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 right-20 w-64 h-64 bg-indigo-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 left-10 w-80 h-80 bg-violet-200/30 rounded-full blur-3xl" />
+      </div>
       
       <div className="relative">
         <GameHeader
@@ -200,7 +203,7 @@ export default function TimelinePage() {
         <div className="container mx-auto px-4 sm:px-6 py-8">
           <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
             
-            {/* Sidebar - Simplified */}
+            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-4">
               <CoachSidebar
                 coaches={aiCoaches}
@@ -208,26 +211,26 @@ export default function TimelinePage() {
                 onCoachSelect={setSelectedCoach}
               />
 
-              {/* Progress Summary - Clean */}
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <h3 className="text-sm font-medium text-white/50 mb-4">Progress</h3>
+              {/* Progress Summary */}
+              <div className="p-5 rounded-2xl bg-white shadow-lg shadow-indigo-100 border border-indigo-100">
+                <h3 className="text-sm font-semibold text-gray-500 mb-4">📊 Progress</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-white/40 text-sm">Completed</span>
-                    <span className="text-white font-medium">
+                    <span className="text-gray-500 text-sm">Completed</span>
+                    <span className="text-gray-900 font-bold">
                       {financialEvents.filter((e) => e.completed).length} / {financialEvents.length}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/40 text-sm">Available</span>
-                    <span className="text-indigo-400 font-medium">
+                    <span className="text-gray-500 text-sm">Available</span>
+                    <span className="text-indigo-600 font-bold">
                       {financialEvents.filter((e) => e.unlocked && !e.completed).length}
                     </span>
                   </div>
-                  <div className="h-px bg-white/5 my-2" />
+                  <div className="h-px bg-gray-100 my-2" />
                   <div className="flex justify-between">
-                    <span className="text-white/40 text-sm">Total XP</span>
-                    <span className="text-white font-semibold">{playerXP.toLocaleString()}</span>
+                    <span className="text-gray-500 text-sm">Total XP</span>
+                    <span className="text-violet-600 font-bold">{playerXP.toLocaleString()} ⭐</span>
                   </div>
                 </div>
               </div>

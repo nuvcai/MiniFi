@@ -1,12 +1,12 @@
 /**
- * GameHeader - Minimalist game navigation
- * Clean, focused design with essential info only
+ * GameHeader - Fun, light game navigation
+ * Teen-friendly design
  */
 
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Gift, Star } from "lucide-react";
+import { Gift, Star, Zap } from "lucide-react";
 import { levelTitles } from "@/components/gamification/LevelUpCelebration";
 
 interface GameHeaderProps {
@@ -28,7 +28,7 @@ export function GameHeader({
   const levelInfo = levelTitles[playerLevel] || levelTitles[1];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           
@@ -37,11 +37,11 @@ export function GameHeader({
             <Image
               src="/favicon.png"
               alt="Mini.Fi"
-              width={36}
-              height={36}
-              className="rounded-xl group-hover:scale-105 transition-transform"
+              width={40}
+              height={40}
+              className="rounded-xl shadow-lg group-hover:scale-105 transition-transform"
             />
-            <span className="text-lg font-semibold text-white/90 hidden sm:inline">
+            <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent hidden sm:inline">
               Mini.Fi
             </span>
           </Link>
@@ -53,31 +53,31 @@ export function GameHeader({
             {onRewardsClick && (
               <button
                 onClick={onRewardsClick}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200 text-amber-600 hover:shadow-lg hover:shadow-amber-100 hover:scale-105 transition-all"
               >
                 <Gift className="h-4 w-4" />
-                <span className="text-sm font-medium hidden sm:inline">Rewards</span>
+                <span className="text-sm font-semibold hidden sm:inline">Rewards</span>
               </button>
             )}
             
             {/* Level & XP */}
-            <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white shadow-lg shadow-indigo-100 border border-indigo-100">
               {/* Level Badge */}
-              <div className={`flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br ${levelInfo.color}`}>
+              <div className={`flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${levelInfo.color} shadow-md`}>
                 <span className="text-sm font-bold text-white">{playerLevel}</span>
               </div>
               
               {/* XP */}
               <div className="hidden sm:block">
                 <div className="flex items-center gap-1.5">
-                  <Star className="h-3.5 w-3.5 text-indigo-400" />
-                  <span className="text-sm font-semibold text-white">
+                  <Star className="h-4 w-4 text-amber-500" />
+                  <span className="text-sm font-bold text-gray-900">
                     {playerXP.toLocaleString()}
                   </span>
-                  <span className="text-xs text-white/40">XP</span>
+                  <span className="text-xs text-gray-500">XP</span>
                 </div>
                 {/* Progress bar */}
-                <div className="w-20 h-1 mt-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-20 h-1.5 mt-1 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
                     style={{ width: `${xpProgress}%` }}
@@ -86,10 +86,10 @@ export function GameHeader({
               </div>
             </div>
             
-            {/* Score - compact */}
-            <div className="text-center px-3 py-2 rounded-xl bg-white/5 border border-white/10">
-              <p className="text-xs text-white/40">Score</p>
-              <p className="text-sm font-bold text-indigo-400">
+            {/* Score */}
+            <div className="text-center px-4 py-2.5 rounded-xl bg-white shadow-lg shadow-violet-100 border border-violet-100">
+              <p className="text-xs text-gray-500">Score</p>
+              <p className="text-sm font-bold text-violet-600">
                 {totalScore.toLocaleString()}
               </p>
             </div>

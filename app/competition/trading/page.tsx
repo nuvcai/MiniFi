@@ -1,5 +1,6 @@
 /**
  * Mini.Fi Trading Dashboard
+ * Light, fun design
  * © 2025 NUVC.AI. All Rights Reserved.
  */
 
@@ -53,10 +54,10 @@ function TradingContent() {
 
   if (!competitionConfig) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="flex items-center justify-center pt-32">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-400 mx-auto mb-4" />
-          <p className="text-white/40">Loading competition...</p>
+          <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">Loading competition...</p>
         </div>
       </div>
     );
@@ -73,28 +74,33 @@ function TradingContent() {
 
 export default function TradingPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      {/* Subtle gradient */}
-      <div className="fixed inset-0 bg-gradient-to-b from-indigo-950/10 via-transparent to-violet-950/5 pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-teal-50">
+      {/* Background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 right-20 w-64 h-64 bg-emerald-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 left-10 w-80 h-80 bg-teal-200/30 rounded-full blur-3xl" />
+      </div>
       
       {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/competition" className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors group">
+            <Link href="/competition" className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm">Exit</span>
+              <span className="text-sm font-medium">Exit</span>
             </Link>
             
             <div className="flex items-center gap-3">
               <Image
                 src="/favicon.png"
                 alt="Mini.Fi"
-                width={32}
-                height={32}
-                className="rounded-lg"
+                width={36}
+                height={36}
+                className="rounded-xl shadow-lg"
               />
-              <span className="text-white/70 font-medium">Trading</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                Trading
+              </span>
             </div>
             
             <div className="w-16" />
@@ -102,18 +108,20 @@ export default function TradingPage() {
         </div>
       </nav>
 
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center pt-32">
-            <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-400 mx-auto mb-4" />
-              <p className="text-white/40">Loading...</p>
+      <div className="relative">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center pt-32">
+              <div className="text-center">
+                <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mx-auto mb-4" />
+                <p className="text-gray-500 font-medium">Loading...</p>
+              </div>
             </div>
-          </div>
-        }
-      >
-        <TradingContent />
-      </Suspense>
+          }
+        >
+          <TradingContent />
+        </Suspense>
+      </div>
     </div>
   );
 }
