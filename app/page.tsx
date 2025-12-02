@@ -23,19 +23,78 @@ export default function HomePage() {
   const [activeEraIndex, setActiveEraIndex] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  
+  // Typewriter state for coach text
+  const [displayedText, setDisplayedText] = useState("");
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const typewriterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get full text to display for current coach
+  const getCoachDisplayText = (coach: typeof aiCoaches[0]) => {
+    return `${coach.description} Investment Philosophy: ${coach.investmentPhilosophy}`;
+  };
+
+  // Typewriter effect for coach text
+  useEffect(() => {
+    const coach = aiCoaches[selectedCoachIndex];
+    const fullText = getCoachDisplayText(coach);
+    
+    // Reset when coach changes
+    setDisplayedText("");
+    setIsTypingComplete(false);
+    setCurrentTextIndex(0);
+    
+    // Clear any existing timeout
+    if (typewriterTimeoutRef.current) {
+      clearTimeout(typewriterTimeoutRef.current);
+    }
+    
+    // Start typing animation
+    let charIndex = 0;
+    const typeChar = () => {
+      if (charIndex < fullText.length) {
+        setDisplayedText(fullText.slice(0, charIndex + 1));
+        setCurrentTextIndex(charIndex + 1);
+        charIndex++;
+        // Speed: 25ms per character (faster for better UX)
+        typewriterTimeoutRef.current = setTimeout(typeChar, 20);
+      } else {
+        setIsTypingComplete(true);
+      }
+    };
+    
+    // Start after a brief delay
+    typewriterTimeoutRef.current = setTimeout(typeChar, 300);
+    
+    return () => {
+      if (typewriterTimeoutRef.current) {
+        clearTimeout(typewriterTimeoutRef.current);
+      }
+    };
+  }, [selectedCoachIndex]);
+
+  // Auto-advance coach only after typing is complete
+  useEffect(() => {
+    if (!isTypingComplete) return;
+    
+    // Wait 3 seconds after typing completes, then move to next coach
+    const advanceTimeout = setTimeout(() => {
+      setSelectedCoachIndex((prev) => (prev + 1) % aiCoaches.length);
+    }, 3000);
+    
+    return () => clearTimeout(advanceTimeout);
+  }, [isTypingComplete]);
 
   useEffect(() => {
     setIsLoaded(true);
-    const coachInterval = setInterval(() => {
-      setSelectedCoachIndex((prev) => (prev + 1) % aiCoaches.length);
-    }, 4000);
     
+    // Era rotation (independent of coach)
     const eraInterval = setInterval(() => {
       setActiveEraIndex((prev) => (prev + 1) % wealthEras.length);
     }, 5000);
     
     return () => {
-      clearInterval(coachInterval);
       clearInterval(eraInterval);
     };
   }, []);
@@ -382,20 +441,43 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Selected Coach Detail */}
-            <div className="mt-8 p-8 rounded-3xl bg-gradient-to-r from-indigo-500/15 via-violet-500/10 to-purple-500/15 border border-indigo-500/30">
+            {/* Selected Coach Detail - with Typewriter Effect */}
+            <div className="mt-8 p-8 rounded-3xl bg-gradient-to-r from-indigo-500/15 via-violet-500/10 to-purple-500/15 border border-indigo-500/30 relative overflow-hidden">
+              {/* Progress bar showing typing progress */}
+              <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-100" 
+                style={{ width: `${(currentTextIndex / getCoachDisplayText(selectedCoach).length) * 100}%` }} 
+              />
+              
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">{selectedCoach.name}</h3>
-                  <p className="text-indigo-300 mb-5 leading-relaxed">{selectedCoach.description}</p>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <Target className="h-5 w-5 text-indigo-400 mt-1 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm font-semibold text-indigo-300 mb-1">Investment Philosophy</div>
-                        <div className="text-white/90 leading-relaxed">{selectedCoach.investmentPhilosophy}</div>
-                      </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <Image
+                      src={selectedCoach.avatar}
+                      alt={selectedCoach.name}
+                      width={56}
+                      height={56}
+                      className="rounded-full ring-2 ring-indigo-400/50"
+                    />
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">{selectedCoach.name}</h3>
+                      <p className="text-sm text-indigo-400 font-medium">{selectedCoach.personality}</p>
                     </div>
+                  </div>
+                  
+                  {/* Typewriter text display */}
+                  <div className="min-h-[140px] relative">
+                    <p className="text-indigo-200 leading-relaxed">
+                      {displayedText}
+                      {!isTypingComplete && (
+                        <span className="inline-block w-0.5 h-5 bg-indigo-400 ml-0.5 animate-pulse" />
+                      )}
+                    </p>
+                    {isTypingComplete && (
+                      <div className="absolute bottom-0 right-0 flex items-center gap-1 text-xs text-indigo-400/60">
+                        <span>Next coach in 3s</span>
+                        <Sparkles className="h-3 w-3" />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -405,7 +487,7 @@ export default function HomePage() {
                   </div>
                   <div className="p-5 rounded-xl bg-indigo-500/15 border border-indigo-500/30">
                     <div className="text-sm font-semibold text-indigo-300 mb-2">Favorite Quote</div>
-                    <p className="text-white italic text-sm leading-relaxed">{selectedCoach.favoriteQuote}</p>
+                    <p className="text-white italic text-sm leading-relaxed">"{selectedCoach.favoriteQuote}"</p>
                   </div>
                 </div>
               </div>
