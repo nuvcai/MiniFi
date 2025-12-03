@@ -22,6 +22,19 @@ import {
   SHARE_REWARDS,
 } from "@/lib/marketing";
 
+// Thesis entry for journal feature
+export interface ThesisEntry {
+  id: string;
+  eventYear: number;
+  eventTitle: string;
+  optionName: string;
+  thesis: string;
+  outcome: "profit" | "loss";
+  actualReturn: number;
+  timestamp: Date;
+  xpEarned: number;
+}
+
 interface EffortStats {
   investmentsMade: number;
   riskPreviewsViewed: number;
@@ -39,6 +52,17 @@ interface EffortStats {
   totalShares: number;
   sharesByPlatform: Record<string, number>;
   shareXpEarned: number;
+  // Quiz tracking
+  quizzesCompleted: number;
+  totalQuizScore: number;
+  quizQuestionsCorrect: number;
+  quizQuestionsAttempted: number;
+  averageQuizScore: number;
+  // Thesis tracking
+  thesesWritten: number;
+  thesesHistory: ThesisEntry[];
+  // Journey tracking
+  claimedJourneyStages: string[];
 }
 
 interface EarnedReward {
@@ -63,6 +87,17 @@ interface UseEffortRewardsReturn {
   // Share actions
   recordShare: (platform: string) => { xp: number; canClaim: boolean; cooldownRemaining: number };
   getShareRewardInfo: (platform: string) => { xp: number; canClaim: boolean; cooldownRemaining: number };
+  
+  // Quiz actions
+  recordQuizCompleted: (questionsCorrect: number, totalQuestions: number) => void;
+  
+  // Thesis actions
+  recordThesis: (entry: Omit<ThesisEntry, "id" | "timestamp">) => void;
+  getThesesHistory: () => ThesisEntry[];
+  
+  // Journey actions
+  claimJourneyStage: (stageId: string) => void;
+  isJourneyStageClaimedFn: (stageId: string) => boolean;
   
   // Helpers
   getLossEncouragement: () => string;
@@ -90,6 +125,17 @@ const initialStats: EffortStats = {
   totalShares: 0,
   sharesByPlatform: {},
   shareXpEarned: 0,
+  // Quiz tracking
+  quizzesCompleted: 0,
+  totalQuizScore: 0,
+  quizQuestionsCorrect: 0,
+  quizQuestionsAttempted: 0,
+  averageQuizScore: 0,
+  // Thesis tracking
+  thesesWritten: 0,
+  thesesHistory: [],
+  // Journey tracking
+  claimedJourneyStages: [],
 };
 
 export function useEffortRewards(): UseEffortRewardsReturn {

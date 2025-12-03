@@ -733,6 +733,10 @@ export function generateRandomScenario(): { event: FinancialEvent; missionData: 
   const template = pickRandom(scenarioTemplates);
   const isGoodOutcome = Math.random() > 0.4; // 60% chance of good outcome
   
+  // Get the principle data for richer educational content
+  const primaryPrinciple = corePrinciples[template.primaryPrinciple];
+  const secondaryPrinciple = corePrinciples[template.secondaryPrinciple];
+  
   // Generate variables for template filling
   const vars = {
     percentage: pickRandom(variations.percentages),
@@ -752,10 +756,14 @@ export function generateRandomScenario(): { event: FinancialEvent; missionData: 
   const currentYear = new Date().getFullYear();
   const scenarioYear = currentYear + Math.floor(Math.random() * 3); // Current to 2 years ahead
   
+  // Build a description that highlights the educational focus
+  const principleEmoji = primaryPrinciple.emoji;
+  const scenarioDescription = `${principleEmoji} ${template.emotionalChallenge.split(' - ')[0]} Challenge`;
+  
   const event: FinancialEvent = {
     year: scenarioYear,
-    title: `${template.title} ${Math.floor(Math.random() * 900) + 100}`, // Add unique ID
-    description: `Random scenario: ${template.themes.join(", ")} 🎲`,
+    title: `${template.title} #${Math.floor(Math.random() * 900) + 100}`, // Add unique ID
+    description: scenarioDescription,
     impact: isGoodOutcome ? "positive" : "negative",
     difficulty: pickRandom(["intermediate", "advanced", "expert"]) as "intermediate" | "advanced" | "expert",
     unlocked: true,
@@ -772,16 +780,28 @@ export function generateRandomScenario(): { event: FinancialEvent; missionData: 
     vars
   );
   
+  // Build principle-based educational messages
+  const wealthLesson = `🎓 WEALTH LESSON: ${pickRandom(template.lessonsTemplates)}`;
+  
+  // Use generational wisdom from the template
+  const foWisdom = `🏛️ FAMILY OFFICE WISDOM: ${pickRandom(template.generationalWisdom)}`;
+  
+  // Build conviction test as opportunity
+  const historicalOpportunity = `💎 THE TEST: ${template.convictionTest}\n\n${secondaryPrinciple.emoji} ${secondaryPrinciple.name}: ${pickRandom(secondaryPrinciple.keyLessons)}`;
+  
+  // Build hope message incorporating the principles
+  const hopeMessage = `✨ MASTERING ${primaryPrinciple.name.toUpperCase()}: ${primaryPrinciple.description}\n\n🔑 Key Insight: ${pickRandom(primaryPrinciple.keyLessons)}\n\n💪 Remember: Every scenario you complete builds your emotional intelligence and investment judgment. This practice will serve you for life!`;
+  
   const missionData: MissionData = {
     context: fillTemplate(pickRandom(template.contextTemplates), vars),
     situation: fillTemplate(pickRandom(template.situationTemplates), vars),
     options,
     coachAdvice: generateCoachAdvice(),
     outcome: outcomeText,
-    wealthLesson: `🎓 WEALTH LESSON: ${pickRandom(template.lessonsTemplates)}`,
-    foWisdom: "🏛️ FAMILY OFFICE WISDOM: Diversification and patience are the cornerstones of generational wealth. No single bet should make or break you.",
-    historicalOpportunity: "💡 THE OPPORTUNITY: Every market condition creates opportunities for prepared investors. The key is having a plan and sticking to it.",
-    hopeMessage: "✨ FOR YOU: This scenario is practice for the real thing! The lessons you learn here will serve you well when real market opportunities arise.",
+    wealthLesson,
+    foWisdom,
+    historicalOpportunity,
+    hopeMessage,
   };
   
   return { event, missionData };
@@ -804,10 +824,20 @@ export function generateRandomScenarios(count: number): { event: FinancialEvent;
   return scenarios;
 }
 
-// Export scenario categories for UI
+// Export scenario categories for UI with principle information
 export const scenarioCategories = scenarioTemplates.map(t => ({
   id: t.id,
   title: t.title,
   themes: t.themes,
+  primaryPrinciple: t.primaryPrinciple,
+  secondaryPrinciple: t.secondaryPrinciple,
+  emotionalChallenge: t.emotionalChallenge,
+  convictionTest: t.convictionTest,
+}));
+
+// Export for educational UI
+export const principlesList = Object.entries(corePrinciples).map(([key, value]) => ({
+  id: key,
+  ...value,
 }));
 
