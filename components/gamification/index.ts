@@ -20,6 +20,12 @@ export {
   type FloatingXpItem 
 } from "./FloatingXp";
 
+// Badge Display Component
+export { BadgeDisplay } from "./BadgeDisplay";
+
+// Milestone Achievement Modal
+export { MilestoneAchievement } from "./MilestoneAchievement";
+
 // Effort Rewards Data & Utilities
 export {
   courageRewards,

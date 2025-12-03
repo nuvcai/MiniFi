@@ -6,6 +6,7 @@ import { FinancialEvent } from "@/components/data/events";
 import { TeachingDialogue } from "@/components/mission/TeachingDialogue";
 import { aiCoaches, AICoach } from "@/components/data/coaches";
 import { getRandomHopeMessage, type HopeMessage } from "@/components/data/wealthWisdom";
+import { ShareResultCard } from "@/components/viral/ShareResultCard";
 
 interface MissionResultProps {
   selectedOption: InvestmentOption;
@@ -20,6 +21,8 @@ interface MissionResultProps {
   selectedCoach: AICoach; // Add selectedCoach prop
   onComplete: () => void;
   onXpEarned?: (amount: number) => void;
+  streakDays?: number;
+  totalXp?: number;
 }
 
 // Confetti particle colors
@@ -70,9 +73,12 @@ export function MissionResult({
   selectedCoach, // Add selectedCoach parameter
   onComplete,
   onXpEarned,
+  streakDays = 0,
+  totalXp = 0,
 }: MissionResultProps) {
   const [showConfetti, setShowConfetti] = useState(true);
   const [wisdomTip, setWisdomTip] = useState<HopeMessage | null>(null);
+  const [showShareSection, setShowShareSection] = useState(false);
 
   // Load a hope message on mount
   useEffect(() => {
@@ -91,9 +97,13 @@ export function MissionResult({
     }));
   }, []);
 
-  // Auto-hide confetti after animation
+  // Auto-hide confetti after animation and show share section
   useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 4000);
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+      // Show share section after confetti
+      setTimeout(() => setShowShareSection(true), 500);
+    }, 4000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -136,6 +146,29 @@ export function MissionResult({
           onXpEarned={onXpEarned}
         />
       </div>
+
+      {/* Share Results Section - Appears after dialogue */}
+      {showShareSection && (
+        <div className="mt-6 animate-in slide-in-from-bottom-4 duration-500">
+          <ShareResultCard
+            missionTitle={event.title}
+            year={event.year}
+            performance={performance}
+            returnPercent={actualReturn * 100}
+            finalAmount={finalAmount}
+            lessonLearned={outcome}
+            streakDays={streakDays}
+            level={playerLevel}
+            totalXp={totalXp}
+            onShareComplete={(platform, xpEarned) => {
+              if (onXpEarned) {
+                onXpEarned(xpEarned);
+              }
+            }}
+            compact={false}
+          />
+        </div>
+      )}
 
       {/* CSS for confetti animation */}
       <style jsx>{`

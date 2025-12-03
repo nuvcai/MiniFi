@@ -20,12 +20,12 @@ export interface FloatingXpItem {
   amount: number;
   x: number;
   y: number;
-  type?: "default" | "courage" | "bonus" | "streak";
+  type?: "default" | "courage" | "bonus" | "streak" | "share";
 }
 
 interface FloatingXpProps {
   amount: number;
-  type?: "default" | "courage" | "bonus" | "streak";
+  type?: "default" | "courage" | "bonus" | "streak" | "share";
   onComplete?: () => void;
 }
 
@@ -66,6 +66,11 @@ export function FloatingXp({ amount, type = "default", onComplete }: FloatingXpP
       bg: "from-orange-500 to-red-500",
       text: "text-orange-400",
       icon: <Zap className="h-3 w-3" />,
+    },
+    share: {
+      bg: "from-blue-500 to-indigo-500",
+      text: "text-blue-400",
+      icon: <Sparkles className="h-3 w-3" />,
     },
   };
 
@@ -151,7 +156,7 @@ export function FloatingXpContainer({ items, onItemComplete }: FloatingXpContain
 interface InlineFloatingXpProps {
   show: boolean;
   amount: number;
-  type?: "default" | "courage" | "bonus" | "streak";
+  type?: "default" | "courage" | "bonus" | "streak" | "share";
   onComplete?: () => void;
   className?: string;
 }
@@ -183,6 +188,7 @@ export function InlineFloatingXp({
     courage: "text-amber-400",
     bonus: "text-purple-400",
     streak: "text-orange-400",
+    share: "text-blue-400",
   };
 
   return (

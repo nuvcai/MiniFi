@@ -19,9 +19,12 @@ import { EventDetailModal } from "@/components/modals/EventDetailModal";
 import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
 import { RewardsModal } from "@/components/modals/RewardsModal";
-import { LevelUpCelebration } from "@/components/gamification/LevelUpCelebration";
+import { LevelUpCelebration, BadgeDisplay, MilestoneAchievement } from "@/components/gamification";
 import { DailyStreak } from "@/components/gamification/DailyStreak";
 import { DailyWisdom } from "@/components/library/DailyWisdom";
+
+// Hooks
+import { useEffortRewards } from "@/hooks/useEffortRewards";
 
 // Data
 import { financialEvents, FinancialEvent } from "@/components/data/events";
@@ -66,6 +69,34 @@ export default function TimelinePage() {
   const [selectedInvestment, setSelectedInvestment] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [missionResult, setMissionResult] = useState<any>(null);
+  const [streakDays, setStreakDays] = useState(0);
+  
+  // Effort rewards tracking
+  const {
+    stats: effortStats,
+    earnedRewards,
+    pendingNotifications,
+    totalEffortXp,
+    recordInvestment,
+    recordRiskPreviewViewed,
+    recordCoachAdviceViewed,
+    recordMissionCompleted,
+    clearPendingNotification,
+    getLossEncouragement,
+  } = useEffortRewards();
+  
+  // Milestone notification state
+  const [showMilestoneModal, setShowMilestoneModal] = useState(false);
+  const [currentMilestoneNotification, setCurrentMilestoneNotification] = useState<typeof pendingNotifications[0] | null>(null);
+  
+  // Handle pending notifications (milestones, badges, courage rewards)
+  useEffect(() => {
+    if (pendingNotifications.length > 0 && !showMilestoneModal) {
+      const notification = pendingNotifications[0];
+      setCurrentMilestoneNotification(notification);
+      setShowMilestoneModal(true);
+    }
+  }, [pendingNotifications, showMilestoneModal]);
 
   // Load saved progress on mount
   useEffect(() => {
@@ -254,6 +285,12 @@ export default function TimelinePage() {
       const adjustedReturn = getCoachAdjustedReturn(option.actualReturn, selectedCoach.personality);
       const finalAmount = 10000 * (1 + adjustedReturn);
       const performance = adjustedReturn > 0 ? "profit" : "loss";
+      
+      // Track investment for effort rewards
+      const riskLevel = option.risk.toLowerCase();
+      const assetClass = option.assetClass || "equities";
+      const wasLoss = performance === "loss";
+      recordInvestment(riskLevel, assetClass, wasLoss);
 
       setMissionResult({
         option,
@@ -265,6 +302,12 @@ export default function TimelinePage() {
       setMissionStep("result");
     }
   };
+  
+  // Track coach selection for exploration rewards
+  const handleCoachSelect = (coach: typeof aiCoaches[0]) => {
+    setSelectedCoach(coach);
+    recordCoachAdviceViewed(coach.id);
+  };
 
   const completeMission = () => {
     if (missionEvent && missionResult) {
@@ -275,6 +318,9 @@ export default function TimelinePage() {
       setPlayerXP(newXP);
       setTotalScore(newXP);
       setCompletedMissions(newMissions);
+      
+      // Record mission completion for effort rewards
+      recordMissionCompleted();
 
       const eventIndex = financialEvents.findIndex((e) => e.year === missionEvent.year);
       if (eventIndex !== -1) {
@@ -331,10 +377,13 @@ export default function TimelinePage() {
     saveProgress(newXP, Math.max(newLevel, playerLevel), completedMissions);
   };
 
-  const handleStreakBonus = (bonus: number) => {
+  const handleStreakBonus = (bonus: number, days?: number) => {
     const newXP = playerXP + bonus;
     setPlayerXP(newXP);
     setTotalScore(newXP);
+    if (days) {
+      setStreakDays(days);
+    }
     
     const newLevel = Math.floor(newXP / 1000) + 1;
     if (newLevel > playerLevel) {
@@ -343,6 +392,14 @@ export default function TimelinePage() {
     
     // Save progress
     saveProgress(newXP, Math.max(newLevel, playerLevel), completedMissions);
+  };
+  
+  // Handle milestone XP claim
+  const handleMilestoneXpClaim = (xp: number) => {
+    handleXpEarned(xp);
+    clearPendingNotification();
+    setShowMilestoneModal(false);
+    setCurrentMilestoneNotification(null);
   };
 
   const closeMissionModal = () => {
@@ -387,11 +444,27 @@ export default function TimelinePage() {
               <CoachSidebar
                 coaches={aiCoaches}
                 selectedCoach={selectedCoach}
-                onCoachSelect={setSelectedCoach}
+                onCoachSelect={handleCoachSelect}
               />
 
               {/* Daily Streak */}
               <DailyStreak onBonusClaimed={handleStreakBonus} />
+              
+              {/* Effort Badges */}
+              <BadgeDisplay
+                earnedBadgeIds={earnedRewards.filter(r => r.type === "badge").map(r => r.data.id)}
+                earnedMilestoneIds={earnedRewards.filter(r => r.type === "milestone").map(r => r.data.id)}
+                stats={{
+                  missionsCompleted: effortStats.missionsCompleted,
+                  differentRiskLevelsTried: effortStats.differentRiskLevelsTried.size,
+                  differentAssetClassesTried: effortStats.differentAssetClassesTried.size,
+                  coachesUsed: effortStats.coachesUsed.size,
+                  lossesExperienced: effortStats.lossesExperienced,
+                  investmentsAfterLoss: effortStats.investmentsAfterLoss,
+                  investmentsMade: effortStats.investmentsMade,
+                }}
+                compact={true}
+              />
 
               {/* Progress Card */}
               <div className="p-5 rounded-2xl bg-white shadow-xl shadow-indigo-100 border border-indigo-100">
@@ -574,6 +647,19 @@ export default function TimelinePage() {
         newLevel={levelUpInfo.newLevel}
         previousLevel={levelUpInfo.previousLevel}
         onClose={() => setShowLevelUp(false)}
+      />
+      
+      {/* Milestone Achievement Modal */}
+      <MilestoneAchievement
+        open={showMilestoneModal}
+        milestone={currentMilestoneNotification?.type === "milestone" ? currentMilestoneNotification.data as any : undefined}
+        courageReward={currentMilestoneNotification?.type === "courage" ? currentMilestoneNotification.data as any : undefined}
+        onClose={() => {
+          clearPendingNotification();
+          setShowMilestoneModal(false);
+          setCurrentMilestoneNotification(null);
+        }}
+        onXpClaimed={handleMilestoneXpClaim}
       />
     </div>
   );

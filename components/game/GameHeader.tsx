@@ -11,16 +11,12 @@ import Link from "next/link";
 import { 
   Gift, 
   Star, 
-  Zap, 
   Menu,
   X,
   Trophy,
-  Flame,
-  Sparkles,
   Mail,
   LogIn,
   LogOut,
-  User,
   Check,
 } from "lucide-react";
 import { levelTitles } from "@/components/gamification/LevelUpCelebration";
@@ -195,15 +191,15 @@ export function GameHeader({
               </button>
             )}
             
-            {/* Rewards Button */}
+            {/* Rewards Button - Coming Soon */}
             {onRewardsClick && (
               <button
                 onClick={onRewardsClick}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 text-amber-600 hover:shadow-lg hover:shadow-amber-100 hover:scale-105 hover:border-amber-300 transition-all group"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-50 to-slate-100 border-2 border-gray-200 text-gray-500 hover:shadow-lg hover:shadow-gray-100 hover:scale-105 hover:border-gray-300 transition-all group relative"
               >
-                <Gift className="h-5 w-5 group-hover:animate-bounce" />
+                <Gift className="h-5 w-5 group-hover:animate-bounce text-gray-400" />
                 <span className="text-sm font-bold">Rewards</span>
-                <Sparkles className="h-4 w-4 text-amber-400" />
+                <span className="absolute -top-2 -right-2 px-1.5 py-0.5 text-[10px] font-bold bg-indigo-500 text-white rounded-full">Soon</span>
               </button>
             )}
             
@@ -352,18 +348,18 @@ export function GameHeader({
               </button>
             )}
             
-            {/* Rewards Button */}
+            {/* Rewards Button - Coming Soon */}
             {onRewardsClick && (
               <button
                 onClick={() => {
                   onRewardsClick();
                   setShowMobileMenu(false);
                 }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-gray-200 to-slate-300 text-gray-600 font-bold shadow-lg hover:shadow-xl transition-all relative"
               >
                 <Gift className="h-5 w-5" />
-                <span>View Rewards</span>
-                <Flame className="h-5 w-5" />
+                <span>Rewards</span>
+                <span className="px-2 py-0.5 text-xs font-bold bg-indigo-500 text-white rounded-full ml-1">Coming Soon</span>
               </button>
             )}
           </div>

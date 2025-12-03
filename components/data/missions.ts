@@ -128,14 +128,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "Yo, those Japanese markets are giving me bad vibes! 😬 I'd put most of your cash in US bonds and gold. Better safe than sorry!",
-      "growth-guru":
-        "Don't YOLO everything into Japan. Try a mix: 40% bonds, 30% stocks, 30% gold. Balance is key! ⚖️",
-      "adventure-alex":
-        "This is a once-in-a-lifetime chance! 🚀 Japanese stocks and real estate are on fire - go big or go home!",
-      "yield-yoda":
-        "Focus on what's gonna last. US bonds aren't flashy, but they'll keep your money growing steadily while others panic. 🧘",
+      "steady-sam": "Those Japanese markets are sketchy! Go safe with bonds and gold 🛡️",
+      "growth-guru": "Don't YOLO into Japan - try a balanced mix ⚖️",
+      "adventure-alex": "Japanese markets are on fire - go big! 🚀",
+      "yield-yoda": "Steady wins the race - bonds keep you safe 🧘",
     },
     outcome:
       "Plot twist: In 1991, Japan's central bank raised interest rates and the bubble POPPED! 💥 Stocks and property prices crashed hard, starting the 'Lost Decade' of slow growth.",
@@ -224,14 +220,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "Asia is a disaster zone right now! 🚫 Stay in US bonds and cash until the storm passes. Don't try to be a hero.",
-      "growth-guru":
-        "Skip Asian markets for now. Try 60% US stocks, 40% bonds - America is where the action is. 🇺🇸",
-      "adventure-alex":
-        "Everyone's panicking = buying opportunity! 🎯 Asian stocks are basically on clearance sale right now!",
-      "yield-yoda":
-        "When everyone else is losing their minds, keep yours. Cash gives you options to pounce when the time is right. 🎯",
+      "steady-sam": "Asia is chaos - stay safe in US bonds 🚫",
+      "growth-guru": "Skip Asia, focus on US stocks 🇺🇸",
+      "adventure-alex": "Everyone's panicking = buying opportunity! 🎯",
+      "yield-yoda": "Stay calm - cash gives you options 🎯",
     },
     outcome:
       "The crisis lasted until 1998 - many Asian currencies lost over 50% of their value and stock markets dropped 60-80%! 😱 Meanwhile, US markets stayed relatively chill and became a safe haven.",
@@ -320,14 +312,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "This market is giving me major bubble vibes! 🫧 I'm staying in cash and waiting for sanity to return.",
-      "growth-guru":
-        "Don't go all-in on tech. Try 50% cash, 30% traditional stocks, 20% tech. Diversify, diversify, diversify! 🎯",
-      "adventure-alex":
-        "The internet is literally changing the world! 🌐 This is your chance to get rich - YOLO into .com stocks!",
-      "yield-yoda":
-        "When prices are crazy high, future returns are usually low. Patience > FOMO. 🧘",
+      "steady-sam": "Major bubble vibes! I'm staying in cash 🫧",
+      "growth-guru": "Don't go all-in on tech - diversify! 🎯",
+      "adventure-alex": "The internet changes everything - YOLO! 🌐",
+      "yield-yoda": "When prices are crazy, patience wins 🧘",
     },
     outcome:
       "March 2000 - the bubble BURSTS! 💥 Nasdaq crashes 78% over the next two years. Most .com companies go bankrupt. Pets.com becomes a meme. The party is over.",
@@ -416,14 +404,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "This is scary stuff! 😰 All my money is going into US bonds and gold. Don't even think about stocks right now.",
-      "growth-guru":
-        "Stay calm but stay careful. Try 70% bonds, 20% gold, 10% stocks. Maybe add more stocks slowly over time. 📊",
-      "adventure-alex":
-        "BLOOD IN THE STREETS! 🩸 Stocks are on mega-sale right now. Warren Buffett is buying - maybe you should too!",
-      "yield-yoda":
-        "Fear is in the air, but that's when opportunities are born. Treasury bonds and gold first, then look for quality stocks later. 🎯",
+      "steady-sam": "Scary times! Bonds and gold only 😰",
+      "growth-guru": "Stay careful - mostly bonds, some gold 📊",
+      "adventure-alex": "Blood in the streets = mega sale! 🩸",
+      "yield-yoda": "Fear creates opportunity - bonds first 🎯",
     },
     outcome:
       "2008-2009: Global stocks dropped 50%+ 📉 But US bonds and gold were the safe havens everyone needed. The government pumped TRILLIONS into the economy, setting up the recovery that followed.",
@@ -512,14 +496,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "A literal pandemic?! 😷 I'm staying super safe with bonds and gold until we know more about this virus.",
-      "growth-guru":
-        "Tech is clearly winning the pandemic. Try 50% tech stocks, 30% bonds, 20% gold. The future is digital! 💻",
-      "adventure-alex":
-        "Travel stocks are basically free money once vaccines arrive! ✈️ Everyone's gonna want to travel SO BAD after being locked up!",
-      "yield-yoda":
-        "Follow the trends - tech, healthcare, and online shopping are the new normal. Focus on companies that benefit from staying home. 🏠",
+      "steady-sam": "Pandemic?! Playing it super safe 😷",
+      "growth-guru": "Tech is winning - the future is digital! 💻",
+      "adventure-alex": "Travel will bounce back huge! ✈️",
+      "yield-yoda": "Follow trends - tech is the new normal 🏠",
     },
     outcome:
       "Plot twist: Tech stocks went absolutely INSANE! 🚀 After the initial crash, the Nasdaq doubled while many traditional companies struggled. The Fed's money printing pushed all asset prices up.",
@@ -608,14 +588,10 @@ export const missionData: Record<number, MissionData> = {
       },
     ],
     coachAdvice: {
-      "steady-sam":
-        "Things are pretty uncertain right now 🤔 I'd go with inflation-protected bonds and commodities to keep your money safe.",
-      "growth-guru":
-        "AI is definitely the future, but balance it out. Try 40% AI stocks, 30% inflation bonds, 30% commodities. Don't go all-in! ⚖️",
-      "adventure-alex":
-        "AI IS GOING TO CHANGE EVERYTHING! 🤖 This is like the internet in 1995 - get in now before it's too late!",
-      "yield-yoda":
-        "High inflation means you need real assets that hold value. Commodities and inflation bonds are your friends right now. 🛡️",
+      "steady-sam": "Uncertain times - protect against inflation 🤔",
+      "growth-guru": "AI is the future but stay balanced ⚖️",
+      "adventure-alex": "AI changes everything - get in now! 🤖",
+      "yield-yoda": "High inflation? Real assets protect you 🛡️",
     },
     outcome:
       "This is happening RIGHT NOW! 🎬 Your investment choices will shape your future wealth. There's no crystal ball - make your best call!",

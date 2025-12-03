@@ -16,9 +16,8 @@ export interface FinancialEvent {
 export const financialEvents: FinancialEvent[] = [
   {
     year: 1990,
-    title: "Japan's Epic Market Crash",
-    description:
-      "Japan's property and stock prices went absolutely wild, then crashed hard - starting their 'Lost Decade' 📉",
+    title: "Japan Bubble Burst",
+    description: "The bubble that started a lost decade 📉",
     impact: "negative",
     difficulty: "beginner",
     unlocked: true,
@@ -30,9 +29,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 1997,
-    title: "Asia's Money Meltdown",
-    description:
-      "A financial crisis that started in Thailand and spread across Asia like wildfire 🔥",
+    title: "Asian Currency Crisis",
+    description: "When currencies collapsed across Asia 🔥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -44,8 +42,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2000,
-    title: "Dot-com Bubble Goes Pop!",
-    description: "Internet company stocks went from hero to zero - Nasdaq dropped 78%! 💥",
+    title: "Dot-com Crash",
+    description: "Internet hype meets reality 💥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -57,9 +55,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2008,
-    title: "The Big Bank Breakdown",
-    description:
-      "When risky home loans went bad, it triggered a worldwide financial earthquake 🌍",
+    title: "Global Financial Crisis",
+    description: "Banks failed, markets crashed 🌍",
     impact: "negative",
     difficulty: "advanced",
     unlocked: true,
@@ -71,32 +68,29 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2020,
-    title: "COVID Chaos & Recovery",
-    description:
-      "The pandemic shut down the world, markets went crazy, but then tech stocks took off! 🦠➡️🚀",
+    title: "COVID Market Chaos",
+    description: "Pandemic panic to tech rally 🦠🚀",
     impact: "mixed",
     difficulty: "advanced",
     unlocked: false,
     completed: false,
     reward: 250,
     unlockRequirements: [2008],
-    unlockDescription:
-      "Beat the 2008 mission first to unlock this challenge!",
+    unlockDescription: "Complete 2008 first",
     image: "/images/covid.png",
     imageAlt: "covid",
   },
   {
     year: 2025,
-    title: "Today's Wild Ride",
-    description: "AI revolution, crypto drama, and global uncertainty - welcome to now! 🎢",
+    title: "AI Revolution",
+    description: "Your era, your choices 🤖",
     impact: "mixed",
     difficulty: "expert",
     unlocked: false,
     completed: false,
     reward: 300,
     unlockRequirements: [2020],
-    unlockDescription:
-      "Complete the COVID mission to face today's challenges!",
+    unlockDescription: "Complete 2020 first",
     image: "/images/inflation.png",
     imageAlt: "inflation",
   },

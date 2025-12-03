@@ -8,6 +8,7 @@
 
 // Share functionality
 export { ShareButton } from './ShareButton';
+export { ShareResultCard } from './ShareResultCard';
 
 // Referral system
 export { ReferralDashboard } from './ReferralDashboard';
