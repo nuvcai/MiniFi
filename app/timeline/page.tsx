@@ -19,12 +19,13 @@ import { EventDetailModal } from "@/components/modals/EventDetailModal";
 import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
 import { RewardsModal } from "@/components/modals/RewardsModal";
-import { LevelUpCelebration, BadgeDisplay, MilestoneAchievement, SavingsVault, InvestorJourney } from "@/components/gamification";
+import { LevelUpCelebration, BadgeDisplay, MilestoneAchievement, SavingsVault, InvestorJourney, RewardsStore } from "@/components/gamification";
 import { DailyStreak } from "@/components/gamification/DailyStreak";
 import { DailyWisdom } from "@/components/library/DailyWisdom";
 
 // Hooks
 import { useEffortRewards } from "@/hooks/useEffortRewards";
+import { usePoints } from "@/hooks/usePoints";
 
 // Data
 import { financialEvents, FinancialEvent } from "@/components/data/events";

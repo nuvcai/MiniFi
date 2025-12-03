@@ -150,10 +150,17 @@ export function useEffortRewards(): UseEffortRewardsReturn {
       if (saved) {
         const parsed = JSON.parse(saved);
         setStats({
+          ...initialStats,
           ...parsed,
           differentRiskLevelsTried: new Set(parsed.differentRiskLevelsTried || []),
           differentAssetClassesTried: new Set(parsed.differentAssetClassesTried || []),
           coachesUsed: new Set(parsed.coachesUsed || []),
+          // Parse thesis history dates
+          thesesHistory: (parsed.thesesHistory || []).map((t: ThesisEntry) => ({
+            ...t,
+            timestamp: new Date(t.timestamp),
+          })),
+          claimedJourneyStages: parsed.claimedJourneyStages || [],
         });
       }
     } catch (e) {

@@ -45,6 +45,10 @@ export { FlybuysRewards } from "./FlybuysRewards";
 // Internal Savings System
 export { SavingsVault } from "./SavingsVault";
 
+// Flybuys-Style Points & Rewards
+export { RewardsStore } from "./RewardsStore";
+export * from "./pointsSystem";
+
 // Staking Types & Data
 export * from "./stakingTypes";
 export {
