@@ -405,6 +405,17 @@ export default function TimelinePage() {
     const newLevel = Math.floor(newXP / 1000) + 1;
     if (newLevel > playerLevel) {
       setPlayerLevel(newLevel);
+      // Earn level up bonus points
+      earnFromXP(newLevel, "level_up");
+    }
+    
+    // Earn Flybuys-style points based on source
+    if (source === "mission_complete") {
+      earnFromXP(amount, "mission_complete");
+    } else if (source === "savings_interest") {
+      earnFromXP(amount, "savings_interest");
+    } else if (source === "daily_streak") {
+      earnFromXP(amount, "daily_streak");
     }
     
     // Save progress

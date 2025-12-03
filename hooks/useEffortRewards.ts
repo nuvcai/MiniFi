@@ -386,6 +386,66 @@ export function useEffortRewards(): UseEffortRewardsReturn {
     setPendingNotifications((prev) => prev.slice(1));
   }, []);
 
+  // Record quiz completion
+  const recordQuizCompleted = useCallback((questionsCorrect: number, totalQuestions: number) => {
+    setStats((prev) => {
+      const newTotalCorrect = prev.quizQuestionsCorrect + questionsCorrect;
+      const newTotalAttempted = prev.quizQuestionsAttempted + totalQuestions;
+      const newAverageScore = newTotalAttempted > 0 
+        ? Math.round((newTotalCorrect / newTotalAttempted) * 100) 
+        : 0;
+      
+      return {
+        ...prev,
+        quizzesCompleted: prev.quizzesCompleted + 1,
+        totalQuizScore: prev.totalQuizScore + Math.round((questionsCorrect / totalQuestions) * 100),
+        quizQuestionsCorrect: newTotalCorrect,
+        quizQuestionsAttempted: newTotalAttempted,
+        averageQuizScore: newAverageScore,
+      };
+    });
+  }, []);
+
+  // Record investment thesis
+  const recordThesis = useCallback((entry: Omit<ThesisEntry, "id" | "timestamp">) => {
+    const newEntry: ThesisEntry = {
+      ...entry,
+      id: `thesis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+    };
+
+    setStats((prev) => ({
+      ...prev,
+      thesesWritten: prev.thesesWritten + 1,
+      thesesHistory: [...prev.thesesHistory, newEntry].slice(-50), // Keep last 50 entries
+    }));
+  }, []);
+
+  // Get thesis history
+  const getThesesHistory = useCallback(() => {
+    return [...stats.thesesHistory].sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }, [stats.thesesHistory]);
+
+  // Claim journey stage
+  const claimJourneyStage = useCallback((stageId: string) => {
+    setStats((prev) => {
+      if (prev.claimedJourneyStages.includes(stageId)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        claimedJourneyStages: [...prev.claimedJourneyStages, stageId],
+      };
+    });
+  }, []);
+
+  // Check if journey stage is claimed
+  const isJourneyStageClaimedFn = useCallback((stageId: string) => {
+    return stats.claimedJourneyStages.includes(stageId);
+  }, [stats.claimedJourneyStages]);
+
   // Get share reward info without claiming
   const getShareRewardInfo = useCallback((platform: string) => {
     const streakMultiplier = stats.currentStreak > 0 ? 1 + (stats.currentStreak * 0.05) : 1;
@@ -483,6 +543,14 @@ export function useEffortRewards(): UseEffortRewardsReturn {
     // Share methods
     recordShare,
     getShareRewardInfo,
+    // Quiz methods
+    recordQuizCompleted,
+    // Thesis methods
+    recordThesis,
+    getThesesHistory,
+    // Journey methods
+    claimJourneyStage,
+    isJourneyStageClaimedFn,
     // Helpers
     getLossEncouragement,
     getNextMilestone,
