@@ -74,16 +74,16 @@ function TradingContent() {
 
 export default function TradingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-teal-50">
-      {/* Background blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-emerald-200/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 left-10 w-80 h-80 bg-teal-200/30 rounded-full blur-3xl" />
+    <div className="min-h-screen w-full bg-gradient-to-b from-emerald-50 via-white to-teal-50 overflow-x-hidden">
+      {/* Background blobs - Full viewport coverage */}
+      <div className="fixed inset-0 w-screen h-screen pointer-events-none overflow-hidden">
+        <div className="absolute top-20 right-0 sm:right-20 w-48 sm:w-64 h-48 sm:h-64 bg-emerald-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 left-0 sm:left-10 w-64 sm:w-80 h-64 sm:h-80 bg-teal-200/30 rounded-full blur-3xl" />
       </div>
       
       {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
-        <div className="container mx-auto px-6 py-4">
+      <nav className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-xl">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/competition" className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />

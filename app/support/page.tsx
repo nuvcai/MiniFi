@@ -37,16 +37,16 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-violet-50">
-      {/* Background blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-violet-200/40 rounded-full blur-3xl" />
+    <div className="min-h-screen w-full bg-gradient-to-b from-pink-50 via-white to-violet-50 overflow-x-hidden">
+      {/* Background blobs - Full viewport coverage */}
+      <div className="fixed inset-0 w-screen h-screen pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-0 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-pink-200/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-0 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-violet-200/40 rounded-full blur-3xl" />
       </div>
       
-      <div className="relative">
+      <div className="relative w-full">
         {/* Navigation */}
-        <nav className={`container mx-auto px-6 py-6 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <nav className={`w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 transition-all duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <div className="flex items-center justify-between">
             <Link 
               href="/"
@@ -73,7 +73,7 @@ export default function SupportPage() {
           </div>
         </nav>
 
-        <main className="container mx-auto px-6">
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6">
           {/* Hero */}
           <div className={`max-w-2xl mx-auto pt-12 pb-16 text-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="text-5xl mb-6">💝</div>
@@ -213,8 +213,8 @@ export default function SupportPage() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-gray-100 bg-white/50 backdrop-blur">
-          <div className="container mx-auto px-6 py-8">
+        <footer className="w-full border-t border-gray-100 bg-white/50 backdrop-blur">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
             <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
               <span>© 2025 NUVC.AI</span>
               <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors">
