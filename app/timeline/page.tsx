@@ -77,6 +77,18 @@ export default function TimelinePage() {
   const [randomScenarios, setRandomScenarios] = useState<{ event: FinancialEvent; missionData: MissionData }[]>([]);
   const [completedRandomCount, setCompletedRandomCount] = useState(0);
   
+  // Flybuys-style points system
+  const {
+    balance: pointsBalance,
+    tierInfo,
+    earnFromXP,
+    redeemReward,
+    canAfford,
+    meetsTier,
+    getPointsValue,
+  } = usePoints();
+  const [showRewardsStore, setShowRewardsStore] = useState(false);
+  
   // Effort rewards tracking
   const {
     stats: effortStats,
