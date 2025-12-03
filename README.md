@@ -21,15 +21,21 @@ Built for **NextGen AI Hackathon 2025** by Tick.AI.
 - **🎁 Real Rewards System**: Exchange XP for Australian brand gift cards
 - **📱 Mobile-First Design**: Optimized for all devices
 
-### 🆕 Latest Features (v1.1)
+### 🆕 Latest Features (v1.2)
 
+- **🎯 Crisis-Based Learning**: Mission flow aligned with "learning through crisis" philosophy
+- **💎 High Conviction Investing**: Celebrate bold decisions and quick failures as growth
+- **🧠 Emotional Intelligence**: Loss results show "Wisdom Earned" with learning-focused messaging
+- **📱 Mobile-First UX**: Bottom sheet modals, 44px touch targets, bottom navigation
+- **🎮 Enhanced Gamification**:
+  - Knowledge Quiz after missions
+  - What-If Analysis for exploring alternate outcomes
+  - Points System with Flybuys-style rewards
+  - League System for competitive progression
+  - Investor Journey with milestone tracking
+- **🎲 Infinite Gameplay**: Random scenario generation after completing historical missions
 - **📊 Asset Class System**: 6 distinct asset classes with FO-aligned categorization
-  - Equities, Fixed Income, Commodities, Alternatives, Cash, Cryptocurrency
-- **⏱️ Time Horizon Guidance**: Short (0-1yr), Medium (1-5yr), Long (5+yr) recommendations
-- **📈 Risk/Return Profiles**: Volatility ranges, stock correlation, and FO allocation percentages
-- **🎯 Asset Class Mastery**: Track progress across all 6 asset classes
-- **🎓 FO Certification Path**: Earn Capital Guardian → Balanced Investor → FO Fellow credentials
-- **🔮 Upcoming Features Preview**: Risk Profile Quiz, Portfolio Builder, Daily Challenges
+- **🎓 FO Certification Path**: Capital Guardian → Balanced Investor → FO Fellow
 
 ## 🚀 Quick Start
 
@@ -143,6 +149,7 @@ components/
 │   ├── missions.ts          # Historical missions with asset class metadata
 │   ├── coaches.ts           # AI coach profiles with FO strategies
 │   ├── assetClasses.ts      # Comprehensive asset class reference
+│   ├── randomScenarios.ts   # Procedural scenario generation
 │   └── events.ts            # Financial events data
 ├── features/
 │   ├── UpcomingFeatures.tsx # Coming soon feature teasers
@@ -150,11 +157,26 @@ components/
 │   ├── RiskSpectrum.tsx     # Risk/return visualization
 │   └── FOCertificationTeaser.tsx # Certification path preview
 ├── mission/
-│   ├── InvestmentDecision.tsx # Investment choice with asset badges
-│   └── TeachingDialogue.tsx  # Post-mission learning with real data
-├── PerformanceChart.tsx      # Investment performance visualization
+│   ├── MissionIntro.tsx     # Crisis → Challenge → Conviction flow
+│   ├── InvestmentDecision.tsx # High conviction investment choice
+│   ├── InvestmentThesis.tsx # Document reasoning before decisions
+│   ├── MissionResult.tsx    # Wisdom-focused results (wins & learning)
+│   ├── KnowledgeQuiz.tsx    # Post-mission comprehension validation
+│   └── WhatIfAnalysis.tsx   # Explore alternate outcomes
+├── gamification/
+│   ├── InvestorJourney.tsx  # Visual milestone progression
+│   ├── LeagueSystem.tsx     # Competitive tier rankings
+│   ├── RewardsStore.tsx     # XP redemption marketplace
+│   ├── FlybuysRewards.tsx   # Partner rewards integration
+│   ├── SavingsVault.tsx     # Goal-based savings game
+│   ├── StakingCard.tsx      # XP staking for bonuses
+│   └── pointsSystem.ts      # Points calculation utilities
+├── shared/
+│   └── MobileBottomNav.tsx  # Fixed mobile navigation
+├── ui/
+│   └── dialog.tsx           # Bottom sheet modal variants
+├── PerformanceChart.tsx     # Investment performance visualization
 ├── AICoach.tsx              # AI coaching interface
-├── investment-competition.tsx # Competition setup
 ├── trading-dashboard.tsx    # Real-time trading with asset classes
 └── competition-results.tsx  # Results and leaderboards
 
@@ -166,7 +188,7 @@ backend/
     ├── coach_service.py    # AI coaching (family office approach)
     ├── coach_chat.py       # Real-time chat
     ├── price_service.py    # Yahoo Finance price data
-    └── investment_metrics_service.py # Historical performance with ticker proxies
+    └── investment_metrics_service.py # Historical performance
 ```
 
 ## 🎯 AI Coaching - Family Office Approach
@@ -233,31 +255,41 @@ MiniFi teaches teens to invest like wealthy families:
 
 ## 🚀 Recent Updates
 
+### v1.2.0 - Crisis Learning & Mobile UX Update (December 2025)
+- ✅ **Philosophy-Aligned Mission Flow**: "Crisis Mode" → "High Conviction" → "Wisdom Earned"
+- ✅ **Learning from Failures**: Losses celebrated as growth opportunities with violet confetti
+- ✅ **Mobile Bottom Navigation**: Fixed nav bar with safe area support
+- ✅ **Bottom Sheet Modals**: Native mobile dialog experience
+- ✅ **Enhanced Touch Targets**: All interactive elements meet 44px minimum
+- ✅ **Knowledge Quiz**: Post-mission comprehension validation
+- ✅ **What-If Analysis**: Explore alternate investment outcomes
+- ✅ **Points System**: Flybuys-style rewards with tier progression
+- ✅ **Rewards Store**: Redeem XP for rewards and perks
+- ✅ **League System**: Competitive rankings (Bronze → Diamond)
+- ✅ **Investor Journey**: Visual milestone progression tracker
+- ✅ **Random Scenarios**: Infinite gameplay with procedurally generated events
+- ✅ **Homepage Mobile Menu**: Hamburger navigation with responsive typography
+
 ### v1.1.0 - Asset Class & Financial Literacy Update (December 2025)
 - ✅ **Asset Class System**: 6 FO-aligned asset classes with full metadata
 - ✅ **Risk/Return Profiles**: Volatility, correlation, and FO allocation ranges
 - ✅ **Time Horizon Guidance**: Short/Medium/Long investment recommendations
 - ✅ **Asset Class Mastery UI**: Track progress across all asset classes
 - ✅ **FO Certification Teaser**: 3-level certification path preview
-- ✅ **Upcoming Features Preview**: Coming soon teasers for new features
 - ✅ **Risk Spectrum Visualization**: Interactive risk/return chart component
-- ✅ **Real Data Connection**: All mission tickers linked to Yahoo Finance
-- ✅ **Historical Ticker Proxies**: ETF alternatives for pre-2000 periods
 
 ### v1.0.0 - Family Office Edition
 - ✅ AI Coach rewards effort and exploration
 - ✅ Backend caching (10x faster price data)
-- ✅ Mobile-optimized UI (44x44px touch targets)
-- ✅ Request ID tracking for debugging
-- ✅ Improved health checks
+- ✅ Mobile-optimized UI
 - ✅ Comprehensive documentation
 
 ---
 
 ## 🗺️ Product Roadmap
 
-### Current: v1.1 (December 2025)
-> *Asset Class & Financial Literacy Update*
+### Current: v1.2 (December 2025)
+> *Crisis Learning & Mobile UX Update*
 
 | Feature | Status | Description |
 |---------|--------|-------------|
@@ -265,12 +297,15 @@ MiniFi teaches teens to invest like wealthy families:
 | AI Coach System | ✅ Complete | 4 FO-aligned coaches with strategies |
 | Trading Simulation | ✅ Complete | Real-time portfolio with asset classes |
 | Performance Analytics | ✅ Complete | Real Yahoo Finance data integration |
-| Mobile-First UI | ✅ Complete | Responsive design, touch-optimized |
+| Mobile-First UI | ✅ Complete | Bottom nav, bottom sheets, 44px targets |
 | Leaderboards | ✅ Complete | Global competition rankings |
-| **Asset Class System** | ✅ Complete | 6 classes with FO metadata |
-| **Risk/Return Profiles** | ✅ Complete | Volatility, correlation, time horizons |
-| **Asset Class Mastery** | ✅ Complete | Progress tracking UI |
-| **Upcoming Features UI** | ✅ Complete | Coming soon teasers |
+| **Crisis-Based Learning** | ✅ Complete | Philosophy-aligned mission flow |
+| **Knowledge Quiz** | ✅ Complete | Post-mission comprehension checks |
+| **What-If Analysis** | ✅ Complete | Explore alternate outcomes |
+| **Points & Rewards** | ✅ Complete | Flybuys-style points system |
+| **League System** | ✅ Complete | Competitive tier progression |
+| **Investor Journey** | ✅ Complete | Visual milestone tracker |
+| **Random Scenarios** | ✅ Complete | Infinite procedural gameplay |
 
 ---
 

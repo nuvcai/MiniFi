@@ -27,6 +27,29 @@
 - ✅ **Real Data Integration**: All tickers linked to Yahoo Finance
 - ✅ **Historical Ticker Proxies**: ETF alternatives for pre-2000 data
 
+### v1.2 - Crisis Learning & Mobile UX (December 2025)
+- ✅ **Philosophy-Aligned Mission Flow**: Crisis → Challenge → Conviction
+  - "Crisis Mode" intro with emotional stakes
+  - "High Conviction Moment" decision making
+  - "Wisdom Earned" for losses (celebrates learning)
+- ✅ **Mobile UX Overhaul**:
+  - Bottom sheet dialogs (native mobile feel)
+  - Fixed bottom navigation with safe area support
+  - 44px minimum touch targets throughout
+  - Hamburger menu on homepage
+  - Responsive typography scaling
+- ✅ **Enhanced Gamification**:
+  - Knowledge Quiz: Post-mission comprehension validation
+  - What-If Analysis: Explore alternate investment outcomes
+  - Points System: Flybuys-style rewards with tier progression
+  - Rewards Store: Redeem points for perks
+  - League System: Bronze → Silver → Gold → Platinum → Diamond
+  - Investor Journey: Visual milestone progression tracker
+  - Savings Vault: Goal-based savings gamification
+  - Staking System: Lock XP for bonus rewards
+- ✅ **Random Scenario Generation**: Infinite gameplay after completing missions
+- ✅ **Emotional Intelligence Focus**: Loss celebrations, wisdom quotes, growth mindset
+
 ---
 
 ## 🚧 In Progress / Coming Soon
@@ -156,6 +179,15 @@
 | Upcoming features UI | Medium | Medium | ✅ Done |
 | Risk spectrum component | Medium | Medium | ✅ Done |
 | Asset mastery tracking UI | Medium | High | ✅ Done |
+| Mobile bottom navigation | Medium | High | ✅ Done |
+| Bottom sheet modals | Medium | High | ✅ Done |
+| Philosophy-aligned mission flow | High | High | ✅ Done |
+| Knowledge Quiz component | Medium | High | ✅ Done |
+| What-If Analysis | Medium | High | ✅ Done |
+| Points System | Medium | High | ✅ Done |
+| League System | Medium | Medium | ✅ Done |
+| Investor Journey tracker | Medium | High | ✅ Done |
+| Random scenario generation | High | High | ✅ Done |
 
 ## 🎯 Next Quick Wins
 
@@ -165,7 +197,7 @@
 | Portfolio Builder sandbox | Medium | High | 🔥 P0 |
 | Risk Roulette daily game | Low | Medium | ⭐ P1 |
 | FO Certification functional | High | High | ⭐ P1 |
-| Coach chat with asset context | Low | High | ⭐ P1 |
+| Parent Portal basics | Medium | High | ⭐ P1 |
 
 ---
 
@@ -225,14 +257,18 @@ interface AICoach {
 
 ## 🏆 Success Metrics
 
-| Metric | Current | v1.2 Target | v2.0 Target |
+| Metric | Current | v1.3 Target | v2.0 Target |
 |--------|---------|-------------|-------------|
 | Asset Classes Explored | - | 4+ per user | 6 per user |
 | FO Certifications Earned | - | 1000 Level 1 | 5000 all levels |
 | Daily Active Users | - | 500 | 5000 |
 | Mission Completion Rate | - | 75% | 90% |
 | Asset Mastery Completion | - | 30% | 60% |
+| Knowledge Quiz Pass Rate | - | 70% | 85% |
+| Points Redeemed | - | 10K | 500K |
+| League Tier Distribution | - | 40% Bronze+ | 60% Silver+ |
+| Mobile Session Duration | - | 8 min avg | 15 min avg |
 
 ---
 
-*Last Updated: December 2025*
+*Last Updated: December 2025 (v1.2)*
