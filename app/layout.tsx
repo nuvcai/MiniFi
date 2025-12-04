@@ -8,6 +8,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { MobileBottomNav, MobileNavSpacer } from "@/components/shared/MobileBottomNav";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // Outfit - Modern geometric sans for headings
 const outfit = Outfit({
@@ -43,7 +44,6 @@ export const metadata: Metadata = {
   authors: [{ name: "NUVC.AI", url: "https://nuvc.ai" }],
   creator: "NUVC.AI",
   keywords: ["financial literacy", "investment education", "game", "teens", "AI"],
-  themeColor: "#8B7CF6",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -60,15 +60,18 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${outfit.variable} ${plusJakarta.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body 
         className="font-sans min-h-screen bg-background text-foreground" 
         suppressHydrationWarning={true}
       >
-        {children}
-        {/* Mobile bottom navigation - hidden on desktop */}
-        <MobileBottomNav />
-        <MobileNavSpacer />
+        <ThemeProvider>
+          {children}
+          {/* Mobile bottom navigation - hidden on desktop */}
+          <MobileBottomNav />
+          <MobileNavSpacer />
+        </ThemeProvider>
       </body>
     </html>
   );

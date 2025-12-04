@@ -1,6 +1,7 @@
 /**
- * CoachSidebar - Enhanced coach selection
- * Interactive cards with animations and status indicators
+ * CoachSidebar — Apple-inspired Design
+ * 
+ * Clean coach selection with minimal decoration
  */
 
 "use client";
@@ -8,17 +9,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { AICoach } from "@/components/data/coaches";
-import { 
-  MessageCircle, 
-  Star, 
-  Sparkles, 
-  Check, 
-  ChevronRight,
-  Brain,
-  Zap,
-  Heart,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Check, ChevronDown } from "lucide-react";
 
 interface CoachSidebarProps {
   coaches: AICoach[];
@@ -26,11 +17,11 @@ interface CoachSidebarProps {
   onCoachSelect: (coach: AICoach) => void;
 }
 
-const coachSpecialties: Record<string, { icon: React.ReactNode; specialty: string; color: string }> = {
-  sage: { icon: <Brain className="h-3 w-3" />, specialty: "Deep Analysis", color: "from-blue-500 to-indigo-500" },
-  mentor: { icon: <Heart className="h-3 w-3" />, specialty: "Patient Teaching", color: "from-rose-500 to-pink-500" },
-  strategist: { icon: <Zap className="h-3 w-3" />, specialty: "Quick Decisions", color: "from-amber-500 to-orange-500" },
-  analyst: { icon: <Star className="h-3 w-3" />, specialty: "Data Expert", color: "from-emerald-500 to-teal-500" },
+const riskColors = {
+  conservative: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  moderate: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  aggressive: "bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  "very-aggressive": "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400",
 };
 
 export function CoachSidebar({
@@ -38,196 +29,88 @@ export function CoachSidebar({
   selectedCoach,
   onCoachSelect,
 }: CoachSidebarProps) {
-  const [hoveredCoach, setHoveredCoach] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const getCoachSpecialty = (coachId: string) => {
-    return coachSpecialties[coachId] || coachSpecialties.mentor;
-  };
-
   return (
-    <div className="p-4 sm:p-5 rounded-2xl bg-white shadow-xl shadow-indigo-100/50 border border-indigo-100 overflow-hidden">
-      {/* Header - Clickable on mobile to expand/collapse */}
+    <div className="rounded-2xl bg-white dark:bg-[#1A1A1A] border border-black/[0.04] dark:border-white/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)] overflow-hidden">
+      {/* Header */}
+      <div className="p-4 border-b border-black/[0.04] dark:border-white/[0.06]">
+        <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Your AI Coach</h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Choose your investment guide</p>
+      </div>
+      
+      {/* Selected Coach */}
       <button 
-        className="w-full flex items-center gap-2 mb-4 sm:mb-5 lg:cursor-default"
         onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full p-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors lg:cursor-default"
       >
-        <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100">
-          <MessageCircle className="h-5 w-5 text-indigo-600" />
+        <div className="relative flex-shrink-0">
+          <Image
+            src={selectedCoach.avatar}
+            alt={selectedCoach.name}
+            width={48}
+            height={48}
+            className="rounded-full ring-2 ring-violet-500 ring-offset-2 ring-offset-white dark:ring-offset-[#1A1A1A]"
+          />
+          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-[#1A1A1A]" />
         </div>
-        <div className="text-left flex-1">
-          <h3 className="font-bold text-gray-900 text-sm sm:text-base">Your AI Coach</h3>
-          <p className="text-xs text-gray-500">Choose your guide</p>
+        
+        <div className="flex-1 text-left min-w-0">
+          <p className="font-semibold text-gray-900 dark:text-white truncate">{selectedCoach.name}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{selectedCoach.personality}</p>
         </div>
-        <Sparkles className="h-4 w-4 text-amber-400" />
-        {/* Mobile expand indicator */}
-        <ChevronRight className={`h-4 w-4 text-gray-400 lg:hidden transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+        
+        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform lg:hidden ${isExpanded ? 'rotate-180' : ''}`} />
       </button>
       
-      {/* Selected Coach Preview - Always visible, compact on mobile */}
-      <div className="relative mb-4 sm:mb-5 p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-indigo-50 via-white to-violet-50 border-2 border-indigo-200 shadow-lg">
-        {/* Background glow */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-violet-500/5 rounded-2xl" />
-        
-        <div className="relative flex items-center gap-3 sm:gap-4">
-          {/* Avatar with ring */}
-          <div className="relative flex-shrink-0">
-            <div className="absolute -inset-1 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-full blur opacity-50" />
-            <Image
-              src={selectedCoach.avatar}
-              alt={selectedCoach.name}
-              width={64}
-              height={64}
-              className="relative rounded-full ring-4 ring-white shadow-xl w-12 h-12 sm:w-16 sm:h-16"
-            />
-            {/* Online indicator */}
-            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 bg-emerald-400 rounded-full border-2 sm:border-3 border-white shadow-lg flex items-center justify-center">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full" />
-            </div>
-          </div>
-          
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-gray-900 text-base sm:text-lg truncate">{selectedCoach.name}</p>
-            <p className="text-xs sm:text-sm text-indigo-600 font-medium truncate">{selectedCoach.personality}</p>
+      {/* Coach Grid */}
+      <div className={`p-4 pt-0 ${isExpanded ? 'block' : 'hidden lg:block'}`}>
+        <div className="grid grid-cols-2 gap-2">
+          {coaches.map((coach) => {
+            const isSelected = selectedCoach.id === coach.id;
             
-            {/* Specialty badge */}
-            <div className="flex items-center gap-2 mt-1.5 sm:mt-2">
-              <Badge 
-                className={`bg-gradient-to-r ${getCoachSpecialty(selectedCoach.id).color} text-white border-0 text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5`}
+            return (
+              <button
+                key={coach.id}
+                onClick={() => onCoachSelect(coach)}
+                className={`relative p-3 rounded-xl transition-all ${
+                  isSelected 
+                    ? 'bg-violet-50 dark:bg-violet-500/10 border-2 border-violet-500' 
+                    : 'bg-gray-50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/[0.04] hover:border-gray-200 dark:hover:border-white/[0.08]'
+                }`}
               >
-                {getCoachSpecialty(selectedCoach.id).icon}
-                <span className="ml-1">{getCoachSpecialty(selectedCoach.id).specialty}</span>
-              </Badge>
-            </div>
-          </div>
-        </div>
-        
-        {/* Quick message preview - hidden on mobile by default */}
-        <div className={`mt-3 sm:mt-4 p-2.5 sm:p-3 rounded-xl bg-white/80 border border-indigo-100 ${isExpanded ? 'block' : 'hidden sm:block'}`}>
-          <p className="text-[11px] sm:text-xs text-gray-600 italic">
-            &ldquo;Ready to help you master investing! Let&apos;s learn together! 🚀&rdquo;
-          </p>
-        </div>
-      </div>
-
-      {/* Coach List - Collapsible on mobile */}
-      <div className={`space-y-2 ${isExpanded ? 'block' : 'hidden'} lg:block`}>
-        <p className="text-xs text-gray-500 font-medium px-1 mb-3">Available Coaches</p>
-        
-        {coaches.map((coach) => {
-          const isSelected = selectedCoach.id === coach.id;
-          const isHovered = hoveredCoach === coach.id;
-          const specialty = getCoachSpecialty(coach.id);
-          
-          return (
-            <button
-              key={coach.id}
-              onClick={() => onCoachSelect(coach)}
-              onMouseEnter={() => setHoveredCoach(coach.id)}
-              onMouseLeave={() => setHoveredCoach(null)}
-              className={`w-full p-3 rounded-xl transition-all duration-300 text-left relative overflow-hidden group ${
-                isSelected
-                  ? "bg-gradient-to-r from-indigo-50 to-violet-50 border-2 border-indigo-300 shadow-lg scale-[1.02]"
-                  : "hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 hover:shadow-md"
-              }`}
-            >
-              {/* Selection indicator */}
-              {isSelected && (
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-violet-500 rounded-r" />
-              )}
-              
-              {/* Hover glow effect */}
-              {isHovered && !isSelected && (
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-transparent" />
-              )}
-              
-              <div className="relative flex items-center gap-3">
-                {/* Coach Avatar */}
-                <div className="relative">
+                {isSelected && (
+                  <div className="absolute top-2 right-2 w-4 h-4 bg-violet-500 rounded-full flex items-center justify-center">
+                    <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
+                  </div>
+                )}
+                
+                <div className="flex flex-col items-center text-center">
                   <Image
                     src={coach.avatar}
                     alt={coach.name}
-                    width={44}
-                    height={44}
-                    className={`rounded-full transition-all duration-300 ${
-                      isSelected 
-                        ? "ring-2 ring-indigo-400 shadow-lg" 
-                        : isHovered 
-                          ? "ring-2 ring-gray-300" 
-                          : "opacity-80"
-                    }`}
+                    width={40}
+                    height={40}
+                    className={`rounded-full mb-2 ${isSelected ? 'ring-2 ring-violet-500' : ''}`}
                   />
-                  {/* Online dot */}
-                  <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white transition-colors ${
-                    isSelected ? "bg-emerald-400" : "bg-gray-300"
-                  }`} />
-                </div>
-                
-                {/* Coach Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className={`text-sm font-semibold transition-colors ${
-                      isSelected ? "text-gray-900" : "text-gray-600 group-hover:text-gray-800"
-                    }`}>
-                      {coach.name}
-                    </p>
-                    {isSelected && (
-                      <Badge className="bg-emerald-100 text-emerald-700 border-0 text-[9px] px-1.5 py-0">
-                        Active
-                      </Badge>
-                    )}
-                  </div>
-                  <p className={`text-xs truncate transition-colors ${
-                    isSelected ? "text-indigo-600" : "text-gray-500"
+                  
+                  <p className={`font-medium text-xs truncate w-full ${
+                    isSelected ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'
                   }`}>
-                    {coach.personality}
+                    {coach.name}
                   </p>
                   
-                  {/* Specialty on hover */}
-                  {(isHovered || isSelected) && (
-                    <div className="flex items-center gap-1 mt-1.5">
-                      <div className={`p-0.5 rounded bg-gradient-to-r ${specialty.color}`}>
-                        <div className="text-white">{specialty.icon}</div>
-                      </div>
-                      <span className="text-[10px] text-gray-500">{specialty.specialty}</span>
-                    </div>
-                  )}
+                  <span className={`mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                    riskColors[coach.riskTolerance as keyof typeof riskColors] || riskColors.moderate
+                  }`}>
+                    {coach.riskTolerance}
+                  </span>
                 </div>
-                
-                {/* Selection indicator */}
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full transition-all ${
-                  isSelected 
-                    ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white" 
-                    : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
-                }`}>
-                  {isSelected ? (
-                    <Check className="h-3.5 w-3.5" />
-                  ) : (
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  )}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-      
-      {/* Footer tip - Also collapsible on mobile */}
-      <div className={`mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 ${isExpanded ? 'block' : 'hidden'} lg:block`}>
-        <div className="flex items-center gap-2">
-          <Star className="h-4 w-4 text-amber-500 flex-shrink-0" />
-          <p className="text-[11px] sm:text-xs text-amber-700">
-            Each coach has a unique teaching style. Try them all!
-          </p>
+              </button>
+            );
+          })}
         </div>
       </div>
-      
-      {/* Mobile: Show expand hint when collapsed */}
-      {!isExpanded && (
-        <p className="lg:hidden text-[10px] text-center text-gray-400 mt-2">
-          Tap to see all coaches
-        </p>
-      )}
     </div>
   );
 }
