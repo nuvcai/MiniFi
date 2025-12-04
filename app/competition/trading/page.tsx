@@ -1,25 +1,14 @@
-/**
- * Mini.Fi Trading Dashboard
- * Light, fun design
- * © 2025 NUVC.AI. All Rights Reserved.
- */
-
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowLeft, Loader2 } from "lucide-react";
 import TradingDashboard from "@/components/trading-dashboard";
 
 function TradingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [competitionConfig, setCompetitionConfig] = useState<{
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     portfolio: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     coach: any;
   } | null>(null);
 
@@ -37,27 +26,35 @@ function TradingContent() {
         router.push("/competition");
       }
     } else {
+      // Redirect to competition setup if no config
       router.push("/competition");
     }
   }, [searchParams, router]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEndCompetition = (results: any) => {
-    if (results && typeof results.finalValue === "number" && typeof results.totalReturn === "number") {
+    if (
+      results &&
+      typeof results.finalValue === "number" &&
+      typeof results.totalReturn === "number"
+    ) {
+      // Navigate to results with data
       const finalValue = results.finalValue;
       const totalReturn = results.totalReturn;
-      router.push(`/competition/results?finalValue=${finalValue}&totalReturn=${totalReturn}`);
+      router.push(
+        `/competition/results?finalValue=${finalValue}&totalReturn=${totalReturn}`
+      );
     } else {
+      // Go back to competition setup
       router.push("/competition");
     }
   };
 
   if (!competitionConfig) {
     return (
-      <div className="flex items-center justify-center pt-32">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">Loading competition...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading competition...</p>
         </div>
       </div>
     );
@@ -74,54 +71,17 @@ function TradingContent() {
 
 export default function TradingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-teal-50">
-      {/* Background blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-emerald-200/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 left-10 w-80 h-80 bg-teal-200/30 rounded-full blur-3xl" />
-      </div>
-      
-      {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/competition" className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-medium">Exit</span>
-            </Link>
-            
-            <div className="flex items-center gap-2">
-              <Image
-                src="/minifi-header-logo.png"
-                alt="Mini.Fi"
-                width={100}
-                height={36}
-                className="h-9 w-auto"
-              />
-              <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                Trading
-              </span>
-            </div>
-            
-            <div className="w-16" />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading...</p>
           </div>
         </div>
-      </nav>
-
-      <div className="relative">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center pt-32">
-              <div className="text-center">
-                <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium">Loading...</p>
-              </div>
-            </div>
-          }
-        >
-          <TradingContent />
-        </Suspense>
-      </div>
-    </div>
+      }
+    >
+      <TradingContent />
+    </Suspense>
   );
 }

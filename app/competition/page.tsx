@@ -1,15 +1,6 @@
-/**
- * Mini.Fi Competition Page
- * Light, fun design
- * © 2025 NUVC.AI. All Rights Reserved.
- */
-
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
 import InvestmentCompetition from "@/components/investment-competition";
 
 export default function CompetitionPage() {
@@ -19,54 +10,18 @@ export default function CompetitionPage() {
     router.push('/timeline');
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleStartTrading = (portfolio: any, coach: any) => {
+    // Encode portfolio and coach data as URL parameters
     const portfolioParam = encodeURIComponent(JSON.stringify(portfolio));
     const coachParam = encodeURIComponent(JSON.stringify(coach));
+    
     router.push(`/competition/trading?portfolio=${portfolioParam}&coach=${coachParam}`);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-teal-50">
-      {/* Background blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-200/40 rounded-full blur-3xl" />
-      </div>
-      
-      {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/timeline" className="flex items-center gap-2 text-gray-500 hover:text-emerald-600 transition-colors group">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-medium">Back</span>
-            </Link>
-            
-            <div className="flex items-center gap-2">
-              <Image
-                src="/minifi-header-logo.png"
-                alt="Mini.Fi"
-                width={100}
-                height={36}
-                className="h-9 w-auto"
-              />
-              <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                Competition
-              </span>
-            </div>
-            
-            <div className="w-16" />
-          </div>
-        </div>
-      </nav>
-
-      <div className="relative">
-        <InvestmentCompetition
-          onBack={handleBack}
-          onStartTrading={handleStartTrading}
-        />
-      </div>
-    </div>
+    <InvestmentCompetition
+      onBack={handleBack}
+      onStartTrading={handleStartTrading}
+    />
   );
 }

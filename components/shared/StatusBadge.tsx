@@ -21,21 +21,21 @@ export function StatusBadge({ status, variant, className }: StatusBadgeProps) {
   const getStatusConfig = () => {
     switch (status) {
       case "completed":
-        return { text: "Completed", variant: "default" as const, className: "bg-chart-1/20 text-chart-1 border-chart-1/30" };
+        return { text: "Completed", variant: "default" as const, className: "bg-green-100 text-green-800" };
       case "available":
-        return { text: "Available", variant: "secondary" as const, className: "bg-primary/10 text-primary border-primary/20" };
+        return { text: "Available", variant: "secondary" as const, className: "bg-blue-100 text-blue-800" };
       case "locked":
-        return { text: "Locked", variant: "outline" as const, className: "bg-muted text-muted-foreground" };
+        return { text: "Locked", variant: "outline" as const, className: "bg-gray-100 text-gray-600" };
       case "beginner":
-        return { text: "Beginner", variant: "outline" as const, className: "bg-primary/10 text-primary border-primary/20" };
+        return { text: "Beginner", variant: "outline" as const, className: "bg-green-50 text-green-700 border-green-200" };
       case "intermediate":
-        return { text: "Intermediate", variant: "outline" as const, className: "bg-accent/20 text-accent-foreground border-accent/30" };
+        return { text: "Intermediate", variant: "outline" as const, className: "bg-yellow-50 text-yellow-700 border-yellow-200" };
       case "advanced":
-        return { text: "Advanced", variant: "outline" as const, className: "bg-secondary/10 text-secondary border-secondary/20" };
+        return { text: "Advanced", variant: "outline" as const, className: "bg-orange-50 text-orange-700 border-orange-200" };
       case "expert":
-        return { text: "Expert", variant: "outline" as const, className: "bg-destructive/10 text-destructive border-destructive/20" };
+        return { text: "Expert", variant: "outline" as const, className: "bg-red-50 text-red-700 border-red-200" };
       case "special":
-        return { text: "Special Challenge", variant: "default" as const, className: "bg-accent text-accent-foreground" };
+        return { text: "Special Challenge", variant: "default" as const, className: "bg-yellow-500 text-white" };
       default:
         return { text: status, variant: "outline" as const, className: "" };
     }

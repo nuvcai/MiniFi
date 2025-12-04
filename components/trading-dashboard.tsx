@@ -1,11 +1,3 @@
-/**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║   MiniFi Trading Dashboard (MVP - Hackathon Edition)                         ║
- * ║   ✨ Vibe-coded by Tick.AI ✨                                                ║
- * ║   Copyright (c) 2025 NUVC.AI. All Rights Reserved. NO COMMERCIAL USE.       ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
- */
-
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
@@ -68,132 +60,19 @@ interface TradingDashboardProps {
   startingCapital?: number;
 }
 
-// Asset Class Types - aligned with Family Office standards
-type AssetClass = "equities" | "fixed_income" | "commodities" | "alternatives" | "cash" | "cryptocurrency";
-type TimeHorizon = "short" | "medium" | "long";
-type RiskLevel = "low" | "medium" | "high" | "extreme";
-
-// Enhanced market data with FO-aligned asset class information
-interface MarketAsset {
-  price: number;
-  change: number;
-  assetClass: AssetClass;
-  riskLevel: RiskLevel;
-  timeHorizon: TimeHorizon;
-  foAllocationRange: string;  // Typical Family Office allocation
-  volatility: string;         // Historical volatility range
-}
-
-const marketData: Record<string, MarketAsset> = {
-  apple: { 
-    price: 230.45, 
-    change: 2.3,
-    assetClass: "equities",
-    riskLevel: "medium",
-    timeHorizon: "long",
-    foAllocationRange: "5-15%",
-    volatility: "20-30%"
-  },
-  microsoft: { 
-    price: 506.46, 
-    change: 1.8,
-    assetClass: "equities",
-    riskLevel: "medium",
-    timeHorizon: "long",
-    foAllocationRange: "5-15%",
-    volatility: "18-25%"
-  },
-  nvidia: { 
-    price: 178.1, 
-    change: 4.2,
-    assetClass: "equities",
-    riskLevel: "high",
-    timeHorizon: "long",
-    foAllocationRange: "3-10%",
-    volatility: "35-50%"
-  },
-  tesla: { 
-    price: 346.76, 
-    change: -1.5,
-    assetClass: "equities",
-    riskLevel: "high",
-    timeHorizon: "long",
-    foAllocationRange: "2-8%",
-    volatility: "40-60%"
-  },
-  sp500: { 
-    price: 646.33, 
-    change: 1.2,
-    assetClass: "equities",
-    riskLevel: "medium",
-    timeHorizon: "long",
-    foAllocationRange: "20-40%",
-    volatility: "15-20%"
-  },
-  etf: { 
-    price: 134.18, 
-    change: 0.8,
-    assetClass: "equities",
-    riskLevel: "medium",
-    timeHorizon: "long",
-    foAllocationRange: "15-30%",
-    volatility: "12-18%"
-  },
-  bitcoin: { 
-    price: 43250.0, 
-    change: 3.7,
-    assetClass: "cryptocurrency",
-    riskLevel: "extreme",
-    timeHorizon: "long",
-    foAllocationRange: "0-5%",
-    volatility: "60-100%"
-  },
-  ethereum: { 
-    price: 2680.5, 
-    change: 2.1,
-    assetClass: "cryptocurrency",
-    riskLevel: "extreme",
-    timeHorizon: "long",
-    foAllocationRange: "0-3%",
-    volatility: "70-120%"
-  },
+// Mock market data for simulation
+const marketData = {
+  apple: { price: 230.45, change: 2.3 },
+  microsoft: { price: 506.46, change: 1.8 },
+  nvidia: { price: 178.1, change: 4.2 },
+  tesla: { price: 346.76, change: -1.5 },
+  sp500: { price: 646.33, change: 1.2 },
+  etf: { price: 134.18, change: 0.8 },
+  bitcoin: { price: 43250.0, change: 3.7 },
+  ethereum: { price: 2680.5, change: 2.1 },
 };
 
-// Asset class display colors and labels
-const assetClassInfo: Record<AssetClass, { label: string; color: string; description: string }> = {
-  equities: { 
-    label: "📈 Equities", 
-    color: "text-blue-600",
-    description: "Stocks & shares - ownership in companies"
-  },
-  fixed_income: { 
-    label: "📊 Fixed Income", 
-    color: "text-green-600",
-    description: "Bonds & treasuries - steady income with lower risk"
-  },
-  commodities: { 
-    label: "🥇 Commodities", 
-    color: "text-yellow-600",
-    description: "Gold, oil, agriculture - real assets"
-  },
-  alternatives: { 
-    label: "🏢 Alternatives", 
-    color: "text-purple-600",
-    description: "Real estate, private equity, hedge funds"
-  },
-  cash: { 
-    label: "💵 Cash", 
-    color: "text-slate-600",
-    description: "Money market & short-term deposits"
-  },
-  cryptocurrency: { 
-    label: "₿ Crypto", 
-    color: "text-orange-600",
-    description: "Digital assets - high risk/high reward"
-  },
-};
-
-const investmentNames: Record<string, string> = {
+const investmentNames = {
   apple: "Apple Inc.",
   microsoft: "Microsoft Corp.",
   nvidia: "NVIDIA Corp.",
@@ -425,48 +304,13 @@ export default function TradingDashboard({
 
       typeIntoMessage(pendingId, reply ?? "Updated.");
     } catch (error: any) {
-      // 4) If there is an error, provide a helpful fallback response instead of error
-      const fallbackResponses = {
-        "Conservative Coach": [
-          "Great effort exploring your portfolio! Remember, family offices think in generations, not days. Keep building that diversified foundation! 🛡️",
-          "I love your curiosity! Steady progress wins the race. Consider bonds and defensive stocks for stability. 💎",
-          "You're thinking like a wealth manager! Capital preservation is key - keep exploring different asset classes."
-        ],
-        "Balanced Coach": [
-          "Fantastic strategic thinking! Balance is the key to family office success. Mix growth with stability. ⚖️",
-          "You're exploring like a family office CIO! Try mixing 2-3 different asset classes for better diversification.",
-          "Great effort! Family offices master asset allocation. Keep experimenting with different combinations! 📊"
-        ],
-        "Aggressive Coach": [
-          "Bold move! Family offices built wealth by exploring new frontiers early. Keep that growth mindset! 🚀",
-          "I like your courage! Innovation comes from trying new things. Explore tech and emerging markets!",
-          "You're thinking ahead! Family offices weren't afraid to take calculated risks. Keep exploring! 💪"
-        ],
-        "Tech Coach": [
-          "Excellent tech exploration! The future belongs to those who embrace innovation. Keep learning! 💻",
-          "Great effort in the tech space! Diversify within tech sectors for better resilience. 🔮",
-          "You're building knowledge like the best tech investors! Keep exploring AI, cloud, and emerging tech!"
-        ]
-      };
-      
-      const coachStyle = selectedCoach.style || selectedCoach.name || "Balanced Coach";
-      const responses = fallbackResponses[coachStyle as keyof typeof fallbackResponses] || fallbackResponses["Balanced Coach"];
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      
-      // Add context about the action if there was one
-      let fallbackMessage = randomResponse;
-      if (action) {
-        fallbackMessage = `${action.type === "buy" ? "Nice buy" : "Smart sell"} on ${action.asset}! ${randomResponse}`;
-      }
-      
+      // 4) If there is an error, replace it with the error message
       updateChatMessageById(pendingId, (old) => ({
         ...old,
-        message: fallbackMessage,
+        message:
+          handleApiError(error) || "Something went wrong. Please try again.",
         timestamp: new Date(),
       }));
-      
-      // Log the actual error for debugging
-      console.error("Coach chat error (using fallback):", handleApiError(error));
     }
   }
 
@@ -561,7 +405,7 @@ export default function TradingDashboard({
   };
 
   return (
-    <div className="relative">
+    <div className="min-h-screen bg-gradient-to-br from-background via-card/30 to-background">
       <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
@@ -569,10 +413,10 @@ export default function TradingDashboard({
           <div className="sm:hidden space-y-3">
             {/* Title Section */}
             <div className="text-center">
-              <h1 className="text-lg font-bold text-white mb-1">
+              <h1 className="text-lg font-serif font-bold text-foreground mb-1">
                 Investment Competition - Day {day}
               </h1>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-muted-foreground">
                 Investing with {selectedCoach.name}
               </p>
             </div>

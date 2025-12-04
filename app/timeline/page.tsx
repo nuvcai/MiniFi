@@ -1,60 +1,36 @@
-/**
- * Mini.Fi Timeline Page
- * Light, fun game interface with all features
- * © 2025 NUVC.AI. All Rights Reserved.
- */
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { BookOpen, Trophy, Star, ChevronRight, Gift } from "lucide-react";
 
-// Components
+// Import components
 import { GameHeader } from "@/components/game/GameHeader";
 import { CoachSidebar } from "@/components/game/CoachSidebar";
+import { ProgressCard } from "@/components/game/ProgressCard";
 import { TimelineSection } from "@/components/game/TimelineSection";
 import { EventDetailModal } from "@/components/modals/EventDetailModal";
 import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
 import { RewardsModal } from "@/components/modals/RewardsModal";
-import { LevelUpCelebration, BadgeDisplay, MilestoneAchievement } from "@/components/gamification";
-import { DailyStreak } from "@/components/gamification/DailyStreak";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Users } from "lucide-react";
 
-// Hooks
-import { useEffortRewards } from "@/hooks/useEffortRewards";
-
-// Data
+// Import data
 import { financialEvents, FinancialEvent } from "@/components/data/events";
 import { aiCoaches } from "@/components/data/coaches";
 import { missionData } from "@/components/data/missions";
 
-// Local storage keys
-const GAME_PROGRESS_KEY = "minifi_game_progress";
-const USER_EMAIL_KEY = "minifi_user_email";
-const SESSION_KEY = "minifi_session_id";
-
-// Generate or get session ID for anonymous users
-const getOrCreateSessionId = () => {
-  if (typeof window === 'undefined') return null;
-  let sessionId = localStorage.getItem(SESSION_KEY);
-  if (!sessionId) {
-    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem(SESSION_KEY, sessionId);
-  }
-  return sessionId;
-};
-
 export default function TimelinePage() {
-  // State
-  const [selectedEvent, setSelectedEvent] = useState<FinancialEvent | null>(null);
+  // State management
+  const [selectedEvent, setSelectedEvent] = useState<FinancialEvent | null>(
+    null
+  );
   const [missionEvent, setMissionEvent] = useState<FinancialEvent | null>(null);
   const [selectedCoach, setSelectedCoach] = useState(aiCoaches[0]);
   const [gameStarted, setGameStarted] = useState(false);
   const [playerLevel, setPlayerLevel] = useState(1);
-  const [playerXP, setPlayerXP] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
+  const [playerXP, setPlayerXP] = useState(0); // Spendable XP (can redeem rewards)
+  const [lifetimeXP, setLifetimeXP] = useState(0); // Total earned (for leveling, never decreases)
   const [showSummary, setShowSummary] = useState(false);
   const [summaryDismissed, setSummaryDismissed] = useState(false);
   const summaryTimerRef = useRef<number | null>(null);
@@ -62,172 +38,35 @@ export default function TimelinePage() {
   const [competitionUnlocked, setCompetitionUnlocked] = useState(false);
   const [showRewardsStore, setShowRewardsStore] = useState(false);
   const [redeemedRewards, setRedeemedRewards] = useState<string[]>([]);
-  const [showLevelUp, setShowLevelUp] = useState(false);
-  const [levelUpInfo, setLevelUpInfo] = useState({ newLevel: 1, previousLevel: 0 });
-  const [missionStep, setMissionStep] = useState<"intro" | "decision" | "result">("intro");
-  const [selectedInvestment, setSelectedInvestment] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  // Mission game state management
+  const [missionStep, setMissionStep] = useState<
+    "intro" | "decision" | "result"
+  >("intro");
+  const [selectedInvestment, setSelectedInvestment] = useState<string | null>(
+    null
+  );
   const [missionResult, setMissionResult] = useState<any>(null);
-  const [streakDays, setStreakDays] = useState(0);
-  
-  // Effort rewards tracking
-  const {
-    stats: effortStats,
-    earnedRewards,
-    pendingNotifications,
-    totalEffortXp,
-    recordInvestment,
-    recordRiskPreviewViewed,
-    recordCoachAdviceViewed,
-    recordMissionCompleted,
-    clearPendingNotification,
-    getLossEncouragement,
-  } = useEffortRewards();
-  
-  // Milestone notification state
-  const [showMilestoneModal, setShowMilestoneModal] = useState(false);
-  const [currentMilestoneNotification, setCurrentMilestoneNotification] = useState<typeof pendingNotifications[0] | null>(null);
-  
-  // Handle pending notifications (milestones, badges, courage rewards)
-  useEffect(() => {
-    if (pendingNotifications.length > 0 && !showMilestoneModal) {
-      const notification = pendingNotifications[0];
-      setCurrentMilestoneNotification(notification);
-      setShowMilestoneModal(true);
-    }
-  }, [pendingNotifications, showMilestoneModal]);
-
-  // Load saved progress on mount
-  useEffect(() => {
-    const loadProgress = async () => {
-      const savedEmail = localStorage.getItem(USER_EMAIL_KEY);
-      const sessionId = getOrCreateSessionId(); // Create session ID if needed
-      
-      let dbXP = 0;
-      let dbLevel = 1;
-      let loadedFromDb = false;
-      
-      // Try to load from database first
-      if (savedEmail || sessionId) {
-        try {
-          const params = new URLSearchParams();
-          if (savedEmail) params.append('email', savedEmail);
-          else if (sessionId) params.append('sessionId', sessionId);
-          
-          const response = await fetch(`/api/streak?${params.toString()}`);
-          const result = await response.json();
-          
-          if (result.success && result.data) {
-            const data = result.data;
-            if (data.totalXP > 0) {
-              dbXP = data.totalXP;
-              dbLevel = data.playerLevel || Math.floor(data.totalXP / 1000) + 1;
-              loadedFromDb = true;
-            }
-          }
-        } catch (e) {
-          console.log("Falling back to localStorage for game progress");
-        }
-      }
-      
-      // Also check localStorage for completed missions and compare XP
-      try {
-        const saved = localStorage.getItem(GAME_PROGRESS_KEY);
-        if (saved) {
-          const progress = JSON.parse(saved);
-          if (progress.completedMissions) {
-            setCompletedMissions(progress.completedMissions);
-            // Restore completed status on events
-            progress.completedMissions.forEach((title: string) => {
-              const event = financialEvents.find(e => e.title === title);
-              if (event) event.completed = true;
-            });
-            updateUnlockStatus();
-          }
-          
-          // Use higher XP value between DB and localStorage
-          const localXP = progress.playerXP || 0;
-          const localLevel = progress.playerLevel || 1;
-          
-          if (localXP > dbXP) {
-            setPlayerXP(localXP);
-            setTotalScore(localXP);
-            setPlayerLevel(localLevel);
-          } else if (loadedFromDb) {
-            setPlayerXP(dbXP);
-            setTotalScore(dbXP);
-            setPlayerLevel(dbLevel);
-          }
-        } else if (loadedFromDb) {
-          // No local storage, use DB values
-          setPlayerXP(dbXP);
-          setTotalScore(dbXP);
-          setPlayerLevel(dbLevel);
-        }
-      } catch (e) {
-        console.error("Failed to load game progress:", e);
-        // Still apply DB values if available
-        if (loadedFromDb) {
-          setPlayerXP(dbXP);
-          setTotalScore(dbXP);
-          setPlayerLevel(dbLevel);
-        }
-      }
-    };
-    
-    loadProgress();
-  }, []);
-
-  // Save progress to localStorage and database when it changes
-  const saveProgress = async (xp: number, level: number, missions: string[]) => {
-    // Save to localStorage
-    const progress = {
-      playerXP: xp,
-      playerLevel: level,
-      completedMissions: missions,
-      lastUpdated: new Date().toISOString(),
-    };
-    localStorage.setItem(GAME_PROGRESS_KEY, JSON.stringify(progress));
-    
-    // Sync to database - always try (will create profile if needed)
-    const savedEmail = localStorage.getItem(USER_EMAIL_KEY);
-    const sessionId = getOrCreateSessionId();
-    
-    if (savedEmail || sessionId) {
-      try {
-        await fetch('/api/streak', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'sync',
-            email: savedEmail,
-            sessionId,
-            streakData: {
-              totalXP: xp,
-              playerLevel: level,
-              completedMissions: missions,
-            },
-          }),
-        });
-      } catch (e) {
-        console.log("Failed to sync progress to database");
-      }
-    }
-  };
 
   const updateUnlockStatus = () => {
     financialEvents.forEach((event) => {
       if (event.unlockRequirements.length > 0) {
-        const allRequirementsMet = event.unlockRequirements.every((requiredYear) => {
-          const requiredEvent = financialEvents.find((e) => e.year === requiredYear);
-          return requiredEvent?.completed === true;
-        });
+        const allRequirementsMet = event.unlockRequirements.every(
+          (requiredYear) => {
+            const requiredEvent = financialEvents.find(
+              (e) => e.year === requiredYear
+            );
+            return requiredEvent?.completed === true;
+          }
+        );
         event.unlocked = allRequirementsMet;
       }
     });
   };
 
-  const allMissionsCompleted = financialEvents.every((event) => event.completed);
+  const allMissionsCompleted = financialEvents.every(
+    (event) => event.completed
+  );
 
   useEffect(() => {
     updateUnlockStatus();
@@ -239,6 +78,7 @@ export default function TimelinePage() {
         setShowSummary(true);
       }, 1000);
     }
+
     return () => {
       if (summaryTimerRef.current) {
         clearTimeout(summaryTimerRef.current);
@@ -268,28 +108,34 @@ export default function TimelinePage() {
     if (option) {
       setSelectedInvestment(optionId);
 
-      const getCoachAdjustedReturn = (baseReturn: number, coachPersonality: string) => {
-        const adjustmentFactors: Record<string, number> = {
-          "Conservative Coach": 0.8,
-          "Balanced Coach": 1.0,
-          "Aggressive Coach": 1.3,
-          "Income Coach": 0.9,
+      // Calculate coach-adjusted returns based on selected coach
+      const getCoachAdjustedReturn = (
+        baseReturn: number,
+        coachPersonality: string
+      ) => {
+        const adjustmentFactors = {
+          "Conservative Coach": 0.8, // More conservative, reduce extreme losses/gains
+          "Balanced Coach": 1.0, // No adjustment, balanced approach
+          "Aggressive Coach": 1.3, // More aggressive, amplify returns
+          "Income Coach": 0.9, // Slightly conservative, focus on stability
         };
-        const factor = adjustmentFactors[coachPersonality] || 1.0;
-        const randomFactor = 0.9 + Math.random() * 0.2;
+        const factor =
+          adjustmentFactors[
+            coachPersonality as keyof typeof adjustmentFactors
+          ] || 1.0;
+        // Apply adjustment with some randomness
+        const randomFactor = 0.9 + Math.random() * 0.2; // 0.9 to 1.1
         const adjustedReturn = baseReturn * factor * randomFactor;
+        // Ensure returns stay within reasonable bounds
         return Math.max(-0.8, Math.min(2.0, adjustedReturn));
       };
 
-      const adjustedReturn = getCoachAdjustedReturn(option.actualReturn, selectedCoach.personality);
+      const adjustedReturn = getCoachAdjustedReturn(
+        option.actualReturn,
+        selectedCoach.personality
+      );
       const finalAmount = 10000 * (1 + adjustedReturn);
       const performance = adjustedReturn > 0 ? "profit" : "loss";
-      
-      // Track investment for effort rewards
-      const riskLevel = option.risk.toLowerCase();
-      const assetClass = option.assetClass || "equities";
-      const wasLoss = performance === "loss";
-      recordInvestment(riskLevel, assetClass, wasLoss);
 
       setMissionResult({
         option,
@@ -301,44 +147,47 @@ export default function TimelinePage() {
       setMissionStep("result");
     }
   };
-  
-  // Track coach selection for exploration rewards
-  const handleCoachSelect = (coach: typeof aiCoaches[0]) => {
-    setSelectedCoach(coach);
-    recordCoachAdviceViewed(coach.id);
-  };
 
   const completeMission = () => {
     if (missionEvent && missionResult) {
-      const missionReward = missionEvent.reward;
-      const newXP = playerXP + missionReward;
-      const newMissions = [...completedMissions, missionEvent.title];
-
-      setPlayerXP(newXP);
-      setTotalScore(newXP);
-      setCompletedMissions(newMissions);
+      // Base mission reward
+      const baseReward = missionEvent.reward;
       
-      // Record mission completion for effort rewards
-      recordMissionCompleted();
+      // Performance bonus: +50% XP for profitable investments!
+      const performanceBonus = missionResult.performance === "profit" 
+        ? Math.round(baseReward * 0.5) 
+        : 0;
+      
+      // Total XP earned this mission
+      const totalMissionXP = baseReward + performanceBonus;
 
-      const eventIndex = financialEvents.findIndex((e) => e.year === missionEvent.year);
+      // Update XP - both spendable and lifetime
+      setPlayerXP((prev) => prev + totalMissionXP);
+      setLifetimeXP((prev) => prev + totalMissionXP);
+      setCompletedMissions((prev) => [...prev, missionEvent.title]);
+
+      // Update event completion status
+      const eventIndex = financialEvents.findIndex(
+        (e) => e.year === missionEvent.year
+      );
       if (eventIndex !== -1) {
         financialEvents[eventIndex].completed = true;
         updateUnlockStatus();
       }
 
-      const newLevel = Math.floor(newXP / 1000) + 1;
+      // Level up based on LIFETIME XP (not affected by spending)
+      // Smoother progression: 250, 600, 1000, 1500, 2000...
+      const xpThresholds = [0, 250, 600, 1000, 1500, 2000, 2600, 3300, 4100, 5000];
+      const newLifetimeXP = lifetimeXP + totalMissionXP;
+      const newLevel = xpThresholds.findIndex((threshold, i) => 
+        newLifetimeXP < (xpThresholds[i + 1] || Infinity)
+      ) + 1;
+      
       if (newLevel > playerLevel) {
-        setLevelUpInfo({ newLevel, previousLevel: playerLevel });
         setPlayerLevel(newLevel);
-        setTimeout(() => setShowLevelUp(true), 500);
-        // Save with new level
-        saveProgress(newXP, newLevel, newMissions);
-      } else {
-        // Save with current level
-        saveProgress(newXP, playerLevel, newMissions);
       }
 
+      // Unlock competition after completing final mission
       if (missionEvent.year === 2025 && missionEvent.title === "Current Challenges") {
         setCompetitionUnlocked(true);
       }
@@ -348,57 +197,22 @@ export default function TimelinePage() {
   };
 
   const startCompetition = () => {
+    // Navigate to competition page using Next.js router
     window.location.href = "/competition";
   };
 
-  const redeemReward = (reward: { id: string; cost: number }) => {
+  const redeemReward = (reward: any) => {
     if (playerXP >= reward.cost && !redeemedRewards.includes(reward.id)) {
-      const newXP = playerXP - reward.cost;
-      setPlayerXP(newXP);
-      setTotalScore(newXP); // Keep score in sync with XP
+      setPlayerXP((prev) => prev - reward.cost); // Only deduct from spendable XP
       setRedeemedRewards((prev) => [...prev, reward.id]);
-      // Save progress after redeeming
-      saveProgress(newXP, playerLevel, completedMissions);
+      // Lifetime XP stays the same - level is preserved!
     }
   };
 
+  // Real-time XP callback for learning interactions (+10 XP per step completed)
   const handleXpEarned = (amount: number) => {
-    const newXP = playerXP + amount;
-    setPlayerXP(newXP);
-    setTotalScore(newXP);
-    
-    const newLevel = Math.floor(newXP / 1000) + 1;
-    if (newLevel > playerLevel) {
-      setPlayerLevel(newLevel);
-    }
-    
-    // Save progress
-    saveProgress(newXP, Math.max(newLevel, playerLevel), completedMissions);
-  };
-
-  const handleStreakBonus = (bonus: number, days?: number) => {
-    const newXP = playerXP + bonus;
-    setPlayerXP(newXP);
-    setTotalScore(newXP);
-    if (days) {
-      setStreakDays(days);
-    }
-    
-    const newLevel = Math.floor(newXP / 1000) + 1;
-    if (newLevel > playerLevel) {
-      setPlayerLevel(newLevel);
-    }
-    
-    // Save progress
-    saveProgress(newXP, Math.max(newLevel, playerLevel), completedMissions);
-  };
-  
-  // Handle milestone XP claim
-  const handleMilestoneXpClaim = (xp: number) => {
-    handleXpEarned(xp);
-    clearPendingNotification();
-    setShowMilestoneModal(false);
-    setCurrentMilestoneNotification(null);
+    setPlayerXP((prev) => prev + amount);
+    setLifetimeXP((prev) => prev + amount);
   };
 
   const closeMissionModal = () => {
@@ -413,203 +227,115 @@ export default function TimelinePage() {
     ? missionData[missionEvent.year as keyof typeof missionData]
     : null;
 
-  const completedCount = financialEvents.filter((e) => e.completed).length;
-  const availableCount = financialEvents.filter((e) => e.unlocked && !e.completed).length;
+  const [showCoachSheet, setShowCoachSheet] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-violet-50">
-      {/* Fun background blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-indigo-200/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 left-10 w-80 h-80 bg-violet-200/30 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-purple-200/20 rounded-full blur-3xl" />
-      </div>
-      
-      <div className="relative">
-        <GameHeader
-          playerLevel={playerLevel}
-          playerXP={playerXP}
-          streakDays={streakDays}
-          onRewardsClick={() => setShowRewardsStore(true)}
-        />
+    <div className="min-h-screen bg-background">
+      <GameHeader
+        playerLevel={playerLevel}
+        playerXP={playerXP}
+        lifetimeXP={lifetimeXP}
+        onRewardsClick={() => setShowRewardsStore(true)}
+      />
 
-        <div className="container mx-auto px-4 sm:px-6 py-8">
-          <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
-            
-            {/* Sidebar - All Features */}
-            <div className="lg:col-span-1 space-y-5">
-              
-              {/* Coach Selection */}
-              <CoachSidebar
-                coaches={aiCoaches}
-                selectedCoach={selectedCoach}
-                onCoachSelect={handleCoachSelect}
-              />
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        <div className="grid lg:grid-cols-4 gap-4 sm:gap-8">
+          {/* Sidebar - Hidden on mobile, shown on large screens */}
+          <div className="hidden lg:block lg:col-span-1">
+            <CoachSidebar
+              coaches={aiCoaches}
+              selectedCoach={selectedCoach}
+              onCoachSelect={setSelectedCoach}
+            />
 
-              {/* Daily Streak */}
-              <DailyStreak onBonusClaimed={handleStreakBonus} />
-              
-              {/* Effort Badges */}
-              <BadgeDisplay
-                earnedBadgeIds={earnedRewards.filter(r => r.type === "badge").map(r => r.data.id)}
-                earnedMilestoneIds={earnedRewards.filter(r => r.type === "milestone").map(r => r.data.id)}
-                stats={{
-                  missionsCompleted: effortStats.missionsCompleted,
-                  differentRiskLevelsTried: effortStats.differentRiskLevelsTried.size,
-                  differentAssetClassesTried: effortStats.differentAssetClassesTried.size,
-                  coachesUsed: effortStats.coachesUsed.size,
-                  lossesExperienced: effortStats.lossesExperienced,
-                  investmentsAfterLoss: effortStats.investmentsAfterLoss,
-                  investmentsMade: effortStats.investmentsMade,
-                }}
-                compact={true}
-              />
-
-              {/* Progress Card */}
-              <div className="p-5 rounded-2xl bg-white shadow-xl shadow-indigo-100 border border-indigo-100">
-                <h3 className="text-sm font-semibold text-gray-500 mb-4 flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-amber-500" />
-                  Your Progress
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-sm">Missions</span>
-                    <span className="font-bold text-gray-900">
-                      {completedCount} / {financialEvents.length}
-                    </span>
-                  </div>
-                  {/* Progress bar */}
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
-                      style={{ width: `${(completedCount / financialEvents.length) * 100}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-sm">Available</span>
-                    <span className="font-bold text-indigo-600">{availableCount} 🎮</span>
-                  </div>
-                  <div className="h-px bg-gray-100" />
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-sm">Total XP</span>
-                    <span className="font-bold text-violet-600">{playerXP.toLocaleString()} ⭐</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Wisdom Library Link */}
-              <Link href="/library">
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 shadow-lg shadow-amber-100 hover:shadow-xl hover:shadow-amber-200 hover:-translate-y-1 transition-all cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">Wealth Library 📚</p>
-                        <p className="text-xs text-gray-500">Learn from the greats</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="h-5 w-5 text-amber-500" />
-                  </div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Timeline - Main Content */}
-            <div className="lg:col-span-3">
-              <TimelineSection
-                events={financialEvents}
-                competitionUnlocked={competitionUnlocked}
-                onEventClick={handleEventClick}
-                onStartCompetition={startCompetition}
-              />
-            </div>
+            <ProgressCard
+              playerXP={playerXP}
+              completedCount={financialEvents.filter((e) => e.completed).length}
+              availableCount={
+                financialEvents.filter((e) => e.unlocked && !e.completed).length
+              }
+            />
           </div>
-        </div>
-        
-        {/* Mobile Bottom Bar - Quick Access to Key Features */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-lg z-40 safe-area-bottom">
-          <div className="flex items-center justify-around py-2 px-4">
-            {/* Coach */}
-            <button 
-              onClick={() => {/* Could open coach modal */}}
-              className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              <img 
-                src={selectedCoach.avatar} 
-                alt={selectedCoach.name}
-                className="w-8 h-8 rounded-full border-2 border-indigo-200"
-              />
-              <span className="text-[10px] text-gray-600 font-medium">Coach</span>
-            </button>
-            
-            {/* Progress */}
-            <div className="flex flex-col items-center gap-1 p-2">
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-100">
-                <span className="text-sm font-bold text-indigo-600">{completedCount}/{financialEvents.length}</span>
-              </div>
-              <span className="text-[10px] text-gray-600 font-medium">Missions</span>
-            </div>
-            
-            {/* Streak */}
-            <button className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className={`flex items-center gap-1 px-3 py-1 rounded-full ${streakDays > 0 ? 'bg-orange-100' : 'bg-gray-100'}`}>
-                <span className="text-sm">🔥</span>
-                <span className={`text-sm font-bold ${streakDays > 0 ? 'text-orange-600' : 'text-gray-400'}`}>{streakDays}</span>
-              </div>
-              <span className="text-[10px] text-gray-600 font-medium">Streak</span>
-            </button>
-            
-            {/* Rewards */}
-            <button 
-              onClick={() => setShowRewardsStore(true)}
-              className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100">
-                <Gift className="h-4 w-4 text-amber-600" />
-              </div>
-              <span className="text-[10px] text-gray-600 font-medium">Rewards</span>
-            </button>
-          </div>
-        </div>
-        
-        {/* Spacer for mobile bottom bar */}
-        <div className="lg:hidden h-20" />
 
-        {/* Footer */}
-        <footer className="mt-12 border-t border-gray-100 bg-white/50 backdrop-blur">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Main Timeline - Full width on mobile */}
+          <div className="lg:col-span-3">
+            {/* Mobile: Quick coach indicator */}
+            <div className="lg:hidden mb-4 flex items-center justify-between bg-card rounded-lg p-3 border shadow-sm">
               <div className="flex items-center gap-3">
-                <Image
-                  src="/nuvc-logo.png"
-                  alt="NUVC.AI"
-                  width={32}
-                  height={32}
-                  className="rounded-lg"
+                <img
+                  src={selectedCoach.avatar}
+                  alt={selectedCoach.name}
+                  className="w-10 h-10 rounded-full border-2 border-primary"
                 />
-                <span className="text-sm text-gray-500">
-                  Made with 💜 by{" "}
-                  <a href="https://nuvc.ai" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline font-medium">
-                    NUVC.AI
-                  </a>
-                </span>
+                <div>
+                  <p className="font-medium text-sm">{selectedCoach.name}</p>
+                  <p className="text-xs text-muted-foreground">Your Coach</p>
+                </div>
               </div>
-              <div className="flex items-center gap-6 text-sm text-gray-500">
-                <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
-                <Link href="/library" className="hover:text-indigo-600 transition-colors">Library</Link>
-                <Link href="/support" className="hover:text-indigo-600 transition-colors">Support</Link>
-                <a href="https://github.com/nuvcai/MiniFi" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors">
-                  GitHub
-                </a>
-              </div>
+              <Sheet open={showCoachSheet} onOpenChange={setShowCoachSheet}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    <Users className="h-4 w-4" />
+                    <span className="hidden xs:inline">Change</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" className="h-[70vh] rounded-t-2xl">
+                  <div className="pt-4 pb-8 overflow-y-auto h-full">
+                    <h3 className="font-serif font-bold text-lg mb-4 px-1">Choose Your Coach</h3>
+                    <div className="space-y-3">
+                      {aiCoaches.map((coach) => (
+                        <div
+                          key={coach.id}
+                          className={`p-4 rounded-xl border-2 cursor-pointer transition-all active:scale-[0.98] ${
+                            selectedCoach.id === coach.id
+                              ? "border-primary bg-primary/10 shadow-md"
+                              : "border-border hover:border-primary/50 hover:bg-primary/5"
+                          }`}
+                          onClick={() => {
+                            setSelectedCoach(coach);
+                            setShowCoachSheet(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-4">
+                            <img
+                              src={coach.avatar}
+                              alt={coach.name}
+                              className="w-14 h-14 rounded-full"
+                            />
+                            <div className="flex-1">
+                              <p className="font-semibold">{coach.name}</p>
+                              <p className="text-sm text-primary font-medium">
+                                {coach.personality}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {coach.description}
+                              </p>
+                            </div>
+                            {selectedCoach.id === coach.id && (
+                              <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
+
+            <TimelineSection
+              events={financialEvents}
+              competitionUnlocked={competitionUnlocked}
+              onEventClick={handleEventClick}
+              onStartCompetition={startCompetition}
+            />
           </div>
-        </footer>
+        </div>
       </div>
 
-      {/* Modals */}
+      {/* Event Detail Modal */}
       <EventDetailModal
         event={selectedEvent}
         selectedCoach={selectedCoach}
@@ -617,6 +343,7 @@ export default function TimelinePage() {
         onStartMission={() => selectedEvent && startMission(selectedEvent)}
       />
 
+      {/* Mission Modal */}
       <MissionModal
         open={gameStarted}
         event={missionEvent}
@@ -636,10 +363,11 @@ export default function TimelinePage() {
         onXpEarned={handleXpEarned}
       />
 
+      {/* Summary Modal */}
       <SummaryModal
         open={showSummary}
         playerXP={playerXP}
-        totalScore={totalScore}
+        lifetimeXP={lifetimeXP}
         events={financialEvents}
         onClose={() => {
           setShowSummary(false);
@@ -648,32 +376,13 @@ export default function TimelinePage() {
         onRestart={() => window.location.reload()}
       />
 
+      {/* Rewards Modal */}
       <RewardsModal
         open={showRewardsStore}
         onOpenChange={setShowRewardsStore}
         playerXP={playerXP}
         redeemedRewards={redeemedRewards}
         onRedeemReward={redeemReward}
-      />
-
-      <LevelUpCelebration
-        open={showLevelUp}
-        newLevel={levelUpInfo.newLevel}
-        previousLevel={levelUpInfo.previousLevel}
-        onClose={() => setShowLevelUp(false)}
-      />
-      
-      {/* Milestone Achievement Modal */}
-      <MilestoneAchievement
-        open={showMilestoneModal}
-        milestone={currentMilestoneNotification?.type === "milestone" ? currentMilestoneNotification.data as any : undefined}
-        courageReward={currentMilestoneNotification?.type === "courage" ? currentMilestoneNotification.data as any : undefined}
-        onClose={() => {
-          clearPendingNotification();
-          setShowMilestoneModal(false);
-          setCurrentMilestoneNotification(null);
-        }}
-        onXpClaimed={handleMilestoneXpClaim}
       />
     </div>
   );

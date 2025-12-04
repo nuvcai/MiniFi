@@ -76,62 +76,36 @@ interface TeachingMessage {
 // ============================================================================
 
 const TICKER_MAP: Record<string, string> = {
-  // ============================================================================
   // 1990 Japanese Bubble options
-  // ============================================================================
   "Japanese Stocks": "^N225", // Nikkei 225 - Japanese stock market
-  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate (same period correlation)
-  "US Treasury Bonds": "^TYX", // 30-year Treasury yield (better for long-term bonds)
-  "Gold": "GLD", // Gold ETF (or ^GOLD for spot gold)
+  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate market (same period correlation)
+  "US Treasury Bonds": "^TNX", // 10-year Treasury yield
+  Gold: "GLD", // Gold ETF
 
-  // ============================================================================
   // 1997 Asian Financial Crisis options
-  // ============================================================================
   "Asian Stocks": "^N225", // Using Nikkei as proxy for Asian markets
   "US Stocks": "^GSPC", // S&P 500
-  "Bonds": "^TYX", // 30-year Treasury yield
-  "US Dollar Cash": "UUP", // US Dollar ETF
+  Bonds: "^TNX", // 10-year Treasury yield
 
-  // ============================================================================
   // 2000 Dot-com Bubble options
-  // ============================================================================
-  "Tech Stocks": "^IXIC", // NASDAQ Composite
-  "Dot-com Startups": "^IXIC", // NASDAQ Composite (best proxy for dot-coms)
-  "Traditional Stocks": "^DJI", // Dow Jones Industrial Average
-  "Cash": "^IRX", // 3-month Treasury Bill rate (proxy for cash returns)
+  "Tech Stocks": "^IXIC", // NASDAQ
+  "Traditional Stocks": "^GSPC", // S&P 500
 
-  // ============================================================================
   // 2008 Financial Crisis options
-  // ============================================================================
-  "Global Stocks": "^GSPC", // S&P 500 as global equity proxy
-  "Banking Stocks": "XLF", // Financial Select Sector SPDR Fund
-  "Bank Stocks": "XLF", // Financial Select Sector SPDR Fund (alias)
+  "Bank Stocks": "^BKX", // KBW Bank Index
+  "Real Estate": "^DJUSRE", // Dow Jones US Real Estate
+  "Government Bonds": "^TNX", // 10-year Treasury yield
 
-  // ============================================================================
   // 2020 COVID-19 options
-  // ============================================================================
   "Tech Growth": "^IXIC", // NASDAQ
-  "Travel & Airlines": "JETS", // US Global Jets ETF (or XAL for airlines index)
   "Value Stocks": "^GSPC", // S&P 500
   "Safe Havens": "GLD", // Gold ETF
 
-  // ============================================================================
-  // 2025 Current Market options
-  // ============================================================================
-  "AI Tech Stocks": "^IXIC", // NASDAQ (includes major AI companies)
-  "Green Energy Stocks": "ICLN", // iShares Global Clean Energy ETF
-  "Inflation-Protected Bonds (TIPS)": "TIP", // iShares TIPS Bond ETF
-  "Commodities Basket": "DJP", // iPath Bloomberg Commodity Index ETN
-
-  // ============================================================================
-  // General/Shared assets across multiple missions
-  // ============================================================================
-  "Real Estate": "VNQ", // Vanguard Real Estate ETF
-  "Government Bonds": "^TYX", // 30-year Treasury yield
+  // General assets
+  "US Dollar Cash": "UUP", // US Dollar ETF
   "Australian Stocks": "^AXJO", // ASX 200
-  "Bitcoin": "BTC-USD", // Bitcoin spot price
-  "Ethereum": "ETH-USD", // Ethereum spot price
-  "Commodities": "DJP", // Bloomberg Commodity Index (alias)
+  Bitcoin: "BTC-USD", // Bitcoin
+  Ethereum: "ETH-USD", // Ethereum
 };
 
 const TYPING_SPEED = 15; // milliseconds per character (faster typing)
@@ -483,16 +457,14 @@ export function TeachingDialogue({
   const [metricExplanation, setMetricExplanation] = useState<string>("");
   // Track hover state for metric highlighting
   const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
-  // Track XP earned this session
-  const [sessionXp, setSessionXp] = useState<number>(0);
   // Track XP animation
   const [showXpAnimation, setShowXpAnimation] = useState<boolean>(false);
+  const [xpAnimationAmount, setXpAnimationAmount] = useState<number>(0);
   // Track coach typing effect
   const [coachTypingText, setCoachTypingText] = useState<string>("");
   const [isCoachTyping, setIsCoachTyping] = useState<boolean>(false);
-  // Track viewed buttons to prevent duplicate XP - separate shared and step-specific
-  const [viewedSharedButtons, setViewedSharedButtons] = useState<Set<string>>(new Set());
-  const [viewedStepButtons, setViewedStepButtons] = useState<Set<string>>(new Set());
+  // Track which steps have earned XP (simpler: one XP reward per step)
+  const [stepsEarnedXP, setStepsEarnedXP] = useState<Set<string>>(new Set());
 
   // Generate cache key for this mission - use useMemo to prevent recreation
   const cacheKey = React.useMemo(
@@ -567,32 +539,6 @@ export function TeachingDialogue({
       markRequestInProgress(cacheKey); // Mark as in progress globally
       setLoadingAiAdvice(true);
 
-      // Set a timeout to fall back if API takes too long
-      const timeoutId = setTimeout(() => {
-        if (!hasFetchedAiAdvice.current) {
-          console.warn("AI coach advice timed out - using fallback");
-          const timeoutFallback: CoachResponse = {
-            advice: `Let's discuss your ${selectedOption.name} investment! You took action during ${event.title} - that's how real investors learn.`,
-            recommendations: [
-              "Diversify your portfolio across different asset classes",
-              "Think long-term like family offices do",
-              "Learn from each investment decision"
-            ],
-            next_steps: [
-              "Explore another mission to continue learning",
-              "Try a different investment strategy"
-            ],
-            risk_assessment: "Every investment carries risk - understanding this is key to becoming a smart investor.",
-            educational_insights: ["Family offices build wealth through patience and diversification"],
-            encouragement: "Keep investing and learning! You're on the path to thinking like a family office. 💪"
-          };
-          setAiCoachAdvice(timeoutFallback);
-          hasFetchedAiAdvice.current = true;
-          setLoadingAiAdvice(false);
-          markRequestCompleted(cacheKey);
-        }
-      }, 8000); // 8 second timeout
-
       try {
         const coachRequest: CoachRequest = {
           player_level: getPlayerLevel(
@@ -619,39 +565,15 @@ export function TeachingDialogue({
         };
 
         const advice = await api.getCoachAdvice(coachRequest);
-        clearTimeout(timeoutId); // Clear timeout on success
         setAiCoachAdvice(advice);
         hasFetchedAiAdvice.current = true; // Mark as fetched
 
         // Cache the advice for future use
         cacheAdvice(cacheKey, advice);
       } catch (error) {
-        clearTimeout(timeoutId); // Clear timeout on error
         console.error("Failed to fetch AI coach advice:", error);
         hasFetchedAiAdvice.current = true; // Mark as fetched even on error
-        
-        // Set fallback AI advice so the game can continue
-        const fallbackAdvice: CoachResponse = {
-          advice: performance === "profit" 
-            ? `Great work on your ${selectedOption.name} investment! You showed courage by investing during ${event.title}. This is how family offices learn - by taking action and studying the results.`
-            : `Your ${selectedOption.name} investment during ${event.title} may not have gone as planned, but every great investor learns from challenges. Family offices build wealth by learning from every experience.`,
-          recommendations: [
-            "Diversify across multiple asset classes like family offices do",
-            "Consider your risk tolerance when choosing investments",
-            "Study how different assets perform during market events"
-          ],
-          next_steps: [
-            "Try a different asset class in your next mission",
-            "Explore how other investments performed during this event"
-          ],
-          risk_assessment: "Understanding risk is key to building long-term wealth. Each investment teaches valuable lessons.",
-          educational_insights: [
-            "Family offices diversify across 4-6+ asset classes",
-            "Past performance helps us understand market behavior"
-          ],
-          encouragement: "You're learning like a family office! Keep exploring different investments and building your knowledge. 🚀"
-        };
-        setAiCoachAdvice(fallbackAdvice);
+        // Fall back to static content
       } finally {
         setLoadingAiAdvice(false);
         markRequestCompleted(cacheKey); // Mark as completed globally
@@ -990,35 +912,22 @@ export function TeachingDialogue({
     setSelectedMetric(isAlreadySelected ? null : metricKey);
     
     if (!isAlreadySelected) {
-      // Determine if this is a shared button (first 4) or step-specific button (5th)
-      const isSharedButton = ["final_value", "total_return", "volatility", "sharpe_ratio"].includes(metricKey);
-      const isStepSpecificButton = metricKey === "portfolio_chart";
+      // Simplified XP: +10 XP for first interaction on this step
+      const stepKey = currentMessage.id;
+      const isFirstInteractionOnStep = !stepsEarnedXP.has(stepKey);
       
-      // Generate step-specific key for step buttons
-      const stepSpecificKey = isStepSpecificButton ? `${metricKey}_${currentMessage.id}` : metricKey;
-      
-      // Check if first view based on button type
-      const isFirstView = isSharedButton 
-        ? !viewedSharedButtons.has(metricKey)
-        : !viewedStepButtons.has(stepSpecificKey);
-      
-      if (isFirstView) {
-        setSessionXp(prev => prev + 5);
+      if (isFirstInteractionOnStep) {
+        const xpReward = 10; // Clean 10 XP per step engagement
+        setXpAnimationAmount(xpReward);
         setShowXpAnimation(true);
+        setStepsEarnedXP(prev => new Set([...prev, stepKey]));
         
-        // Update appropriate viewed set
-        if (isSharedButton) {
-          setViewedSharedButtons(prev => new Set([...prev, metricKey]));
-        } else {
-          setViewedStepButtons(prev => new Set([...prev, stepSpecificKey]));
-        }
-        
-        // Call XP callback if provided
+        // Call XP callback
         if (onXpEarned) {
-          onXpEarned(5);
+          onXpEarned(xpReward);
         }
         
-        // Reset XP animation after delay
+        // Reset animation
         setTimeout(() => setShowXpAnimation(false), 1500);
       }
       
@@ -1297,7 +1206,7 @@ export function TeachingDialogue({
               {showXpAnimation && (
                 <div className="absolute -top-2 right-0 z-10">
                   <div className="text-yellow-600 font-bold text-lg animate-bounce-slide-up">
-                    +5 XP
+                    +{xpAnimationAmount} XP
                   </div>
                   {/* Sparkle effects */}
                   <div className="absolute -inset-4 pointer-events-none">
@@ -1313,7 +1222,7 @@ export function TeachingDialogue({
               {/* Metric buttons - first row (4 buttons) - Cloud bubble style */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
                 {currentMessage.metricButtons.slice(0, 4).map((button) => {
-                  const isViewed = viewedSharedButtons.has(button.key);
+                  const stepHasXP = stepsEarnedXP.has(currentMessage.id);
                   return (
                     <button
                       key={button.key}
@@ -1322,8 +1231,6 @@ export function TeachingDialogue({
                       } ${
                         selectedMetric === button.key
                           ? "bg-gradient-to-r from-indigo-400 to-purple-500 text-white border-indigo-500 shadow-lg"
-                          : isViewed
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 border-emerald-200 hover:from-green-100 hover:to-emerald-100"
                           : "bg-gradient-to-r from-sky-50 to-blue-50 text-blue-700 border-blue-200 hover:from-sky-100 hover:to-blue-100"
                       } ${isCoachTyping ? "opacity-50 cursor-not-allowed" : ""}`}
                       onClick={() => !isCoachTyping && handleMetricClick(button.key, button.targetMetric)}
@@ -1335,8 +1242,6 @@ export function TeachingDialogue({
                       <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 ${
                         selectedMetric === button.key
                           ? "bg-gradient-to-r from-indigo-400 to-purple-500 border-r border-b border-indigo-500"
-                          : isViewed
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 border-r border-b border-emerald-200"
                           : "bg-gradient-to-r from-sky-50 to-blue-50 border-r border-b border-blue-200"
                       }`}></div>
                       
@@ -1345,13 +1250,10 @@ export function TeachingDialogue({
                           className: `h-3 w-3 ${
                             selectedMetric === button.key
                               ? "text-white"
-                              : isViewed
-                              ? "text-emerald-600"
                               : "text-blue-600"
                           }`,
                         })}
                         <span className="text-xs font-medium">{button.label}</span>
-                        {isViewed && <span className="text-xs">✓</span>}
                       </div>
                     </button>
                   );
@@ -1363,8 +1265,6 @@ export function TeachingDialogue({
                 <div className="flex justify-center">
                   {(() => {
                     const extraMetricButton = currentMessage.metricButtons[4];
-                    const stepSpecificKey = `${extraMetricButton.key}_${currentMessage.id}`;
-                    const isViewed = viewedStepButtons.has(stepSpecificKey);
                     return (
                       <button
                         key={extraMetricButton.key}
@@ -1373,8 +1273,6 @@ export function TeachingDialogue({
                         } ${
                           selectedMetric === extraMetricButton.key
                             ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-purple-500 shadow-lg"
-                            : isViewed
-                            ? "bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 border-emerald-200 hover:from-green-100 hover:to-emerald-100"
                             : "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-purple-200 hover:from-purple-100 hover:to-pink-100"
                         } ${isCoachTyping ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={() => !isCoachTyping && handleMetricClick(extraMetricButton.key, extraMetricButton.targetMetric)}
@@ -1386,8 +1284,6 @@ export function TeachingDialogue({
                         <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 ${
                           selectedMetric === extraMetricButton.key
                             ? "bg-gradient-to-r from-purple-400 to-pink-500 border-r border-b border-purple-500"
-                            : isViewed
-                            ? "bg-gradient-to-r from-green-50 to-emerald-50 border-r border-b border-emerald-200"
                             : "bg-gradient-to-r from-purple-50 to-pink-50 border-r border-b border-purple-200"
                         }`}></div>
                         
@@ -1396,8 +1292,6 @@ export function TeachingDialogue({
                             className: `h-3 w-3 ${
                               selectedMetric === extraMetricButton.key
                                 ? "text-white"
-                                : isViewed
-                                ? "text-emerald-600"
                                 : "text-purple-600"
                             }`,
                           })}
@@ -1406,7 +1300,6 @@ export function TeachingDialogue({
                             {currentMessage.id === "annual_returns" && "Annual Returns Chart"}
                             {currentMessage.id === "risk_analysis" && "Risk Analysis Chart"}
                           </span>
-                          {isViewed && <span className="text-xs">✓</span>}
                         </div>
                       </button>
                     );

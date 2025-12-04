@@ -1,39 +1,29 @@
-/**
- * Mini.Fi - Root Layout
- * © 2025 NUVC.AI. All Rights Reserved.
- */
-
 import type React from "react";
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 
-// Outfit - Modern geometric sans for headings
-const outfit = Outfit({
+const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-outfit",
-  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-montserrat",
+  weight: ["400", "600", "700", "900"], // Including Black weight for headings
 });
 
-// Plus Jakarta Sans - Clean sans for body
-const plusJakarta = Plus_Jakarta_Sans({
+const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-plus-jakarta",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-open-sans",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: "Mini.Fi - Learn to Invest Through Play",
-  description: "A free game that teaches teens about investing through time-travel adventures. Built by NUVC.AI for the AWS AI Hackathon 2025.",
+  title: "NUVC Financial Literacy App",
+  description: "Empowering Australian teens with AI-powered investment education through gamified learning",
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',
   },
-  authors: [{ name: "NUVC.AI", url: "https://nuvc.ai" }],
-  creator: "NUVC.AI",
-  keywords: ["financial literacy", "investment education", "game", "teens", "AI"],
 };
 
 export default function RootLayout({
@@ -44,12 +34,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${plusJakarta.variable} antialiased`}
+      className={`${montserrat.variable} ${openSans.variable} antialiased`}
     >
-      <body 
-        className="font-sans min-h-screen bg-[#0a0a0f] text-white" 
-        suppressHydrationWarning={true}
-      >
+      <body className="font-sans" suppressHydrationWarning={true}>
         {children}
       </body>
     </html>

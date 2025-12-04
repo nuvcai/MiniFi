@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -12,21 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { 
-  Gift, 
-  Clock, 
-  Star, 
-  Sparkles, 
-  Zap, 
-  Trophy,
-  TrendingUp,
-  Target,
-  Rocket,
-} from "lucide-react";
+import { Gift, Check, Lock, CheckCircle, QrCode } from "lucide-react";
 import { Reward, rewardsStore } from "@/components/data/rewards";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface RewardsModalProps {
   open: boolean;
@@ -36,213 +30,413 @@ interface RewardsModalProps {
   onRedeemReward: (reward: Reward) => void;
 }
 
-// Level progression thresholds
-const XP_MILESTONES = [
-  { xp: 100, label: "First Steps", icon: "🌱" },
-  { xp: 500, label: "Getting Started", icon: "🚀" },
-  { xp: 1000, label: "On Track", icon: "⭐" },
-  { xp: 2500, label: "Rising Star", icon: "🌟" },
-  { xp: 5000, label: "Investor Pro", icon: "💎" },
-  { xp: 10000, label: "Market Master", icon: "👑" },
-];
-
 export function RewardsModal({
   open,
   onOpenChange,
   playerXP,
+  redeemedRewards,
+  onRedeemReward,
 }: RewardsModalProps) {
-  const [animatedXP, setAnimatedXP] = useState(0);
-  
-  // Animate XP counter on open
-  useEffect(() => {
-    if (open) {
-      setAnimatedXP(0);
-      const duration = 1500;
-      const steps = 60;
-      const stepValue = playerXP / steps;
-      let current = 0;
-      
-      const interval = setInterval(() => {
-        current++;
-        if (current >= steps) {
-          setAnimatedXP(playerXP);
-          clearInterval(interval);
-        } else {
-          setAnimatedXP(Math.round(stepValue * current));
-        }
-      }, duration / steps);
-      
-      return () => clearInterval(interval);
-    }
-  }, [open, playerXP]);
-  
-  // Get current milestone
-  const currentMilestone = XP_MILESTONES.reduce((acc, milestone) => {
-    return playerXP >= milestone.xp ? milestone : acc;
-  }, XP_MILESTONES[0]);
-  
-  const nextMilestone = XP_MILESTONES.find(m => m.xp > playerXP) || XP_MILESTONES[XP_MILESTONES.length - 1];
-  const progressToNext = Math.min(100, ((playerXP - (currentMilestone?.xp || 0)) / (nextMilestone.xp - (currentMilestone?.xp || 0))) * 100);
-  
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg w-[95vw] p-0 overflow-hidden bg-gradient-to-b from-amber-50 via-white to-orange-50 border-2 border-amber-200">
-        {/* Light animated background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-64 h-64 bg-amber-200/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-orange-200/30 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-100/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        </div>
-        
-        <div className="relative p-4 sm:p-6 space-y-5">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-3 text-2xl sm:text-3xl">
-              <div className="relative">
-                <Gift className="h-8 w-8 text-amber-500 animate-bounce" style={{ animationDuration: '2s' }} />
-                <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-yellow-500 animate-pulse" />
-              </div>
-              <span className="font-black bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 bg-clip-text text-transparent">
-                Rewards Store
-              </span>
-            </DialogTitle>
-          </DialogHeader>
+  const canAfford = (cost: number) => playerXP >= cost;
+  const isRedeemed = (rewardId: string) => redeemedRewards.includes(rewardId);
+  const [redeemMode, setRedeemMode] = useState<"list" | "redeem" | "success">(
+    "list"
+  );
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [email, setEmail] = useState("");
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
 
-          {/* XP Treasury - Light Theme */}
-          <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100" />
-            <div className="relative p-5 border-2 border-amber-200 rounded-2xl shadow-lg shadow-amber-100">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-amber-700 text-sm font-medium flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-amber-500" />
-                    Your XP Treasury
-                  </p>
-                  <p className="text-4xl sm:text-5xl font-black text-gray-900 mt-1 tabular-nums">
-                    {animatedXP.toLocaleString()}
-                    <span className="text-amber-500 text-2xl ml-2">XP</span>
-                  </p>
-                </div>
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 flex items-center justify-center shadow-xl shadow-amber-200/50">
-                    <Star className="h-8 w-8 text-white fill-white" />
+  const handleRedeemClick = (reward: Reward) => {
+    setSelectedReward(reward);
+    setRedeemMode("redeem");
+  };
+
+  const handleConfirmRedeem = async () => {
+    if (!selectedReward || !email) return;
+
+    setIsRedeeming(true);
+
+    try {
+      // Call the backend API to redeem reward
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/rewards/redeem`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_email: email,
+            reward_name: selectedReward.name,
+            partner: selectedReward.partner,
+            reward_description: selectedReward.description,
+            player_xp: playerXP,
+            reward_cost: selectedReward.cost,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Call the parent function to update XP and redeemed rewards
+        onRedeemReward(selectedReward);
+
+        // Set the coupon code from the API response
+        setCouponCode(result.coupon_code);
+
+        // Show success message
+        setRedeemMode("success");
+
+        console.log(
+          `✅ Reward redeemed successfully! Email ${
+            result.simulated ? "simulated" : "sent"
+          } to ${email}`
+        );
+      } else {
+        // Handle error
+        alert(`Failed to redeem reward: ${result.message}`);
+        setRedeemMode("redeem"); // Stay in redeem mode
+      }
+    } catch (error) {
+      console.error("Error redeeming reward:", error);
+      alert("Failed to connect to server. Please try again.");
+      setRedeemMode("redeem"); // Stay in redeem mode
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
+
+  const handleBackToList = () => {
+    setRedeemMode("list");
+    setSelectedReward(null);
+    setEmail("");
+    setIsRedeeming(false);
+    setCouponCode("");
+  };
+
+  const handleClose = () => {
+    onOpenChange(false);
+    setRedeemMode("list");
+    setSelectedReward(null);
+    setEmail("");
+    setIsRedeeming(false);
+    setCouponCode("");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+        {redeemMode === "list" && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl sm:text-2xl">
+                <Gift className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600" />
+                Rewards Store
+              </DialogTitle>
+              <DialogDescription className="text-sm">
+                Exchange your XP for amazing rewards from our partner brands!
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {/* Current XP Display */}
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-3 sm:p-4 rounded-lg border">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Your Available XP
+                    </p>
+                    <p className="text-xl sm:text-2xl font-bold text-primary">
+                      {playerXP} XP
+                    </p>
                   </div>
-                  {playerXP >= 1000 && (
-                    <Trophy className="absolute -bottom-1 -right-1 h-6 w-6 text-amber-500 fill-amber-400" />
-                  )}
+                  <div className="text-left sm:text-right">
+                    <p className="text-sm text-muted-foreground">
+                      Rewards Redeemed
+                    </p>
+                    <p className="text-lg font-semibold text-secondary">
+                      {redeemedRewards.length}
+                    </p>
+                  </div>
                 </div>
               </div>
-              
-              {/* Progress to next milestone */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-amber-600 flex items-center gap-1">
-                    <span>{currentMilestone.icon}</span>
-                    {currentMilestone.label}
-                  </span>
-                  <span className="text-amber-600 flex items-center gap-1">
-                    {nextMilestone.icon}
-                    {nextMilestone.label}
-                  </span>
-                </div>
-                <div className="h-3 bg-amber-100 rounded-full overflow-hidden border border-amber-200">
-                  <div 
-                    className="h-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-400 rounded-full transition-all duration-1000 relative"
-                    style={{ width: `${progressToNext}%` }}
+
+              {/* Rewards List */}
+              <div className="space-y-4">
+                {rewardsStore.map((reward) => (
+                  <Card
+                    key={reward.id}
+                    className={`relative ${
+                      isRedeemed(reward.id) ? "opacity-60" : ""
+                    }`}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                        {/* Icon */}
+                        <div className="text-3xl sm:text-4xl flex-shrink-0">
+                          {reward.image}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-base sm:text-lg">
+                                {reward.name}
+                              </h3>
+                              <p className="text-xs text-muted-foreground">
+                                Partner: {reward.partner}
+                              </p>
+                            </div>
+                            <Badge
+                              variant={
+                                canAfford(reward.cost) ? "default" : "secondary"
+                              }
+                              className="self-start sm:ml-2"
+                            >
+                              {reward.cost} XP
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            {reward.description}
+                          </p>
+                        </div>
+
+                        {/* Action Button */}
+                        <div className="flex-shrink-0 w-full sm:w-auto">
+                          <Button
+                            onClick={() => handleRedeemClick(reward)}
+                            disabled={
+                              !canAfford(reward.cost) || isRedeemed(reward.id)
+                            }
+                            variant={
+                              isRedeemed(reward.id) ? "outline" : "default"
+                            }
+                            size="sm"
+                            className="w-full sm:w-auto"
+                          >
+                            {isRedeemed(reward.id) ? (
+                              <>
+                                <Check className="h-4 w-4 mr-2" />
+                                Redeemed
+                              </>
+                            ) : canAfford(reward.cost) ? (
+                              <>
+                                <Gift className="h-4 w-4 mr-2" />
+                                Redeem
+                              </>
+                            ) : (
+                              <>
+                                <Lock className="h-4 w-4 mr-2" />
+                                Need {reward.cost - playerXP} more
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                    {isRedeemed(reward.id) && (
+                      <div className="absolute top-2 right-2">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-100 text-green-800"
+                        >
+                          ✓ Claimed
+                        </Badge>
+                      </div>
+                    )}
+                  </Card>
+                ))}
+              </div>
+
+              {/* How it works section */}
+              <Card className="bg-blue-50 border-blue-200">
+                <CardHeader>
+                  <CardTitle className="text-lg text-blue-800">
+                    How Rewards Work
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-blue-700 space-y-2">
+                  <p>• Complete missions to earn XP</p>
+                  <p>• Exchange XP for real rewards from partner brands</p>
+                  <p>
+                    • Voucher codes will be sent to your email after redemption
+                  </p>
+                  <p>• Each reward can only be claimed once per account</p>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
+
+        {redeemMode === "redeem" && selectedReward && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <Gift className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
+                Redeem Reward
+              </DialogTitle>
+              <DialogDescription className="text-sm">
+                Enter your email to receive your {selectedReward.name}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <Card className="bg-muted/30">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row items-start gap-3">
+                    <div className="text-2xl sm:text-3xl">
+                      {selectedReward.image}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-base sm:text-lg">
+                        {selectedReward.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedReward.description}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Partner: {selectedReward.partner}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <p className="text-xs text-amber-600 text-center font-medium">
-                  {nextMilestone.xp - playerXP} XP to {nextMilestone.label}
+                </CardContent>
+              </Card>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="shadow-sm border-gray-300"
+                />
+                <p className="text-xs text-muted-foreground">
+                  We'll send your voucher code to this email address
                 </p>
               </div>
-            </div>
-          </div>
 
-          {/* Coming Soon - Light Card */}
-          <Card className="bg-gradient-to-br from-indigo-50 via-violet-50 to-purple-50 border-2 border-indigo-200 shadow-lg shadow-indigo-100 overflow-hidden relative">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-violet-200/30 rounded-full blur-2xl" />
-            </div>
-            <CardContent className="p-6 relative">
-              <div className="text-center space-y-4">
-                {/* Animated rocket icon */}
-                <div className="relative mx-auto w-24 h-24">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 to-violet-300 rounded-full blur-xl opacity-50 animate-pulse" />
-                  <div className="relative w-24 h-24 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200">
-                    <Rocket className="h-12 w-12 text-white animate-bounce" style={{ animationDuration: '3s' }} />
-                  </div>
-                  <div className="absolute -top-2 -right-2 px-2.5 py-1 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full shadow-lg">
-                    <span className="text-xs font-bold text-white">NEW</span>
-                  </div>
-                </div>
-                
-                <div>
-                  <Badge className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white border-0 px-4 py-1.5 text-sm font-bold mb-3 shadow-lg">
-                    <Clock className="h-3.5 w-3.5 mr-1.5" />
-                    Launching Soon
-                  </Badge>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">
-                    Real Rewards Incoming! 🎁
-                  </h3>
-                  <p className="text-sm text-gray-600 max-w-sm mx-auto">
-                    Trade your XP for real gift cards, subscriptions, and exclusive experiences. 
-                    Keep stacking that XP!
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-sm text-blue-700">
+                  <strong>Cost:</strong> {selectedReward.cost} XP (You have:{" "}
+                  {playerXP} XP)
+                </p>
+                {playerXP < selectedReward.cost && (
+                  <p className="text-xs text-red-600 mt-1">
+                    You need {selectedReward.cost - playerXP} more XP to redeem
+                    this reward
                   </p>
-                </div>
-
-                {/* Animated reward previews */}
-                <div className="flex justify-center gap-3 pt-3">
-                  {rewardsStore.slice(0, 5).map((reward, index) => (
-                    <div 
-                      key={reward.id}
-                      className="w-14 h-14 rounded-xl bg-white/80 backdrop-blur border-2 border-indigo-100 flex items-center justify-center text-2xl shadow-md hover:scale-110 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer group"
-                      style={{ 
-                        animation: 'float 3s ease-in-out infinite',
-                        animationDelay: `${index * 0.2}s`
-                      }}
-                    >
-                      <span className="group-hover:scale-125 transition-transform">{reward.image}</span>
-                    </div>
-                  ))}
-                </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
 
-          {/* How It Works - Light Theme */}
-          <Card className="bg-white border-2 border-gray-200 shadow-md">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2 text-gray-700">
-                <Target className="h-4 w-4 text-indigo-500" />
-                How to Earn Rewards
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-3 text-sm">
-              {[
-                { icon: <Trophy className="h-4 w-4 text-amber-500" />, text: "Complete missions", bg: "bg-amber-50 border-amber-200" },
-                { icon: <Zap className="h-4 w-4 text-orange-500" />, text: "Daily streaks", bg: "bg-orange-50 border-orange-200" },
-                { icon: <Star className="h-4 w-4 text-violet-500" />, text: "Earn XP badges", bg: "bg-violet-50 border-violet-200" },
-                { icon: <TrendingUp className="h-4 w-4 text-emerald-500" />, text: "Level up faster", bg: "bg-emerald-50 border-emerald-200" },
-              ].map((item, i) => (
-                <div key={i} className={`flex items-center gap-2 p-2.5 rounded-xl border ${item.bg}`}>
-                  {item.icon}
-                  <span className="text-gray-700 text-xs font-medium">{item.text}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  onClick={handleConfirmRedeem}
+                  disabled={
+                    !email || playerXP < selectedReward.cost || isRedeeming
+                  }
+                  className="flex-1"
+                >
+                  {isRedeeming ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Gift className="h-4 w-4 mr-2" />
+                      Redeem Now
+                    </>
+                  )}
+                </Button>
+                <Button variant="outline" onClick={handleBackToList}>
+                  Back to Rewards
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
 
-          {/* CTA Button */}
-          <Button 
-            onClick={() => onOpenChange(false)}
-            className="w-full py-6 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 hover:from-indigo-600 hover:via-violet-600 hover:to-purple-600 text-white font-bold text-lg shadow-xl shadow-indigo-200 relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-            <Sparkles className="h-5 w-5 mr-2" />
-            Keep Earning XP!
-          </Button>
-        </div>
+        {redeemMode === "success" && selectedReward && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl text-green-600">
+                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                Reward Redeemed!
+              </DialogTitle>
+              <DialogDescription className="text-sm">
+                Your voucher has been sent to your email
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="p-4">
+                  <div className="text-center space-y-3">
+                    <div className="text-4xl">🎉</div>
+                    <h3 className="font-semibold text-green-800">
+                      {selectedReward.name} Redeemed!
+                    </h3>
+                    <p className="text-sm text-green-700">
+                      Check your email for the voucher code
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-muted/30">
+                <CardHeader>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <QrCode className="h-4 w-4" />
+                    Your Voucher Code
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-white p-3 rounded border-2 border-dashed border-gray-300 text-center">
+                    <p className="font-mono text-lg font-bold tracking-wider">
+                      {couponCode}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Show this code at {selectedReward.partner} to redeem
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <h4 className="font-semibold text-blue-800 mb-2">
+                  How to Use:
+                </h4>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• Check your email for the complete voucher details</li>
+                  <li>
+                    • Present this code at any {selectedReward.partner} location
+                  </li>
+                  <li>
+                    • The staff will scan or enter the code for your discount
+                  </li>
+                  <li>• Valid for 30 days from today</li>
+                </ul>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button onClick={handleBackToList} className="flex-1">
+                  Back to Rewards
+                </Button>
+                <Button variant="outline" onClick={handleClose}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -1,11 +1,3 @@
-/**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║   MiniFi Investment Competition (MVP - Hackathon Edition)                    ║
- * ║   ✨ Vibe-coded by Tick.AI ✨                                                ║
- * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
- */
-
 "use client";
 
 import Image from "next/image";
@@ -13,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress as _Progress } from "@/components/ui/progress";
+import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import {
   ArrowLeft,
@@ -327,19 +319,26 @@ export default function InvestmentCompetition({
     ].join(" ");
 
   return (
-    <div className="relative">
+    <div className="min-h-screen bg-gradient-to-br from-background via-card/30 to-background">
       <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col items-center mb-8 sm:mb-10 gap-4">
-          <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-8 gap-6 sm:gap-0">
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="flex items-center gap-2 bg-transparent w-full sm:w-auto justify-center order-2 sm:order-none py-3 sm:py-2"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to Timeline
+          </Button>
+          <div className="text-center order-1 sm:order-none flex-1">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mb-2 sm:mb-1">
               Investment Competition
             </h1>
-            <p className="text-white/50">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Use your $5,000 starting capital to begin your investment journey
             </p>
           </div>
-          <div className="flex justify-center">
+          <div className="w-full sm:w-auto order-3 sm:order-none flex justify-end">
             <Button
               variant="destructive"
               className="w-full sm:w-auto py-3 sm:py-2"
