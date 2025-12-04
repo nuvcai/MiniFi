@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TrendingUp, TrendingDown, Brain, BarChart3, GraduationCap, PenLine } from "lucide-react";
+import { TrendingUp, TrendingDown, Brain, BarChart3, GraduationCap, PenLine, Diamond, Zap } from "lucide-react";
 import { MissionIntro } from "@/components/mission/MissionIntro";
 import { InvestmentDecision } from "@/components/mission/InvestmentDecision";
 import { MissionResult } from "@/components/mission/MissionResult";
@@ -78,13 +78,6 @@ export function MissionModal({
   const [investmentThesis, setInvestmentThesis] = useState<string>("");
   const [quizCompleted, setQuizCompleted] = useState(false);
 
-  if (!event || !missionData) return null;
-
-  // Get selected option for thesis
-  const selectedOption = selectedInvestment 
-    ? missionData.options.find(o => o.id === selectedInvestment)
-    : null;
-
   // Handle moving from decision to thesis step
   const handleDecisionConfirm = useCallback(() => {
     if (selectedInvestment) {
@@ -125,13 +118,21 @@ export function MissionModal({
     onMissionComplete();
   }, [onMissionComplete]);
 
+  // Early return AFTER all hooks are called
+  if (!event || !missionData) return null;
+
+  // Get selected option for thesis
+  const selectedOption = selectedInvestment 
+    ? missionData.options.find(o => o.id === selectedInvestment)
+    : null;
+
   // Dynamic dialog title based on step
   const getDialogTitle = () => {
     switch (missionStep) {
       case "intro":
         return `Crisis Mode: ${event.year}`;
       case "decision":
-        return "High Conviction Moment";
+        return "High Conviction Moment 💎";
       case "thesis":
         return "Investment Thesis 📝";
       case "result":
@@ -153,7 +154,7 @@ export function MissionModal({
       case "intro":
         return `${event.title} — History is about to test your discipline`;
       case "decision":
-        return "Make bold moves with conviction. Quick failures teach more than slow indecision.";
+        return "⚡ Make bold moves with conviction. Quick failures teach more than slow indecision.";
       case "thesis":
         return "Family Office Principle: Document your reasoning before every major decision";
       case "result":
@@ -172,6 +173,8 @@ export function MissionModal({
   // Get icon for current step
   const getStepIcon = () => {
     switch (missionStep) {
+      case "decision":
+        return <Diamond className="h-5 w-5 sm:h-6 sm:w-6 text-violet-500" />;
       case "thesis":
         return <PenLine className="h-5 w-5 sm:h-6 sm:w-6 text-violet-500" />;
       case "whatif":

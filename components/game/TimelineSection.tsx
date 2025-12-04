@@ -2,6 +2,8 @@
  * TimelineSection - Educational Journey Timeline
  * Expert-designed gamification with clear learning paths
  * Key principles: Visual progression, skill trees, intrinsic motivation
+ * 
+ * v2.0 - Enhanced Chapter-based progression system for teens
  */
 
 "use client";
@@ -31,11 +33,18 @@ import {
   Lightbulb,
   Rocket,
   Shield,
+  Gamepad2,
+  Lock,
+  Gift,
+  Heart,
+  Crown,
+  Swords,
 } from "lucide-react";
 import { FinancialEvent } from "@/components/data/events";
 import { EventCard } from "./EventCard";
 import { CompetitionCard } from "./CompetitionCard";
 import { SkillsMastery } from "./SkillsMastery";
+import { ChapterHub } from "./ChapterHub";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -101,6 +110,8 @@ export function TimelineSection({
   const [isVisible, setIsVisible] = useState(false);
   const [filter, setFilter] = useState<"all" | "available" | "completed">("all");
   const [showLearningPath, setShowLearningPath] = useState(true);
+  // Default to timeline view for better onboarding experience
+  const [viewMode, setViewMode] = useState<"chapter" | "classic">("classic");
   
   const completedCount = events.filter(e => e.completed).length;
   const availableCount = events.filter(e => e.unlocked && !e.completed).length;
@@ -123,6 +134,9 @@ export function TimelineSection({
 
   // Get recommended next mission
   const recommendedMission = events.find(e => e.unlocked && !e.completed);
+  
+  // All missions completed check
+  const allMissionsCompleted = completedCount === events.length;
 
   useEffect(() => {
     setIsVisible(true);
@@ -140,6 +154,83 @@ export function TimelineSection({
     <div className={`transition-all duration-700 ${
       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
     }`}>
+      {/* View Mode Toggle - Compact pill design */}
+      <div className="flex items-center justify-end mb-4">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/10">
+          <button
+            onClick={() => setViewMode("classic")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              viewMode === "classic"
+                ? "bg-gradient-to-r from-[#9898f2] to-[#7070c0] text-white shadow-lg"
+                : "text-slate-500 dark:text-white/60 hover:text-slate-700 dark:hover:text-white"
+            }`}
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Timeline</span>
+          </button>
+          <button
+            onClick={() => setViewMode("chapter")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              viewMode === "chapter"
+                ? "bg-gradient-to-r from-[#9898f2] to-[#7070c0] text-white shadow-lg"
+                : "text-slate-500 dark:text-white/60 hover:text-slate-700 dark:hover:text-white"
+            }`}
+          >
+            <Swords className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Chapters</span>
+          </button>
+        </div>
+      </div>
+      
+      {/* Chapter View Mode - NEW DESIGN */}
+      {viewMode === "chapter" && (
+        <>
+          <ChapterHub 
+            events={events} 
+            onLevelClick={onEventClick}
+            streakDays={streakDays}
+          />
+          
+          {/* Family Office Wisdom Section - Skills & Knowledge */}
+          <div className="mt-6">
+            <SkillsMastery events={events} />
+          </div>
+        </>
+      )}
+      
+      {/* Classic Timeline View */}
+      {viewMode === "classic" && (
+        <>
+          {/* Chapter 1 Quick Info Banner */}
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-[#9898f2]/10 via-violet-500/5 to-purple-500/5 dark:from-[#9898f2]/20 dark:via-violet-500/10 dark:to-purple-500/5 border border-[#9898f2]/30">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#9898f2] to-[#7070c0] flex items-center justify-center text-xl shadow-lg">
+                  📉
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <Badge className="bg-[#9898f2]/20 text-[#7070c0] dark:text-[#9898f2] border-[#9898f2]/30 text-[10px]">
+                      CHAPTER 1
+                    </Badge>
+                    <span className="text-xs text-slate-500 dark:text-white/50">
+                      {completedCount}/{events.length} completed
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Learn from Market Crashes</h3>
+                </div>
+              </div>
+              <button
+                onClick={() => setViewMode("chapter")}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#9898f2]/10 hover:bg-[#9898f2]/20 dark:bg-white/10 dark:hover:bg-white/20 text-[#7070c0] dark:text-[#9898f2] text-sm font-semibold transition-all"
+              >
+                <Swords className="h-4 w-4" />
+                <span className="hidden sm:inline">View Chapters</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        
       {/* Educational Journey Hero */}
       <div className="mb-6 p-6 rounded-3xl bg-gradient-to-br from-[#9898f2] via-[#7070c0] to-[#5050a0] dark:from-[#9898f2]/90 dark:via-[#7070c0]/80 dark:to-[#5050a0]/70 border border-[#9898f2]/50 relative overflow-hidden shadow-xl shadow-[#9898f2]/20">
         {/* Animated background elements */}
@@ -691,6 +782,132 @@ export function TimelineSection({
         )}
         </div>
       </div>
+      
+      {/* Skills & Knowledge - Family Office Wisdom */}
+      <div className="mt-6">
+        <SkillsMastery events={events} />
+      </div>
+        </>
+      )}
+      
+      {/* Competition & Practice Section - Always Visible */}
+      {viewMode === "chapter" && (
+        <div className="mt-6 space-y-4">
+          {/* Competition Card */}
+          <CompetitionCard
+            unlocked={competitionUnlocked || allMissionsCompleted}
+            onStartCompetition={onStartCompetition}
+          />
+          
+          {/* Random Scenario Generator - Only after completion */}
+          {allMissionsCompleted && (
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-fuchsia-500/5 border border-violet-500/30">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                  <Dice6 className="h-7 w-7 text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Practice Mode 🎯</h3>
+                    <Badge className="bg-violet-500/20 text-violet-400 border-violet-500/30 text-xs">
+                      <InfinityIcon className="h-3 w-3 mr-1" />
+                      Infinite
+                    </Badge>
+                  </div>
+                  <p className="text-slate-600 dark:text-white/60 text-sm mb-4">
+                    You've mastered all levels! Keep your skills sharp with randomly generated scenarios.
+                  </p>
+                  
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 mb-4 text-sm">
+                    <div className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400">
+                      <RefreshCw className="h-4 w-4" />
+                      <span className="font-semibold">{randomScenarios.length}</span>
+                      <span className="text-slate-500 dark:text-white/50">generated</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                      <Trophy className="h-4 w-4" />
+                      <span className="font-semibold">{completedRandomCount}</span>
+                      <span className="text-slate-500 dark:text-white/50">completed</span>
+                    </div>
+                  </div>
+                  
+                  {/* Generate Button */}
+                  {onGenerateRandomScenario && (
+                    <Button 
+                      size="lg"
+                      className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 text-white font-bold shadow-lg shadow-violet-500/30 group w-full sm:w-auto"
+                      onClick={onGenerateRandomScenario}
+                    >
+                      <Dice6 className="h-5 w-5 mr-2 group-hover:animate-spin" style={{ animationDuration: '1s' }} />
+                      New Random Challenge
+                      <Sparkles className="h-5 w-5 ml-2 text-yellow-300" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {/* Recent Random Scenarios */}
+              {randomScenarios.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-violet-500/30">
+                  <h4 className="text-sm font-semibold text-slate-600 dark:text-white/70 mb-3 flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Recent Practice Rounds
+                  </h4>
+                  <div className="grid gap-3">
+                    {randomScenarios.slice(-3).reverse().map((scenario) => (
+                      <button
+                        key={scenario.event.title}
+                        onClick={() => onEventClick(scenario.event)}
+                        disabled={scenario.event.completed}
+                        className={`w-full p-4 rounded-xl border text-left transition-all ${
+                          scenario.event.completed
+                            ? 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 opacity-60'
+                            : 'bg-white dark:bg-white/5 border-violet-200 dark:border-violet-500/30 hover:border-violet-400 dark:hover:border-violet-500/50 hover:bg-violet-50 dark:hover:bg-white/10 cursor-pointer'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                              scenario.event.completed
+                                ? 'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-white/40'
+                                : 'bg-violet-500/20 text-violet-600 dark:text-violet-400'
+                            }`}>
+                              {scenario.event.completed ? (
+                                <Star className="h-5 w-5 fill-current" />
+                              ) : (
+                                <Dice6 className="h-5 w-5" />
+                              )}
+                            </div>
+                            <div>
+                              <p className={`font-semibold ${scenario.event.completed ? 'text-slate-400 dark:text-white/40' : 'text-slate-900 dark:text-white'}`}>
+                                {scenario.event.title}
+                              </p>
+                              <p className="text-xs text-slate-500 dark:text-white/50">{scenario.event.description}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={`text-xs ${
+                              scenario.event.completed 
+                                ? 'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-white/40' 
+                                : 'bg-violet-500/20 text-violet-600 dark:text-violet-400'
+                            }`}>
+                              {scenario.event.reward} iii
+                            </Badge>
+                            {!scenario.event.completed && (
+                              <Play className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

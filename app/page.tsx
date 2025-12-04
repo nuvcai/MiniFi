@@ -173,15 +173,22 @@ export default function HomePage() {
         {/* Navigation */}
         <nav className={`w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/minifi-icon.svg"
+                alt="Mini.Fi Icon"
+                width={40}
+                height={40}
+                className="h-8 w-8 sm:h-10 sm:w-10"
+              />
               <Image
                 src="/minifi-logo.svg"
                 alt="Mini.Fi"
-                width={120}
-                height={40}
-                className="h-8 sm:h-10 w-auto"
+                width={100}
+                height={32}
+                className="h-6 sm:h-8 w-auto hidden sm:block"
               />
-            </div>
+            </Link>
             
             {/* Desktop Navigation */}
             <div className="hidden sm:flex items-center gap-6">

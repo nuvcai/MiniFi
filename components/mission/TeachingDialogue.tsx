@@ -1463,46 +1463,41 @@ export function TeachingDialogue({
       )}
 
       {/* Risk Analysis - REMOVED to avoid duplication with PerformanceChart */}
-      {/* Action Buttons */}
-      <div className="flex justify-between">
+      {/* Action Buttons - Always stacked full width for mobile-first cards */}
+      <div className="flex flex-col gap-3">
+        {/* Continue/Complete Buttons */}
+        {currentMessage.showComplete ? (
+          <Button
+            onClick={handleComplete}
+            className="w-full min-h-[48px] flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700"
+            disabled={isCoachTyping}
+          >
+            <Trophy className="h-4 w-4" />
+            Complete Mission
+          </Button>
+        ) : (
+          <Button
+            onClick={handleContinue}
+            className="w-full min-h-[48px] flex items-center justify-center gap-2 bg-gradient-to-r from-[#9898f2] to-[#7070c0] hover:from-[#8585e0] hover:to-[#6060b0] text-white"
+            disabled={isCoachTyping || !showContinue}
+          >
+            Continue
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        )}
+        
         {/* Back Button - only show after step 1 */}
         {currentMessageIndex > 0 && (
           <Button
             onClick={handleBack}
             variant="outline"
-            className="flex items-center gap-2"
+            className="w-full min-h-[48px] flex items-center justify-center gap-2"
             disabled={isCoachTyping}
           >
             <ChevronRight className="h-4 w-4 rotate-180" />
             Back
           </Button>
         )}
-        
-        {/* Spacer when no back button */}
-        {currentMessageIndex === 0 && <div />}
-        
-        {/* Continue/Complete Buttons */}
-        <div className="flex gap-2">
-          {currentMessage.showComplete ? (
-            <Button
-              onClick={handleComplete}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-              disabled={isCoachTyping}
-            >
-              <Trophy className="h-4 w-4" />
-              Complete Mission
-            </Button>
-          ) : (
-            <Button
-              onClick={handleContinue}
-              className="flex items-center gap-2"
-              disabled={isCoachTyping || !showContinue}
-            >
-              Continue
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
       </div>
 
       {/* Progress Indicator */}

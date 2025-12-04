@@ -28,6 +28,7 @@ import {
   BookOpen,
   Target,
 } from "lucide-react";
+import { III_CONFIG } from "@/hooks/useIII";
 import Image from "next/image";
 import { InvestmentOption } from "@/components/data/missions";
 import { AICoach } from "@/components/data/coaches";
@@ -209,7 +210,7 @@ export function RiskPreviewCard({
               <div className="flex items-center gap-2 justify-center">
                 <Sparkles className="h-4 w-4 text-emerald-500" />
                 <span className="text-sm font-medium text-emerald-700">
-                  +{courageReward.xp} Courage XP for trying this investment!
+                  +{courageReward.xp} Courage {III_CONFIG.symbol} for trying this investment!
                 </span>
               </div>
             </div>
@@ -258,12 +259,12 @@ export function RiskPreviewCard({
               <span className="text-sm font-medium">Courage Meter</span>
             </div>
             <Badge className="bg-amber-100 text-amber-700 border-amber-200">
-              +{courageReward.xp} XP • {courageReward.label}
+              +{courageReward.xp} {III_CONFIG.symbol} • {courageReward.label}
             </Badge>
           </div>
           <Progress value={courageLevel} className="h-2 bg-amber-100" />
           <p className="text-xs text-muted-foreground text-center">
-            You earn XP for having the courage to try - regardless of outcome!
+            You earn {III_CONFIG.symbol} for having the courage to try - regardless of outcome!
           </p>
         </div>
 
@@ -374,15 +375,15 @@ export function RiskPreviewCard({
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-white">+{courageReward.xp}</Badge>
-                <span className="text-amber-700">Courage XP</span>
+                <span className="text-amber-700">Courage {III_CONFIG.symbol}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-white">+5</Badge>
-                <span className="text-amber-700">Learning XP</span>
+                <span className="text-amber-700">Learning {III_CONFIG.symbol}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-white">+10</Badge>
-                <span className="text-amber-700">Completion XP</span>
+                <span className="text-amber-700">Completion {III_CONFIG.symbol}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-white">🏅</Badge>

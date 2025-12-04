@@ -419,9 +419,9 @@ export const courageMessages = [
   "Remember: You can't learn to swim without getting in the water! 🏊",
   "The best time to learn about risk is with virtual money. No real stakes, all the lessons! 🎮",
   "Every 'no' is also a decision. But 'yes' teaches you more! 💡",
-  "Fortune favors the bold... and so does XP! 🌟",
+  "Fortune favors the bold... and so does iii! 🌟",
   "Scared money don't make money... but in this game, trying IS the reward! 🎯",
-  "Win or lose, you'll have a story to tell. And +XP to show for it! ✨",
+  "Win or lose, you'll have a story to tell. And +iii to show for it! ✨",
 ];
 
 // Calculate total effort XP for a player session
