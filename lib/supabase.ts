@@ -354,7 +354,7 @@ export interface UserProfile {
   email?: string;
   display_name?: string;
   session_id?: string;
-  age_range?: '12-14' | '15-16' | '17-18';
+  age_range?: '12-14' | '15-16' | '17-18' | '19-24' | '25+';
   country?: string;
   has_part_time_job?: boolean;
   has_savings_goal?: boolean;

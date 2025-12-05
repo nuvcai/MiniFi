@@ -400,3 +400,4 @@ export function BadgeCollection({
 
 export default DualRewardCelebration;
 
+

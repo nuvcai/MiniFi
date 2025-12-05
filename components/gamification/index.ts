@@ -159,7 +159,7 @@ export {
   type StakingTier,
   type TierBenefits,
   type FlybuysPoints,
-  type RewardCategory,
+  // RewardCategory already exported from dualRewards
   type ActiveBoost,
 } from "./stakingTypes";
 

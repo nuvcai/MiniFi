@@ -31,7 +31,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { InvestmentOption } from "@/components/data/missions";
-import { AICoach } from "@/components/data/coaches";
+import { AICoach, getCoachEncouragement, getCoachCatchphrase } from "@/components/data/coaches";
 
 interface InvestmentThesisProps {
   selectedOption: InvestmentOption;
@@ -196,33 +196,37 @@ const getQuickThesisOptions = (option: InvestmentOption, eventYear: number): Qui
   return baseOptions.slice(0, 4);
 };
 
-// Coach reactions based on thesis
+// Coach reactions based on thesis - NOW WITH ENHANCED PERSONALITY
 const getCoachReaction = (
   coach: AICoach, 
-  option: InvestmentOption, 
+  _option: InvestmentOption, 
   quality: ThesisQuality
 ): string => {
-  const coachName = coach.name.split(" ")[0]; // First name only
+  void _option; // Available for future use
+  const emoji = coach.speechStyle?.emoji || "🎯";
+  const catchphrase = getCoachCatchphrase(coach);
   
   if (quality.isThoughtful && quality.mentionsRisk) {
+    // Use coach-specific encouragement
+    const encouragement = getCoachEncouragement(coach);
     switch (coach.riskTolerance) {
       case "conservative":
-        return `${coachName} nods approvingly: "I love that you're thinking about risk management! This is exactly how Family Offices preserve wealth across generations."`;
+        return `${emoji} ${coach.name} nods approvingly: "${encouragement} This is exactly how Family Offices preserve wealth. Remember: '${catchphrase}'"`;
       case "moderate":
-        return `${coachName} smiles: "Great balanced thinking! You're weighing both upside and downside - that's the hallmark of a mature investor."`;
+        return `${emoji} ${coach.name} smiles: "Great balanced thinking! ${encouragement} That's the hallmark of a mature investor."`;
       case "aggressive":
       case "very_aggressive":
-        return `${coachName} grins: "Bold reasoning! Taking calculated risks with clear thinking is how fortunes are made."`;
+        return `${emoji} ${coach.name} grins: "${encouragement} Taking calculated risks with clear thinking is how fortunes are made!"`;
       default:
-        return `${coachName} says: "Excellent reasoning! You're thinking like a real investor."`;
+        return `${emoji} ${coach.name} says: "Excellent reasoning! ${encouragement}"`;
     }
   }
   
   if (quality.hasReason) {
-    return `${coachName} considers your thesis: "Good start! The best investors always know WHY they're making a decision."`;
+    return `${emoji} ${coach.name} considers your thesis: "Good start! The best investors always know WHY they're making a decision. '${catchphrase}'"`;
   }
   
-  return `${coachName} encourages you: "Every thesis is a learning opportunity. Let's see how your thinking plays out!"`;
+  return `${emoji} ${coach.name} encourages you: "Every thesis is a learning opportunity. Let's see how your thinking plays out!"`;
 };
 
 export function InvestmentThesis({
@@ -298,16 +302,18 @@ export function InvestmentThesis({
     : getCoachReaction(coach, selectedOption, quality);
     
   function getQuickCoachReaction(coach: AICoach, option: QuickThesisOption): string {
-    const coachName = coach.name.split(" ")[0];
+    const emoji = coach.speechStyle?.emoji || "🎯";
+    const catchphrase = getCoachCatchphrase(coach);
+    const encouragement = getCoachEncouragement(coach);
     
     const reactions: Record<string, string> = {
-      conservative: `${coachName} nods approvingly: "Smart thinking! Protecting capital is the foundation of all wealth building. Family Offices have followed this principle for generations."`,
-      balanced: `${coachName} smiles: "Well-reasoned! Balance is the key to long-term success. You're thinking like a true Family Office investor."`,
-      growth: `${coachName} grins: "Bold move! This is how fortunes are made - calculated conviction. You understand that great returns require some risk."`,
-      opportunistic: `${coachName} looks impressed: "Crisis investing! This is advanced thinking. When others panic, the disciplined find opportunity."`,
+      conservative: `${emoji} ${coach.name} nods approvingly: "${encouragement} Protecting capital is the foundation of all wealth building. '${catchphrase}'"`,
+      balanced: `${emoji} ${coach.name} smiles: "Well-reasoned! ${encouragement} You're thinking like a true Family Office investor."`,
+      growth: `${emoji} ${coach.name} grins: "${encouragement} This is how fortunes are made - calculated conviction!"`,
+      opportunistic: `${emoji} ${coach.name} looks impressed: "Crisis investing! ${encouragement} When others panic, the disciplined find opportunity."`,
     };
     
-    return reactions[option.foAlignment] || `${coachName} appreciates your reasoning!`;
+    return reactions[option.foAlignment] || `${emoji} ${coach.name}: "${encouragement}"`;
   }
 
   return (

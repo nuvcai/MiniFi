@@ -43,7 +43,7 @@ import {
 import { FinancialEvent } from "@/components/data/events";
 import { EventCard } from "./EventCard";
 import { CompetitionCard } from "./CompetitionCard";
-import { SkillsMastery } from "./SkillsMastery";
+import { SkillsDrawer } from "./SkillsDrawer";
 import { ChapterHub } from "./ChapterHub";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -193,7 +193,7 @@ export function TimelineSection({
           
           {/* Family Office Wisdom Section - Skills & Knowledge */}
           <div className="mt-6">
-            <SkillsMastery events={events} />
+            <SkillsDrawer events={events} />
           </div>
         </>
       )}
@@ -449,7 +449,7 @@ export function TimelineSection({
       
       {/* Skills & Knowledge - Collapsible */}
       <div className="mb-6">
-        <SkillsMastery events={events} />
+        <SkillsDrawer events={events} />
       </div>
       
       {/* Main Content Card - Premium Design */}
@@ -785,7 +785,7 @@ export function TimelineSection({
       
       {/* Skills & Knowledge - Family Office Wisdom */}
       <div className="mt-6">
-        <SkillsMastery events={events} />
+        <SkillsDrawer events={events} />
       </div>
         </>
       )}

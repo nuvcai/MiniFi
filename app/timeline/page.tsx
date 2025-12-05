@@ -14,14 +14,16 @@ import { BookOpen, ChevronRight } from "lucide-react";
 // Components
 import { GameHeader } from "@/components/game/GameHeader";
 import { CoachSidebar } from "@/components/game/CoachSidebar";
-import { TimelineSection } from "@/components/game/TimelineSection";
+import { JourneyHub } from "@/components/game/JourneyHub";
 import { EventDetailModal } from "@/components/modals/EventDetailModal";
 import { MissionModal } from "@/components/modals/MissionModal";
 import { SummaryModal } from "@/components/modals/SummaryModal";
+import { SaveProgressModal } from "@/components/modals/SaveProgressModal";
 import { LevelUpCelebration, MilestoneAchievement } from "@/components/gamification";
 import { IIIDashboard } from "@/components/gamification/IIIDashboard";
 import { DailyWisdom } from "@/components/library/DailyWisdom";
 import { WelcomeModal } from "@/components/onboarding/WelcomeModal";
+import { GameErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 // Hooks
 import { useIII } from "@/hooks/useIII";
@@ -59,7 +61,7 @@ export default function TimelinePage() {
     levelProgress,
     iiiToNextLevel,
     weeklyIII,
-    stats,
+    stats: _stats,
     earnedBadges,
     addIII,
     recordInvestment,
@@ -75,6 +77,10 @@ export default function TimelinePage() {
   // =========================================================================
   // GAME STATE
   // =========================================================================
+  // Use state for events to trigger re-renders when completed status changes
+  const [events, setEvents] = useState<FinancialEvent[]>(() => 
+    financialEvents.map(e => ({ ...e })) // Create a copy to avoid mutating imported data
+  );
   const [selectedEvent, setSelectedEvent] = useState<FinancialEvent | null>(null);
   const [missionEvent, setMissionEvent] = useState<FinancialEvent | null>(null);
   const [selectedCoach, setSelectedCoach] = useState(aiCoaches[0]);
@@ -92,7 +98,7 @@ export default function TimelinePage() {
   const [missionResult, setMissionResult] = useState<any>(null);
   const [streakDays, setStreakDays] = useState(0);
   const [streakBonusAvailable, setStreakBonusAvailable] = useState(false);
-  const [showBadgeModal, setShowBadgeModal] = useState(false);
+  const [_showBadgeModal, setShowBadgeModal] = useState(false);
   
   // Compute streak bonus based on current streak days
   const streakBonus = getStreakBonus(streakDays);
@@ -110,6 +116,9 @@ export default function TimelinePage() {
   
   // Onboarding state
   const [showWelcome, setShowWelcome] = useState(false);
+  
+  // Save Progress prompt state
+  const [showSaveProgress, setShowSaveProgress] = useState(false);
 
   // =========================================================================
   // CHECK FOR FIRST-TIME USER & SHOW ONBOARDING
@@ -175,12 +184,14 @@ export default function TimelinePage() {
           const progress = JSON.parse(saved);
           if (progress.completedMissions) {
             setCompletedMissions(progress.completedMissions);
-            // Restore completed status on events
-            progress.completedMissions.forEach((title: string) => {
-              const event = financialEvents.find(e => e.title === title);
-              if (event) event.completed = true;
+            // Restore completed status on events using state
+            setEvents(prevEvents => {
+              const updatedEvents = prevEvents.map(event => ({
+                ...event,
+                completed: progress.completedMissions.includes(event.title)
+              }));
+              return updateUnlockStatus(updatedEvents);
             });
-            updateUnlockStatus();
           }
         }
       } catch (e) {
@@ -299,22 +310,23 @@ export default function TimelinePage() {
   // =========================================================================
   // UNLOCK LOGIC
   // =========================================================================
-  const updateUnlockStatus = () => {
-    financialEvents.forEach((event) => {
+  const updateUnlockStatus = (currentEvents: FinancialEvent[]) => {
+    return currentEvents.map((event) => {
       if (event.unlockRequirements.length > 0) {
         const allRequirementsMet = event.unlockRequirements.every((requiredYear) => {
-          const requiredEvent = financialEvents.find((e) => e.year === requiredYear);
+          const requiredEvent = currentEvents.find((e) => e.year === requiredYear);
           return requiredEvent?.completed === true;
         });
-        event.unlocked = allRequirementsMet;
+        return { ...event, unlocked: allRequirementsMet };
       }
+      return event;
     });
   };
 
-  const allMissionsCompleted = financialEvents.every((event) => event.completed);
+  const allMissionsCompleted = events.every((event) => event.completed);
 
   useEffect(() => {
-    updateUnlockStatus();
+    setEvents(prevEvents => updateUnlockStatus(prevEvents));
   }, []);
 
   useEffect(() => {
@@ -419,11 +431,15 @@ export default function TimelinePage() {
         );
         setCompletedRandomCount(prev => prev + 1);
       } else {
-        const eventIndex = financialEvents.findIndex((e) => e.year === missionEvent.year);
-        if (eventIndex !== -1) {
-          financialEvents[eventIndex].completed = true;
-          updateUnlockStatus();
-        }
+        // Update events state to mark mission as completed
+        setEvents(prevEvents => {
+          const updatedEvents = prevEvents.map(event => 
+            event.year === missionEvent.year 
+              ? { ...event, completed: true }
+              : event
+          );
+          return updateUnlockStatus(updatedEvents);
+        });
       }
 
       // Check for level up
@@ -441,6 +457,14 @@ export default function TimelinePage() {
       }
 
       closeMissionModal();
+      
+      // Show save progress modal after first mission if user hasn't saved yet
+      const savedEmail = localStorage.getItem(USER_EMAIL_KEY);
+      const savePromptDismissed = localStorage.getItem('minifi_save_prompt_dismissed');
+      if (newMissions.length === 1 && !savedEmail && !savePromptDismissed) {
+        // Delay to let level up animation show first
+        setTimeout(() => setShowSaveProgress(true), 1500);
+      }
     }
   };
 
@@ -501,6 +525,41 @@ export default function TimelinePage() {
     setSelectedInvestment(null);
     setMissionResult(null);
   };
+  
+  // Handle saving progress via email
+  const handleSaveProgress = async (email: string): Promise<boolean> => {
+    try {
+      const sessionId = getOrCreateSessionId();
+      const response = await fetch('/api/streak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'signup',
+          email,
+          streakData: {
+            currentStreak: streakDays,
+            totalXP: totalIII,
+            sessionId,
+          },
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Save email to localStorage
+        localStorage.setItem(USER_EMAIL_KEY, email);
+        // Give bonus iii for saving
+        addIII(50, 'save_progress', '🎁 Progress saved bonus!');
+        addLeagueIII(50);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+      return false;
+    }
+  };
 
   // Get mission data
   const getCurrentMissionData = (): MissionData | null => {
@@ -557,11 +616,12 @@ export default function TimelinePage() {
           weeklyXP={weeklyIII}
         />
 
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
-          <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
+          <GameErrorBoundary>
+            <div className="grid lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             
-            {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-5">
+            {/* Sidebar - Coach appears FIRST on mobile, then stats */}
+            <div className="lg:col-span-1 space-y-4 sm:space-y-5 order-1 lg:order-1">
               
               {/* Coach Selection */}
               <CoachSidebar
@@ -589,32 +649,45 @@ export default function TimelinePage() {
                 onViewBadges={() => setShowBadgeModal(true)}
               />
 
-              {/* Daily Wisdom */}
-              <DailyWisdom compact showControls={false} />
+              {/* Daily Wisdom & Library - DESKTOP ONLY (hidden on mobile) */}
+              <div className="hidden lg:block space-y-4">
+                <DailyWisdom compact showControls={false} />
 
-              {/* Library Link */}
-              <Link href="/library">
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-1 transition-all cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                        <BookOpen className="h-5 w-5 text-white" />
+                <Link href="/library">
+                  <div className="group p-4 rounded-2xl 
+                    bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 
+                    dark:from-amber-500/10 dark:via-orange-500/10 dark:to-yellow-500/5
+                    border border-amber-200 dark:border-amber-500/30 
+                    hover:border-amber-300 dark:hover:border-amber-500/50 
+                    hover:shadow-lg hover:shadow-amber-200/30 dark:hover:shadow-amber-500/10
+                    hover:-translate-y-1 transition-all cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-400/30">
+                          <BookOpen className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-amber-900 dark:text-white text-sm group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                            Wealth Library 📚
+                          </p>
+                          <p className="text-xs text-amber-700/70 dark:text-amber-300/60">
+                            Learn from the greats
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-white text-sm">Wealth Library 📚</p>
-                        <p className="text-xs text-white/50">Learn from the greats</p>
+                      <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-500/20 group-hover:bg-amber-200 dark:group-hover:bg-amber-500/30 transition-colors">
+                        <ChevronRight className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                       </div>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-amber-400" />
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             </div>
 
-            {/* Timeline - Main Content */}
-            <div className="lg:col-span-3">
-              <TimelineSection
-                events={financialEvents}
+            {/* Journey Hub - Main Content - Appears after coach on mobile */}
+            <div className="lg:col-span-3 order-2 lg:order-2">
+              <JourneyHub
+                events={events}
                 competitionUnlocked={competitionUnlocked}
                 onEventClick={handleEventClick}
                 onStartCompetition={startCompetition}
@@ -623,8 +696,41 @@ export default function TimelinePage() {
                 onGenerateRandomScenario={startRandomMission}
                 streakDays={streakDays}
               />
+              
+              {/* Daily Wisdom & Library - MOBILE ONLY (after game cards) */}
+              <div className="lg:hidden space-y-4 mt-6">
+                <DailyWisdom compact showControls={false} />
+
+                <Link href="/library">
+                  <div className="group p-3 sm:p-4 rounded-xl sm:rounded-2xl 
+                    bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 
+                    dark:from-amber-500/10 dark:via-orange-500/10 dark:to-yellow-500/5
+                    border border-amber-200 dark:border-amber-500/30 
+                    active:scale-[0.98] transition-all cursor-pointer touch-manipulation">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-400/30">
+                          <BookOpen className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-amber-900 dark:text-white text-sm">
+                            Wealth Library 📚
+                          </p>
+                          <p className="text-xs text-amber-700/70 dark:text-amber-300/60">
+                            Learn from the greats
+                          </p>
+                        </div>
+                      </div>
+                      <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-500/20">
+                        <ChevronRight className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
-          </div>
+            </div>
+          </GameErrorBoundary>
         </div>
 
         {/* Footer */}
@@ -688,7 +794,7 @@ export default function TimelinePage() {
         open={showSummary}
         playerXP={totalIII}
         totalScore={totalIII}
-        events={financialEvents}
+        events={events}
         onClose={() => {
           setShowSummary(false);
           setSummaryDismissed(true);
@@ -734,6 +840,16 @@ export default function TimelinePage() {
         open={showWelcome}
         onClose={handleWelcomeClose}
         onStartPlaying={handleWelcomeClose}
+      />
+      
+      {/* Save Progress Modal - Shows after first mission */}
+      <SaveProgressModal
+        open={showSaveProgress}
+        onClose={() => setShowSaveProgress(false)}
+        onSave={handleSaveProgress}
+        currentIII={totalIII}
+        completedMissions={completedMissions.length}
+        streakDays={streakDays}
       />
       
     </div>

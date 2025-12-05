@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { Sparkles, Quote, Brain, Heart } from "lucide-react";
 import { InvestmentOption } from "@/components/data/missions";
 import { FinancialEvent } from "@/components/data/events";
 import { TeachingDialogue } from "@/components/mission/TeachingDialogue";
-import { aiCoaches, AICoach } from "@/components/data/coaches";
+import { AICoach } from "@/components/data/coaches";
 import { getRandomHopeMessage, type HopeMessage } from "@/components/data/wealthWisdom";
 import { ShareResultCard } from "@/components/viral/ShareResultCard";
 
@@ -160,36 +161,85 @@ export function MissionResult({
 
       {/* Wisdom Banner - Shows after confetti settles */}
       {!showConfetti && (
-        <div className={`rounded-xl p-4 mb-4 animate-bounce-in ${
+        <div className={`rounded-2xl overflow-hidden mb-4 animate-bounce-in shadow-lg ${
           isLoss 
-            ? "bg-gradient-to-r from-violet-500/15 via-purple-500/10 to-indigo-500/15 border border-violet-500/30" 
-            : "bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30"
+            ? "bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-500/20 dark:via-purple-500/15 dark:to-indigo-500/20 border-2 border-violet-200 dark:border-violet-500/30" 
+            : "bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-500/15 dark:via-orange-500/10 dark:to-yellow-500/15 border-2 border-amber-200 dark:border-amber-500/30"
         }`}>
-          <div className="flex items-start gap-3">
-            <span className="text-2xl flex-shrink-0">{isLoss ? "💎" : "✨"}</span>
-            <div>
+          {/* Header */}
+          <div className={`px-4 py-2.5 ${
+            isLoss 
+              ? "bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-500/30 dark:to-purple-500/20" 
+              : "bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-500/30 dark:to-orange-500/20"
+          }`}>
+            <div className="flex items-center gap-2">
               {isLoss ? (
-                <>
-                  <h4 className="font-bold text-violet-300 text-sm mb-1">{lossWisdom.title}</h4>
-                  <p className="text-xs text-violet-200/80 leading-relaxed">{lossWisdom.message}</p>
-                </>
-              ) : wisdomTip ? (
-                <>
-                  <h4 className="font-semibold text-amber-300 text-sm mb-1">{wisdomTip.title}</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">{wisdomTip.callToAction}</p>
-                </>
-              ) : null}
+                <Brain className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+              ) : (
+                <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              )}
+              <span className={`text-xs font-bold uppercase tracking-wide ${
+                isLoss ? "text-violet-700 dark:text-violet-300" : "text-amber-700 dark:text-amber-300"
+              }`}>
+                {isLoss ? "Wisdom Earned" : "Victory Insight"}
+              </span>
             </div>
           </div>
           
-          {/* Loss-specific encouragement */}
-          {isLoss && (
-            <div className="mt-3 pt-3 border-t border-violet-500/20">
-              <p className="text-[11px] text-violet-300/70 italic text-center">
-                "The stock market is a device for transferring money from the impatient to the patient." — Warren Buffett
-              </p>
+          {/* Main Content */}
+          <div className="p-4">
+            <div className="flex items-start gap-3">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md ${
+                isLoss 
+                  ? "bg-gradient-to-br from-violet-500 to-purple-600" 
+                  : "bg-gradient-to-br from-amber-400 to-orange-500"
+              }`}>
+                <span className="text-2xl">{isLoss ? "💎" : "✨"}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                {isLoss ? (
+                  <>
+                    <h4 className="font-bold text-violet-800 dark:text-violet-200 text-base mb-1.5">{lossWisdom.title}</h4>
+                    <p className="text-sm text-violet-700/80 dark:text-violet-300/80 leading-relaxed">{lossWisdom.message}</p>
+                  </>
+                ) : wisdomTip ? (
+                  <>
+                    <h4 className="font-bold text-amber-800 dark:text-amber-200 text-base mb-1.5">{wisdomTip.title}</h4>
+                    <p className="text-sm text-amber-700/80 dark:text-amber-300/80 leading-relaxed">{wisdomTip.callToAction}</p>
+                  </>
+                ) : null}
+              </div>
             </div>
-          )}
+            
+            {/* Loss-specific encouragement quote */}
+            {isLoss && (
+              <div className={`mt-4 p-3 rounded-xl ${
+                "bg-white/60 dark:bg-black/20 border border-violet-200/50 dark:border-violet-500/20"
+              }`}>
+                <div className="flex items-start gap-2">
+                  <Quote className="h-4 w-4 text-violet-400 dark:text-violet-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-violet-700 dark:text-violet-300 italic leading-relaxed">
+                      "The stock market is a device for transferring money from the impatient to the patient."
+                    </p>
+                    <p className="text-[10px] text-violet-600/70 dark:text-violet-400/60 mt-1 font-medium">
+                      — Warren Buffett
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Win celebration message */}
+            {!isLoss && wisdomTip && (
+              <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-100/80 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30">
+                <Heart className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <p className="text-xs text-emerald-700 dark:text-emerald-300 font-medium">
+                  Great decision! Your patience is building generational wealth habits.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

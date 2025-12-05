@@ -1389,27 +1389,57 @@ export function TeachingDialogue({
   if (!currentMessage) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      {/* Coach Header - Enhanced with personality */}
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700">
+      {/* Coach Header - Enhanced with personality & light mode optimized */}
       {(() => {
-        // Get coach-specific colors
+        // Get coach-specific colors - Light mode optimized
         const coachColors = fullCoach?.id === "steady-sam" 
-          ? { gradient: "from-blue-50 to-cyan-50", glow: "bg-blue-400/30", border: "border-blue-300" }
+          ? { 
+              gradient: "from-blue-50 via-cyan-50 to-blue-50 dark:from-blue-500/20 dark:via-cyan-500/15 dark:to-blue-500/20", 
+              glow: "bg-blue-400/40 dark:bg-blue-400/30", 
+              border: "border-blue-200 dark:border-blue-500/40",
+              accent: "text-blue-700 dark:text-blue-300",
+              badge: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300"
+            }
           : fullCoach?.id === "growth-guru"
-          ? { gradient: "from-emerald-50 to-teal-50", glow: "bg-emerald-400/30", border: "border-emerald-300" }
+          ? { 
+              gradient: "from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-500/20 dark:via-teal-500/15 dark:to-emerald-500/20", 
+              glow: "bg-emerald-400/40 dark:bg-emerald-400/30", 
+              border: "border-emerald-200 dark:border-emerald-500/40",
+              accent: "text-emerald-700 dark:text-emerald-300",
+              badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+            }
           : fullCoach?.id === "adventure-alex"
-          ? { gradient: "from-purple-50 to-violet-50", glow: "bg-purple-400/30", border: "border-purple-300" }
+          ? { 
+              gradient: "from-purple-50 via-violet-50 to-purple-50 dark:from-purple-500/20 dark:via-violet-500/15 dark:to-purple-500/20", 
+              glow: "bg-purple-400/40 dark:bg-purple-400/30", 
+              border: "border-purple-200 dark:border-purple-500/40",
+              accent: "text-purple-700 dark:text-purple-300",
+              badge: "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300"
+            }
           : fullCoach?.id === "yield-yoda"
-          ? { gradient: "from-amber-50 to-yellow-50", glow: "bg-amber-400/30", border: "border-amber-300" }
-          : { gradient: "from-blue-50 to-purple-50", glow: "bg-violet-400/30", border: "border-violet-300" };
+          ? { 
+              gradient: "from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-500/20 dark:via-yellow-500/15 dark:to-amber-500/20", 
+              glow: "bg-amber-400/40 dark:bg-amber-400/30", 
+              border: "border-amber-200 dark:border-amber-500/40",
+              accent: "text-amber-700 dark:text-amber-300",
+              badge: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300"
+            }
+          : { 
+              gradient: "from-violet-50 via-purple-50 to-violet-50 dark:from-violet-500/20 dark:via-purple-500/15 dark:to-violet-500/20", 
+              glow: "bg-violet-400/40 dark:bg-violet-400/30", 
+              border: "border-violet-200 dark:border-violet-500/40",
+              accent: "text-violet-700 dark:text-violet-300",
+              badge: "bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300"
+            };
         
         return (
-          <div className={`flex items-center gap-3 mb-6 p-4 bg-gradient-to-r ${coachColors.gradient} rounded-lg border ${coachColors.border}`}>
-            <div className="relative w-20 h-20 shrink-0">
+          <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 p-4 bg-gradient-to-br ${coachColors.gradient} rounded-xl border-2 ${coachColors.border} shadow-sm`}>
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0">
               {/* Coach-specific glow effect */}
-              <div className={`absolute -inset-1 rounded-full ${coachColors.glow} ${isCoachTyping ? 'animate-pulse' : ''}`}></div>
+              <div className={`absolute -inset-1 rounded-full ${coachColors.glow} blur-sm ${isCoachTyping ? 'animate-pulse' : ''}`}></div>
               {/* Performance indicator ring */}
-              <div className={`absolute -inset-2 rounded-full ${performance === "profit" ? "bg-green-400/10" : "bg-orange-400/10"} ${isCoachTyping ? 'animate-ping' : ''}`} style={{ animationDuration: '2s' }}></div>
+              <div className={`absolute -inset-2 rounded-full ${performance === "profit" ? "bg-emerald-400/20 dark:bg-emerald-400/10" : "bg-orange-400/20 dark:bg-orange-400/10"} ${isCoachTyping ? 'animate-ping' : ''}`} style={{ animationDuration: '2s' }}></div>
               <Image
                 src={isCoachTyping ? coach.animatedAvatar : coach.avatar}
                 alt={coach.name}
@@ -1418,55 +1448,58 @@ export function TeachingDialogue({
                 className={`rounded-full object-cover border-2 ${coachColors.border} shadow-lg relative z-10`}
               />
               {/* Status indicator */}
-              <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${isCoachTyping ? 'bg-green-500' : 'bg-gray-400'} border-2 border-white flex items-center justify-center z-20`}>
+              <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${isCoachTyping ? 'bg-emerald-500' : 'bg-slate-400'} border-2 border-white dark:border-slate-900 flex items-center justify-center z-20 shadow-md`}>
                 <span className="text-xs">{isCoachTyping ? "💬" : fullCoach?.speechStyle?.emoji || "🎯"}</span>
               </div>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-bold text-lg">{coach.name}</h3>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <h3 className={`font-bold text-lg ${coachColors.accent}`}>{coach.name}</h3>
                 <span className="text-xl">{fullCoach?.speechStyle?.emoji || "🎯"}</span>
-                <Badge variant="secondary" className={coach.color}>
+                <Badge className={`${coachColors.badge} border-0 text-xs font-semibold`}>
                   {coach.personality}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">{coach.description}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{coach.description}</p>
               {/* Teaching style hint */}
               {fullCoach && (
-                <p className="text-xs text-gray-500 mt-1 italic">
-                  💡 Teaching style: {fullCoach.teachingStyle?.approach || "balanced"}
-                </p>
+                <div className={`inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-lg ${coachColors.badge} text-xs font-medium`}>
+                  <span>💡</span>
+                  <span>Teaching style: {fullCoach.teachingStyle?.approach || "balanced"}</span>
+                </div>
               )}
             </div>
           </div>
         );
       })()}
 
-      {/* Coach Interaction Panel - Always Visible */}
+      {/* Coach Interaction Panel - Always Visible - Light Mode Optimized */}
       <div className="mb-4 relative">
-        <div className="bg-white border-2 border-blue-200 rounded-2xl p-4 shadow-sm relative">
+        <div className="bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 shadow-sm relative">
           {/* Chat bubble pointer pointing to coach header */}
-          <div className="absolute -top-2 left-20 w-4 h-4 bg-white border-l-2 border-t-2 border-blue-200 transform rotate-45"></div>
+          <div className="absolute -top-2 left-16 sm:left-20 w-4 h-4 bg-slate-50 dark:bg-slate-800/50 border-l-2 border-t-2 border-slate-200 dark:border-slate-700 transform rotate-45"></div>
           
           {/* Coach response area */}
           {selectedMetric && (isCoachTyping || metricExplanation) ? (
-            <div className="text-sm text-gray-700 leading-relaxed mb-4">
+            <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
               {isCoachTyping ? (
                 <>
                   {coachTypingText}
-                  <span className="inline-block w-2 h-4 bg-blue-500 ml-1 animate-pulse"></span>
+                  <span className="inline-block w-2 h-4 bg-[#9898f2] ml-1 animate-pulse rounded-sm"></span>
                 </>
               ) : (
                 metricExplanation
               )}
             </div>
           ) : currentMessage.id === "summary_completion" ? (
-            <div className="text-sm text-gray-700 leading-relaxed mb-4 prose prose-sm">
+            <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 prose prose-sm dark:prose-invert">
               <div dangerouslySetInnerHTML={{ __html: currentMessage.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>') }} />
             </div>
           ) : (
-            <div className="text-sm text-gray-600 mb-4">
-              💡 <span className="font-medium">Ask {coach.name} about your results:</span> Click any button below to get detailed explanations!
+            <div className="text-sm text-slate-600 dark:text-slate-400 mb-4 p-3 bg-white dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700">
+              <span className="text-base mr-1">💡</span>
+              <span className="font-medium text-slate-800 dark:text-white">Ask {coach.name} about your results:</span>
+              <span className="text-slate-500 dark:text-slate-400"> Click any button below to get detailed explanations!</span>
             </div>
           )}
           
@@ -1490,55 +1523,46 @@ export function TeachingDialogue({
                 </div>
               )}
               
-              {/* Metric buttons - first row (4 buttons) - Cloud bubble style */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+              {/* Metric buttons - first row (4 buttons) - Mobile optimized */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3">
                 {currentMessage.metricButtons.slice(0, 4).map((button) => {
                   const isViewed = viewedSharedButtons.has(button.key);
                   return (
                     <button
                       key={button.key}
-                      className={`relative px-3 py-2 min-h-[45px] rounded-xl border transition-all duration-200 ${
-                        hoveredMetric === button.key ? "shadow-md scale-105" : ""
+                      className={`relative px-3 py-2.5 min-h-[48px] sm:min-h-[45px] rounded-xl border-2 transition-all duration-200 touch-manipulation active:scale-[0.97] ${
+                        hoveredMetric === button.key ? "shadow-md scale-[1.02]" : ""
                       } ${
                         selectedMetric === button.key
-                          ? "bg-gradient-to-r from-indigo-400 to-purple-500 text-white border-indigo-500 shadow-lg"
+                          ? "bg-gradient-to-r from-[#9898f2] to-violet-500 text-white border-[#9898f2] shadow-lg shadow-[#9898f2]/30"
                           : isViewed
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 border-emerald-200 hover:from-green-100 hover:to-emerald-100"
-                          : "bg-gradient-to-r from-sky-50 to-blue-50 text-blue-700 border-blue-200 hover:from-sky-100 hover:to-blue-100"
+                          ? "bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-500/20 dark:to-teal-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40"
+                          : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-[#9898f2]/50 hover:bg-slate-50 dark:hover:bg-slate-700"
                       } ${isCoachTyping ? "opacity-50 cursor-not-allowed" : ""}`}
                       onClick={() => !isCoachTyping && handleMetricClick(button.key, button.targetMetric)}
                       onMouseEnter={() => !isCoachTyping && handleMetricHover(button.key)}
                       onMouseLeave={() => !isCoachTyping && handleMetricHover(null)}
                       disabled={isCoachTyping}
                     >
-                      {/* Cloud bubble pointer */}
-                      <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 ${
-                        selectedMetric === button.key
-                          ? "bg-gradient-to-r from-indigo-400 to-purple-500 border-r border-b border-indigo-500"
-                          : isViewed
-                          ? "bg-gradient-to-r from-green-50 to-emerald-50 border-r border-b border-emerald-200"
-                          : "bg-gradient-to-r from-sky-50 to-blue-50 border-r border-b border-blue-200"
-                      }`}></div>
-                      
-                      <div className="flex items-center gap-1 justify-center">
+                      <div className="flex items-center gap-1.5 justify-center">
                         {React.cloneElement(button.icon, {
-                          className: `h-3 w-3 ${
+                          className: `h-4 w-4 sm:h-3.5 sm:w-3.5 ${
                             selectedMetric === button.key
                               ? "text-white"
                               : isViewed
-                              ? "text-emerald-600"
-                              : "text-blue-600"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-slate-500 dark:text-slate-400"
                           }`,
                         })}
-                        <span className="text-xs font-medium">{button.label}</span>
-                        {isViewed && <span className="text-xs">✓</span>}
+                        <span className="text-xs sm:text-[11px] font-semibold">{button.label}</span>
+                        {isViewed && <span className="text-emerald-500 text-xs">✓</span>}
                       </div>
                     </button>
                   );
                 })}
               </div>
               
-              {/* Chart-specific button - second row */}
+              {/* Chart-specific button - second row - Full width on mobile */}
               {currentMessage.metricButtons.length > 4 && (
                 <div className="flex justify-center">
                   {(() => {
@@ -1548,45 +1572,36 @@ export function TeachingDialogue({
                     return (
                       <button
                         key={extraMetricButton.key}
-                        className={`relative px-4 py-2 min-h-[45px] rounded-xl border transition-all duration-200 ${
-                          hoveredMetric === extraMetricButton.key ? "shadow-md scale-105" : ""
+                        className={`w-full sm:w-auto relative px-4 py-2.5 min-h-[48px] sm:min-h-[45px] rounded-xl border-2 transition-all duration-200 touch-manipulation active:scale-[0.97] ${
+                          hoveredMetric === extraMetricButton.key ? "shadow-md scale-[1.02]" : ""
                         } ${
                           selectedMetric === extraMetricButton.key
-                            ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-purple-500 shadow-lg"
+                            ? "bg-gradient-to-r from-[#9898f2] to-violet-500 text-white border-[#9898f2] shadow-lg shadow-[#9898f2]/30"
                             : isViewed
-                            ? "bg-gradient-to-r from-green-50 to-emerald-50 text-emerald-700 border-emerald-200 hover:from-green-100 hover:to-emerald-100"
-                            : "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-purple-200 hover:from-purple-100 hover:to-pink-100"
+                            ? "bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-500/20 dark:to-teal-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/40"
+                            : "bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-500/15 dark:to-purple-500/10 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-500/40 hover:border-violet-300 dark:hover:border-violet-500/60"
                         } ${isCoachTyping ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={() => !isCoachTyping && handleMetricClick(extraMetricButton.key, extraMetricButton.targetMetric)}
                         onMouseEnter={() => !isCoachTyping && handleMetricHover(extraMetricButton.key)}
                         onMouseLeave={() => !isCoachTyping && handleMetricHover(null)}
                         disabled={isCoachTyping}
                       >
-                        {/* Cloud bubble pointer */}
-                        <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45 ${
-                          selectedMetric === extraMetricButton.key
-                            ? "bg-gradient-to-r from-purple-400 to-pink-500 border-r border-b border-purple-500"
-                            : isViewed
-                            ? "bg-gradient-to-r from-green-50 to-emerald-50 border-r border-b border-emerald-200"
-                            : "bg-gradient-to-r from-purple-50 to-pink-50 border-r border-b border-purple-200"
-                        }`}></div>
-                        
                         <div className="flex items-center gap-2 justify-center">
                           {React.cloneElement(extraMetricButton.icon, {
-                            className: `h-3 w-3 ${
+                            className: `h-4 w-4 sm:h-3.5 sm:w-3.5 ${
                               selectedMetric === extraMetricButton.key
                                 ? "text-white"
                                 : isViewed
-                                ? "text-emerald-600"
-                                : "text-purple-600"
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-violet-600 dark:text-violet-400"
                             }`,
                           })}
-                          <span className="text-xs font-medium">
+                          <span className="text-xs sm:text-[11px] font-semibold">
                             {currentMessage.id === "portfolio_performance" && "Portfolio Performance (Annual)"}
                             {currentMessage.id === "annual_returns" && "Annual Returns Chart"}
                             {currentMessage.id === "risk_analysis" && "Risk Analysis Chart"}
                           </span>
-                          {isViewed && <span className="text-xs">✓</span>}
+                          {isViewed && <span className="text-emerald-500 text-xs">✓</span>}
                         </div>
                       </button>
                     );

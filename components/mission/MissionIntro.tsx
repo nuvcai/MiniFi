@@ -19,7 +19,7 @@ import {
 import { ConvictionChart } from "@/components/gamification/ConvictionChart";
 import { MissionData } from "@/components/data/missions";
 import { III_CONFIG } from "@/hooks/useIII";
-import { AICoach } from "@/components/data/coaches";
+import { AICoach, getCoachGreeting, getCoachCatchphrase } from "@/components/data/coaches";
 
 interface MissionIntroProps {
   missionData: MissionData;
@@ -196,38 +196,88 @@ export function MissionIntro({
           </Card>
         )}
 
-        {/* Step 2: Generational Wisdom - Long-term thinking */}
+        {/* Step 2: Generational Wisdom - Long-term thinking with Coach Personality */}
         {step === 2 && (
-          <Card className="border-2 border-amber-300 dark:border-amber-500/30 bg-gradient-to-br from-amber-50 via-yellow-50/50 to-white dark:from-amber-500/20 dark:via-amber-500/10 dark:to-[#1a1a2e] overflow-hidden shadow-lg">
+          <Card className={`border-2 overflow-hidden shadow-lg ${
+            selectedCoach.visualIdentity?.borderColor || "border-amber-300 dark:border-amber-500/30"
+          } bg-gradient-to-br ${
+            selectedCoach.id === "steady-sam" ? "from-blue-50 via-cyan-50/50 to-white dark:from-blue-500/20 dark:via-cyan-500/10 dark:to-[#1a1a2e]" :
+            selectedCoach.id === "growth-guru" ? "from-emerald-50 via-teal-50/50 to-white dark:from-emerald-500/20 dark:via-teal-500/10 dark:to-[#1a1a2e]" :
+            selectedCoach.id === "adventure-alex" ? "from-purple-50 via-violet-50/50 to-white dark:from-purple-500/20 dark:via-violet-500/10 dark:to-[#1a1a2e]" :
+            "from-amber-50 via-yellow-50/50 to-white dark:from-amber-500/20 dark:via-amber-500/10 dark:to-[#1a1a2e]"
+          }`}>
             <CardContent className="p-4 sm:p-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative">
+                  <div className={`absolute -inset-1 rounded-full blur-sm opacity-40 bg-gradient-to-r ${selectedCoach.visualIdentity?.bgGradient || "from-amber-400 to-orange-500"}`} />
                   <Image
                     src={selectedCoach.avatar}
                     alt={selectedCoach.name}
                     width={48}
                     height={48}
-                    className="rounded-full ring-2 ring-amber-300 dark:ring-amber-500 ring-offset-2 ring-offset-white dark:ring-offset-[#1a1a2e] shadow-lg"
+                    className={`relative rounded-full ring-2 ${
+                      selectedCoach.id === "steady-sam" ? "ring-blue-300 dark:ring-blue-500" :
+                      selectedCoach.id === "growth-guru" ? "ring-emerald-300 dark:ring-emerald-500" :
+                      selectedCoach.id === "adventure-alex" ? "ring-purple-300 dark:ring-purple-500" :
+                      "ring-amber-300 dark:ring-amber-500"
+                    } ring-offset-2 ring-offset-white dark:ring-offset-[#1a1a2e] shadow-lg`}
                   />
-                  <div className="absolute -bottom-1 -right-1 p-1 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow">
-                    <Brain className="h-3 w-3 text-white" />
+                  <div className={`absolute -bottom-1 -right-1 p-1 rounded-full shadow flex items-center justify-center bg-gradient-to-r ${selectedCoach.visualIdentity?.bgGradient || "from-amber-400 to-orange-500"}`}>
+                    <span className="text-xs">{selectedCoach.speechStyle?.emoji || "🧠"}</span>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">{selectedCoach.name}&apos;s Wisdom</h4>
-                  <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-medium">Generational thinking for lasting wealth</p>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">{selectedCoach.name}</h4>
+                    <span className="text-lg">{selectedCoach.speechStyle?.emoji || "🎯"}</span>
+                  </div>
+                  <p className={`text-[10px] sm:text-xs font-medium ${
+                    selectedCoach.id === "steady-sam" ? "text-blue-600 dark:text-blue-400" :
+                    selectedCoach.id === "growth-guru" ? "text-emerald-600 dark:text-emerald-400" :
+                    selectedCoach.id === "adventure-alex" ? "text-purple-600 dark:text-purple-400" :
+                    "text-amber-600 dark:text-amber-400"
+                  }`}>
+                    {selectedCoach.personality} • {selectedCoach.teachingStyle?.approach || "balanced"} approach
+                  </p>
                 </div>
               </div>
+              
+              {/* Coach Greeting */}
+              <p className="text-gray-700 dark:text-gray-200 leading-relaxed text-sm mb-3 italic">
+                "{getCoachGreeting(selectedCoach)}"
+              </p>
+              
+              {/* Coach-specific advice */}
               <p className="text-gray-700 dark:text-gray-200 leading-relaxed text-sm">
                 {getCoachTip()}
               </p>
               
-              {/* Emotional Intelligence Callout */}
-              <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 border border-amber-200 dark:border-amber-500/30">
-                <p className="text-xs text-amber-700 dark:text-amber-300 font-medium flex items-center gap-2">
-                  <span className="text-base">🧠</span>
-                  Master your emotions. The market tests psychology before it tests strategy.
+              {/* Coach Catchphrase */}
+              <div className={`mt-4 p-3 rounded-xl border ${
+                selectedCoach.id === "steady-sam" ? "bg-gradient-to-r from-blue-500/10 to-cyan-500/10 dark:from-blue-500/20 dark:to-cyan-500/20 border-blue-200 dark:border-blue-500/30" :
+                selectedCoach.id === "growth-guru" ? "bg-gradient-to-r from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/20 dark:to-teal-500/20 border-emerald-200 dark:border-emerald-500/30" :
+                selectedCoach.id === "adventure-alex" ? "bg-gradient-to-r from-purple-500/10 to-violet-500/10 dark:from-purple-500/20 dark:to-violet-500/20 border-purple-200 dark:border-purple-500/30" :
+                "bg-gradient-to-r from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 border-amber-200 dark:border-amber-500/30"
+              }`}>
+                <p className={`text-xs font-medium flex items-center gap-2 ${
+                  selectedCoach.id === "steady-sam" ? "text-blue-700 dark:text-blue-300" :
+                  selectedCoach.id === "growth-guru" ? "text-emerald-700 dark:text-emerald-300" :
+                  selectedCoach.id === "adventure-alex" ? "text-purple-700 dark:text-purple-300" :
+                  "text-amber-700 dark:text-amber-300"
+                }`}>
+                  <span className="text-base">💬</span>
+                  "{getCoachCatchphrase(selectedCoach)}"
                 </p>
+                {selectedCoach.teachingStyle?.uniqueInsight && (
+                  <p className={`text-[10px] mt-2 opacity-70 ${
+                    selectedCoach.id === "steady-sam" ? "text-blue-600 dark:text-blue-400" :
+                    selectedCoach.id === "growth-guru" ? "text-emerald-600 dark:text-emerald-400" :
+                    selectedCoach.id === "adventure-alex" ? "text-purple-600 dark:text-purple-400" :
+                    "text-amber-600 dark:text-amber-400"
+                  }`}>
+                    💡 {selectedCoach.teachingStyle.uniqueInsight}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

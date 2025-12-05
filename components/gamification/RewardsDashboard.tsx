@@ -602,3 +602,4 @@ function BadgeDetailModal({
 
 export default RewardsDashboard;
 
+

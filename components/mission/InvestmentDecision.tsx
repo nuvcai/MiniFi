@@ -25,7 +25,7 @@ import {
   PieChart,
 } from "lucide-react";
 import { InvestmentOption, AssetClass } from "@/components/data/missions";
-import { AICoach } from "@/components/data/coaches";
+import { AICoach, getCoachResponse, getCoachEncouragement, getCoachWarning } from "@/components/data/coaches";
 import { RiskPreviewCard } from "@/components/gamification/RiskPreviewCard";
 import { CourageXpNotification } from "@/components/gamification/CourageXpNotification";
 import { getCourageXpForRisk } from "@/components/gamification/effortRewards";
@@ -156,27 +156,43 @@ function generateCoachAllocation(
   return allocations.filter(a => a.allocation > 0);
 }
 
-// Get coach's reaction to user's choice
+// Get coach's reaction to user's choice - NOW WITH ENHANCED PERSONALITY
 function getCoachReaction(coach: AICoach | undefined, option: InvestmentOption): string {
   if (!coach) return "Interesting choice! Let me build a smart portfolio around it.";
   
   const risk = option.risk.toLowerCase();
-  const coachName = coach.name.split(" ")[0];
+  const isHighRisk = risk === "extreme" || risk === "high";
+  const isSafe = risk === "low" || risk === "none";
+  const emoji = coach.speechStyle?.emoji || "🎯";
   
-  if (coach.riskTolerance === "conservative") {
-    if (risk === "extreme" || risk === "high") {
-      return `${coachName}: "Bold pick! I respect your conviction. I'll balance it with some safer assets to protect you."`;
+  // Use new personality system
+  if (isHighRisk) {
+    if (coach.riskTolerance === "conservative") {
+      // Sam warns but supports
+      const warning = getCoachWarning(coach);
+      return `${emoji} ${coach.name}: "${warning} But I respect your conviction—I'll balance it with protective assets."`;
+    } else if (coach.riskTolerance === "very_aggressive" || coach.riskTolerance === "aggressive") {
+      // Alex gets excited
+      const encouragement = getCoachEncouragement(coach);
+      return `${emoji} ${coach.name}: "${encouragement} Let's ride this wave together!"`;
     } else {
-      return `${coachName}: "Smart and safe—exactly my style! I'll optimize this allocation for steady growth."`;
+      // Guru/Yoda balanced response
+      return `${emoji} ${coach.name}: "Bold choice! I'll architect a portfolio that balances your conviction with smart diversification."`;
     }
-  } else if (coach.riskTolerance === "aggressive" || coach.riskTolerance === "very_aggressive") {
-    if (risk === "extreme" || risk === "high") {
-      return `${coachName}: "Now THAT'S what I'm talking about! Let's ride this wave together. 🚀"`;
+  } else if (isSafe) {
+    if (coach.riskTolerance === "conservative") {
+      // Sam loves it
+      const response = getCoachResponse(coach, "safeChoice");
+      return `${emoji} ${coach.name}: "${response}"`;
+    } else if (coach.riskTolerance === "very_aggressive" || coach.riskTolerance === "aggressive") {
+      // Alex wants more action
+      return `${emoji} ${coach.name}: "${coach.emotionalResponses?.onSafeChoice?.[0] || "Safe choice... but I'll add some growth potential to spice it up!"}"`;
     } else {
-      return `${coachName}: "Safe choice, but I'll add some growth potential to your portfolio too!"`;
+      return `${emoji} ${coach.name}: "Solid foundation! I'll build a balanced portfolio around this choice."`;
     }
   } else {
-    return `${coachName}: "Solid thinking! I'll build a balanced portfolio with your choice as the foundation."`;
+    // Medium risk - everyone is okay
+    return `${emoji} ${coach.name}: "Good thinking! ${coach.speechStyle?.catchphrases?.[0] || "Let's build something great."}"`;
   }
 }
 
@@ -304,20 +320,31 @@ export function InvestmentDecision({
       )}
 
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-violet-500/20 via-purple-500/15 to-indigo-500/20 border-2 border-violet-500/40 rounded-2xl p-4">
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-lg flex-shrink-0">
-            <Diamond className="h-5 w-5 text-white" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h3 className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400">
-                What's Your Conviction?
-              </h3>
+      <div className="relative overflow-hidden rounded-2xl p-4 sm:p-5
+        bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50
+        dark:from-violet-500/15 dark:via-purple-500/10 dark:to-indigo-500/15
+        border-2 border-violet-300/50 dark:border-violet-500/40">
+        
+        {/* Decorative Elements */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-violet-400/20 to-purple-400/20 rounded-full blur-2xl" />
+        <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-gradient-to-br from-indigo-400/20 to-violet-400/20 rounded-full blur-xl" />
+        
+        <div className="relative flex items-start gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-2xl blur-md opacity-50" />
+            <div className="relative p-3 rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 shadow-xl shadow-violet-500/30">
+              <Diamond className="h-6 w-6 text-white" />
             </div>
-            <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">
+            <Sparkles className="absolute -top-1 -right-1 h-3.5 w-3.5 text-amber-400 animate-pulse" />
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg font-black bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent mb-1">
+              What's Your Conviction? 💎
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               Pick the investment <span className="font-bold text-violet-600 dark:text-violet-400">you believe in most</span>. 
-              {selectedCoach?.name || "Your coach"} will handle the portfolio allocation.
+              <span className="block sm:inline"> {selectedCoach?.name || "Your coach"} will build a smart portfolio around your choice.</span>
             </p>
           </div>
         </div>
