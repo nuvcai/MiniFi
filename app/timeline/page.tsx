@@ -36,6 +36,22 @@ import { aiCoaches } from "@/components/data/coaches";
 import { missionData, MissionData } from "@/components/data/missions";
 import { generateRandomScenario } from "@/components/data/randomScenarios";
 
+// Local storage keys
+const GAME_PROGRESS_KEY = "minifi_game_progress";
+const USER_EMAIL_KEY = "minifi_user_email";
+const SESSION_KEY = "minifi_session_id";
+
+// Generate or get session ID for anonymous users
+const getOrCreateSessionId = () => {
+  if (typeof window === 'undefined') return null;
+  let sessionId = localStorage.getItem(SESSION_KEY);
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(SESSION_KEY, sessionId);
+  }
+  return sessionId;
+};
+
 export default function TimelinePage() {
   // =========================================================================
   // UNIFIED iii TOKEN SYSTEM

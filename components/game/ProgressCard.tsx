@@ -1,33 +1,72 @@
-import React from "react";
+/**
+ * ProgressCard - Enhanced progress display with animations
+ * Stunning visual feedback for player achievements
+ */
+
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { MetricsGrid, MetricItem } from "@/components/shared/MetricsGrid";
-import { Trophy, Users } from "lucide-react";
+import { 
+  Trophy, 
+  Users, 
+  Star, 
+  Zap, 
+  Flame,
+  Target,
+  Sparkles,
+  ChevronUp,
+  Award,
+} from "lucide-react";
+import { DailyStreak } from "@/components/gamification/DailyStreak";
+import { levelTitles } from "@/components/gamification/LevelUpCelebration";
 
 interface ProgressCardProps {
   playerXP: number;
   completedCount: number;
   availableCount: number;
+  playerLevel?: number;
   maxXP?: number;
+  onStreakBonusClaimed?: (bonus: number) => void;
 }
 
 export function ProgressCard({ 
   playerXP, 
   completedCount, 
-  availableCount, 
-  maxXP = 1000 
+  availableCount,
+  playerLevel = 1,
+  maxXP = 1000,
+  onStreakBonusClaimed,
 }: ProgressCardProps) {
+  const xpInLevel = playerXP % maxXP;
+  const xpProgress = (xpInLevel / maxXP) * 100;
+  const xpNeeded = maxXP - xpInLevel;
+  const [animatedProgress, setAnimatedProgress] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const levelInfo = levelTitles[playerLevel] || levelTitles[1];
+  const nextLevelInfo = levelTitles[playerLevel + 1];
+
+  // Animate progress bar on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedProgress(xpProgress);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [xpProgress]);
+
   const progressMetrics: MetricItem[] = [
     {
       id: "completed",
-      icon: <Trophy className="h-6 w-6 text-primary" />,
-      title: "Completed Missions",
+      icon: <Trophy className="h-6 w-6 text-emerald-400" />,
+      title: "Missions Crushed 💪",
       value: completedCount,
     },
     {
       id: "available",
-      icon: <Users className="h-6 w-6 text-secondary" />,
-      title: "Available Missions",
+      icon: <Target className="h-6 w-6 text-teal-400" />,
+      title: "Ready to Play 🎮",
       value: availableCount,
     },
   ];
@@ -174,12 +213,9 @@ export function ProgressCard({
                 <Sparkles className="h-4 w-4 text-amber-400" />
               </div>
             </div>
-            <Progress value={(playerXP / maxXP) * 100} className="h-2" />
           </div>
-          
-          <MetricsGrid metrics={progressMetrics} columns={2} />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

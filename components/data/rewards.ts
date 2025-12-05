@@ -11,7 +11,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "jbhifi-20",
     name: "JB Hi-Fi Gift Card",
-    description: "AU$20 JB Hi-Fi voucher for tech, games, and music",
+    description: "$20 to spend on tech, games, music - whatever you want! 🎮",
     cost: 200,
     image: "🎮",
     partner: "JB Hi-Fi",
@@ -19,7 +19,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "woolworths-25",
     name: "Woolworths Gift Card",
-    description: "AU$25 Woolworths voucher for groceries and snacks",
+    description: "$25 for snacks, drinks, or whatever munchies you're craving 🛒",
     cost: 250,
     image: "🛒",
     partner: "Woolworths",
@@ -27,7 +27,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "spotify-premium",
     name: "Spotify Premium",
-    description: "3 months of Spotify Premium subscription",
+    description: "3 months of ad-free music - your playlists, your way 🎵",
     cost: 300,
     image: "🎵",
     partner: "Spotify",
@@ -35,7 +35,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "event-cinemas",
     name: "Event Cinemas Tickets",
-    description: "2 movie tickets for the latest films",
+    description: "2 movie tickets - grab a friend and catch the latest blockbuster! 🎬",
     cost: 400,
     image: "🎬",
     partner: "Event Cinemas",
@@ -43,7 +43,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "guzman-gomez",
     name: "Guzman y Gomez Meal",
-    description: "Free burrito or bowl at GYG",
+    description: "Free burrito or bowl at GYG - treat yourself! 🌯",
     cost: 150,
     image: "🌯",
     partner: "Guzman y Gomez",
@@ -51,7 +51,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "cotton-on-30",
     name: "Cotton On Voucher",
-    description: "AU$30 Cotton On gift card for trendy fashion",
+    description: "$30 to upgrade your fit with some fresh threads 👕",
     cost: 350,
     image: "👕",
     partner: "Cotton On",
@@ -59,7 +59,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "boost-juice",
     name: "Boost Juice Cards",
-    description: "5 free smoothies at Boost Juice",
+    description: "5 free smoothies - that's a whole week of healthy vibes! 🥤",
     cost: 180,
     image: "🥤",
     partner: "Boost Juice",
@@ -67,7 +67,7 @@ export const rewardsStore: Reward[] = [
   {
     id: "rebel-sport-40",
     name: "Rebel Sport Voucher",
-    description: "AU$40 Rebel Sport gift card for sportswear",
+    description: "$40 for kicks, gear, or whatever keeps you moving ⚽",
     cost: 450,
     image: "⚽",
     partner: "Rebel Sport",

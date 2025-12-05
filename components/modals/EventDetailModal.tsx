@@ -34,15 +34,15 @@ export function EventDetailModal({
   const getCoachStrategy = () => {
     switch (selectedCoach.id) {
       case "steady-sam":
-        return "Stay calm during crises and choose defensive assets like bonds and gold.";
+        return "Keep cool when things get crazy! 😎 Safe picks like bonds and gold are our jam.";
       case "growth-guru":
-        return "Balance risk and opportunity by diversifying across different asset classes.";
+        return "Don't put all your eggs in one basket! Mix it up with different investments for the win. ⚖️";
       case "adventure-alex":
-        return "Crisis creates opportunity! Look for undervalued high-growth potential investments.";
+        return "When everyone else panics, that's when the real opportunities pop up! Let's hunt for gems! 💎";
       case "yield-yoda":
-        return "Focus on investments that generate stable cash flow and let compound interest work for you.";
+        return "Make your money work for YOU. Passive income + compound interest = magic! ✨";
       default:
-        return "Follow a balanced investment approach based on market conditions.";
+        return "Let's read the market vibes and make smart moves! 🎯";
     }
   };
 
@@ -83,7 +83,7 @@ export function EventDetailModal({
           <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
             <CardContent className="p-6">
               <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="relative">
                     <Image
                       src={selectedCoach.avatar}
@@ -115,7 +115,7 @@ export function EventDetailModal({
                     <p className="text-sm">
                       <span className="font-semibold text-accent-foreground flex items-center gap-2 mb-1">
                         <Target className="h-4 w-4" />
-                        Recommended Strategy:
+                        My Game Plan:
                       </span>
                       <span className="text-muted-foreground">
                         {getCoachStrategy()}
@@ -130,7 +130,7 @@ export function EventDetailModal({
           <div className="flex flex-col gap-3">
             <Button onClick={onStartMission} className="w-full min-h-[48px] font-medium bg-gradient-to-r from-[#9898f2] to-[#7070c0] hover:from-[#8585e0] hover:to-[#6060b0] text-white">
               <Play className="h-4 w-4 mr-2" />
-              Start Time Mission
+              Let&apos;s Go! 🚀
             </Button>
             <Button variant="outline" onClick={onClose} className="w-full min-h-[48px]">
               Maybe Later

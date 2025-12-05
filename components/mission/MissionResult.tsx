@@ -105,6 +105,8 @@ export function MissionResult({
   selectedCoach, // Add selectedCoach parameter
   onComplete,
   onXpEarned,
+  streakDays = 0,
+  totalXp = 0,
 }: MissionResultProps) {
   const [showConfetti, setShowConfetti] = useState(true);
   const [wisdomTip, setWisdomTip] = useState<HopeMessage | null>(null);
@@ -256,6 +258,43 @@ export function MissionResult({
           onXpEarned={onXpEarned}
         />
       </div>
+
+      {/* Share Results Section - Appears after dialogue */}
+      {showShareSection && (
+        <div className="mt-6 animate-in slide-in-from-bottom-4 duration-500">
+          <ShareResultCard
+            missionTitle={event.title}
+            year={event.year}
+            performance={performance}
+            returnPercent={actualReturn * 100}
+            finalAmount={finalAmount}
+            lessonLearned={outcome}
+            streakDays={streakDays}
+            level={playerLevel}
+            totalXp={totalXp}
+            onShareComplete={(platform, xpEarned) => {
+              if (onXpEarned) {
+                onXpEarned(xpEarned);
+              }
+            }}
+            compact={false}
+          />
+        </div>
+      )}
+
+      {/* CSS for confetti animation */}
+      <style jsx>{`
+        @keyframes confetti-fall {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(500px) rotate(720deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }

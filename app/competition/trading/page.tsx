@@ -126,9 +126,11 @@ export default function TradingPage() {
             <div className="w-16" />
           </div>
         </div>
-      }
-    >
-      <TradingContent />
-    </Suspense>
+      </nav>
+      
+      <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><Loader2 className="h-8 w-8 animate-spin text-emerald-500" /></div>}>
+        <TradingContent />
+      </Suspense>
+    </div>
   );
 }

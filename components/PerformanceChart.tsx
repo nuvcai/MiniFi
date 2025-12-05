@@ -1,3 +1,11 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║   MiniFi Performance Chart (MVP - Hackathon Edition)                         ║
+ * ║   ✨ Vibe-coded by Tick.AI ✨                                                ║
+ * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -223,14 +231,14 @@ export function PerformanceChart({
           <Card
             className={`transition-all duration-200 ${
               highlightedMetric === "final_value"
-                ? "ring-2 ring-blue-400 shadow-lg scale-105 bg-blue-50"
+                ? "ring-2 ring-primary shadow-lg scale-105 bg-primary/10"
                 : ""
             }`}
           >
             <CardContent className="px-2 py-1 sm:px-2 sm:py-1">
               <div className="flex flex-col space-y-0.5 sm:space-y-0.5">
                 <div className="flex items-center space-x-1 justify-center">
-                  <DollarSign className="h-3 w-3 sm:h-3 sm:w-3 text-green-600 flex-shrink-0" />
+                  <DollarSign className="h-3 w-3 sm:h-3 sm:w-3 text-green-600 shrink-0" />
                   <p className="text-xs font-medium text-muted-foreground">
                     Final Value
                   </p>
@@ -245,7 +253,7 @@ export function PerformanceChart({
           <Card
             className={`transition-all duration-200 ${
               highlightedMetric === "total_return"
-                ? "ring-2 ring-blue-400 shadow-lg scale-105 bg-blue-50"
+                ? "ring-2 ring-primary shadow-lg scale-105 bg-primary/10"
                 : ""
             }`}
           >
@@ -253,9 +261,9 @@ export function PerformanceChart({
               <div className="flex flex-col space-y-0.5 sm:space-y-0.5">
                 <div className="flex items-center space-x-1 justify-center">
                   {totalReturn >= 0 ? (
-                    <TrendingUp className="h-3 w-3 sm:h-3 sm:w-3 text-green-600 flex-shrink-0" />
+                    <TrendingUp className="h-3 w-3 sm:h-3 sm:w-3 text-green-600 shrink-0" />
                   ) : (
-                    <TrendingDown className="h-3 w-3 sm:h-3 sm:w-3 text-red-600 flex-shrink-0" />
+                    <TrendingDown className="h-3 w-3 sm:h-3 sm:w-3 text-red-600 shrink-0" />
                   )}
                   <p className="text-xs font-medium text-muted-foreground">
                     Total Return
@@ -275,14 +283,14 @@ export function PerformanceChart({
           <Card
             className={`transition-all duration-200 ${
               highlightedMetric === "volatility"
-                ? "ring-2 ring-blue-400 shadow-lg scale-105 bg-blue-50"
+                ? "ring-2 ring-primary shadow-lg scale-105 bg-primary/10"
                 : ""
             }`}
           >
             <CardContent className="px-2 py-1 sm:px-2 sm:py-1">
               <div className="flex flex-col space-y-0.5 sm:space-y-0.5">
                 <div className="flex items-center space-x-1 justify-center">
-                  <BarChart3 className="h-3 w-3 sm:h-3 sm:w-3 text-blue-600 flex-shrink-0" />
+                  <BarChart3 className="h-3 w-3 sm:h-3 sm:w-3 text-blue-600 shrink-0" />
                   <p className="text-xs font-medium text-muted-foreground">
                     Volatility
                   </p>
@@ -297,7 +305,7 @@ export function PerformanceChart({
           <Card
             className={`transition-all duration-200 ${
               highlightedMetric === "sharpe_ratio"
-                ? "ring-2 ring-blue-400 shadow-lg scale-105 bg-blue-50"
+                ? "ring-2 ring-primary shadow-lg scale-105 bg-primary/10"
                 : ""
             }`}
           >

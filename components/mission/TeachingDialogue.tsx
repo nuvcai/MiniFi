@@ -86,36 +86,62 @@ interface TeachingMessage {
 // ============================================================================
 
 const TICKER_MAP: Record<string, string> = {
+  // ============================================================================
   // 1990 Japanese Bubble options
+  // ============================================================================
   "Japanese Stocks": "^N225", // Nikkei 225 - Japanese stock market
-  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate market (same period correlation)
-  "US Treasury Bonds": "^TNX", // 10-year Treasury yield
-  Gold: "GLD", // Gold ETF
+  "Tokyo Real Estate": "^N225", // Using Nikkei as proxy for Japanese real estate (same period correlation)
+  "US Treasury Bonds": "^TYX", // 30-year Treasury yield (better for long-term bonds)
+  "Gold": "GLD", // Gold ETF (or ^GOLD for spot gold)
 
+  // ============================================================================
   // 1997 Asian Financial Crisis options
+  // ============================================================================
   "Asian Stocks": "^N225", // Using Nikkei as proxy for Asian markets
   "US Stocks": "^GSPC", // S&P 500
-  Bonds: "^TNX", // 10-year Treasury yield
+  "Bonds": "^TYX", // 30-year Treasury yield
+  "US Dollar Cash": "UUP", // US Dollar ETF
 
+  // ============================================================================
   // 2000 Dot-com Bubble options
-  "Tech Stocks": "^IXIC", // NASDAQ
-  "Traditional Stocks": "^GSPC", // S&P 500
+  // ============================================================================
+  "Tech Stocks": "^IXIC", // NASDAQ Composite
+  "Dot-com Startups": "^IXIC", // NASDAQ Composite (best proxy for dot-coms)
+  "Traditional Stocks": "^DJI", // Dow Jones Industrial Average
+  "Cash": "^IRX", // 3-month Treasury Bill rate (proxy for cash returns)
 
+  // ============================================================================
   // 2008 Financial Crisis options
-  "Bank Stocks": "^BKX", // KBW Bank Index
-  "Real Estate": "^DJUSRE", // Dow Jones US Real Estate
-  "Government Bonds": "^TNX", // 10-year Treasury yield
+  // ============================================================================
+  "Global Stocks": "^GSPC", // S&P 500 as global equity proxy
+  "Banking Stocks": "XLF", // Financial Select Sector SPDR Fund
+  "Bank Stocks": "XLF", // Financial Select Sector SPDR Fund (alias)
 
+  // ============================================================================
   // 2020 COVID-19 options
+  // ============================================================================
   "Tech Growth": "^IXIC", // NASDAQ
+  "Travel & Airlines": "JETS", // US Global Jets ETF (or XAL for airlines index)
   "Value Stocks": "^GSPC", // S&P 500
   "Safe Havens": "GLD", // Gold ETF
 
-  // General assets
-  "US Dollar Cash": "UUP", // US Dollar ETF
+  // ============================================================================
+  // 2025 Current Market options
+  // ============================================================================
+  "AI Tech Stocks": "^IXIC", // NASDAQ (includes major AI companies)
+  "Green Energy Stocks": "ICLN", // iShares Global Clean Energy ETF
+  "Inflation-Protected Bonds (TIPS)": "TIP", // iShares TIPS Bond ETF
+  "Commodities Basket": "DJP", // iPath Bloomberg Commodity Index ETN
+
+  // ============================================================================
+  // General/Shared assets across multiple missions
+  // ============================================================================
+  "Real Estate": "VNQ", // Vanguard Real Estate ETF
+  "Government Bonds": "^TYX", // 30-year Treasury yield
   "Australian Stocks": "^AXJO", // ASX 200
-  Bitcoin: "BTC-USD", // Bitcoin
-  Ethereum: "ETH-USD", // Ethereum
+  "Bitcoin": "BTC-USD", // Bitcoin spot price
+  "Ethereum": "ETH-USD", // Ethereum spot price
+  "Commodities": "DJP", // Bloomberg Commodity Index (alias)
 };
 
 const TYPING_SPEED = 15; // milliseconds per character (faster typing)
@@ -473,12 +499,12 @@ export function TeachingDialogue({
   const [_sessionXp, setSessionXp] = useState<number>(0); void _sessionXp;
   // Track XP animation
   const [showXpAnimation, setShowXpAnimation] = useState<boolean>(false);
-  const [xpAnimationAmount, setXpAnimationAmount] = useState<number>(0);
   // Track coach typing effect
   const [coachTypingText, setCoachTypingText] = useState<string>("");
   const [isCoachTyping, setIsCoachTyping] = useState<boolean>(false);
-  // Track which steps have earned XP (simpler: one XP reward per step)
-  const [stepsEarnedXP, setStepsEarnedXP] = useState<Set<string>>(new Set());
+  // Track viewed buttons to prevent duplicate XP - separate shared and step-specific
+  const [viewedSharedButtons, setViewedSharedButtons] = useState<Set<string>>(new Set());
+  const [viewedStepButtons, setViewedStepButtons] = useState<Set<string>>(new Set());
 
   // Generate cache key for this mission - use useMemo to prevent recreation
   const cacheKey = React.useMemo(
@@ -553,6 +579,32 @@ export function TeachingDialogue({
       markRequestInProgress(cacheKey); // Mark as in progress globally
       setLoadingAiAdvice(true);
 
+      // Set a timeout to fall back if API takes too long
+      const timeoutId = setTimeout(() => {
+        if (!hasFetchedAiAdvice.current) {
+          console.warn("AI coach advice timed out - using fallback");
+          const timeoutFallback: CoachResponse = {
+            advice: `Let's discuss your ${selectedOption.name} investment! You took action during ${event.title} - that's how real investors learn.`,
+            recommendations: [
+              "Diversify your portfolio across different asset classes",
+              "Think long-term like family offices do",
+              "Learn from each investment decision"
+            ],
+            next_steps: [
+              "Explore another mission to continue learning",
+              "Try a different investment strategy"
+            ],
+            risk_assessment: "Every investment carries risk - understanding this is key to becoming a smart investor.",
+            educational_insights: ["Family offices build wealth through patience and diversification"],
+            encouragement: "Keep investing and learning! You're on the path to thinking like a family office. 💪"
+          };
+          setAiCoachAdvice(timeoutFallback);
+          hasFetchedAiAdvice.current = true;
+          setLoadingAiAdvice(false);
+          markRequestCompleted(cacheKey);
+        }
+      }, 8000); // 8 second timeout
+
       try {
         const coachRequest: CoachRequest = {
           player_level: getPlayerLevel(
@@ -579,15 +631,39 @@ export function TeachingDialogue({
         };
 
         const advice = await api.getCoachAdvice(coachRequest);
+        clearTimeout(timeoutId); // Clear timeout on success
         setAiCoachAdvice(advice);
         hasFetchedAiAdvice.current = true; // Mark as fetched
 
         // Cache the advice for future use
         cacheAdvice(cacheKey, advice);
       } catch (error) {
+        clearTimeout(timeoutId); // Clear timeout on error
         console.error("Failed to fetch AI coach advice:", error);
         hasFetchedAiAdvice.current = true; // Mark as fetched even on error
-        // Fall back to static content
+        
+        // Set fallback AI advice so the game can continue
+        const fallbackAdvice: CoachResponse = {
+          advice: performance === "profit" 
+            ? `Great work on your ${selectedOption.name} investment! You showed courage by investing during ${event.title}. This is how family offices learn - by taking action and studying the results.`
+            : `Your ${selectedOption.name} investment during ${event.title} may not have gone as planned, but every great investor learns from challenges. Family offices build wealth by learning from every experience.`,
+          recommendations: [
+            "Diversify across multiple asset classes like family offices do",
+            "Consider your risk tolerance when choosing investments",
+            "Study how different assets perform during market events"
+          ],
+          next_steps: [
+            "Try a different asset class in your next mission",
+            "Explore how other investments performed during this event"
+          ],
+          risk_assessment: "Understanding risk is key to building long-term wealth. Each investment teaches valuable lessons.",
+          educational_insights: [
+            "Family offices diversify across 4-6+ asset classes",
+            "Past performance helps us understand market behavior"
+          ],
+          encouragement: "You're learning like a family office! Keep exploring different investments and building your knowledge. 🚀"
+        };
+        setAiCoachAdvice(fallbackAdvice);
       } finally {
         setLoadingAiAdvice(false);
         markRequestCompleted(cacheKey); // Mark as completed globally
@@ -991,22 +1067,35 @@ export function TeachingDialogue({
     setSelectedMetric(isAlreadySelected ? null : metricKey);
     
     if (!isAlreadySelected) {
-      // Simplified XP: +10 XP for first interaction on this step
-      const stepKey = currentMessage.id;
-      const isFirstInteractionOnStep = !stepsEarnedXP.has(stepKey);
+      // Determine if this is a shared button (first 4) or step-specific button (5th)
+      const isSharedButton = ["final_value", "total_return", "volatility", "sharpe_ratio"].includes(metricKey);
+      const isStepSpecificButton = metricKey === "portfolio_chart";
       
-      if (isFirstInteractionOnStep) {
-        const xpReward = 10; // Clean 10 XP per step engagement
-        setXpAnimationAmount(xpReward);
+      // Generate step-specific key for step buttons
+      const stepSpecificKey = isStepSpecificButton ? `${metricKey}_${currentMessage.id}` : metricKey;
+      
+      // Check if first view based on button type
+      const isFirstView = isSharedButton 
+        ? !viewedSharedButtons.has(metricKey)
+        : !viewedStepButtons.has(stepSpecificKey);
+      
+      if (isFirstView) {
+        setSessionXp(prev => prev + 5);
         setShowXpAnimation(true);
-        setStepsEarnedXP(prev => new Set([...prev, stepKey]));
         
-        // Call XP callback
-        if (onXpEarned) {
-          onXpEarned(xpReward);
+        // Update appropriate viewed set
+        if (isSharedButton) {
+          setViewedSharedButtons(prev => new Set([...prev, metricKey]));
+        } else {
+          setViewedStepButtons(prev => new Set([...prev, stepSpecificKey]));
         }
         
-        // Reset animation
+        // Call XP callback if provided
+        if (onXpEarned) {
+          onXpEarned(5);
+        }
+        
+        // Reset XP animation after delay
         setTimeout(() => setShowXpAnimation(false), 1500);
       }
       
@@ -1437,7 +1526,7 @@ export function TeachingDialogue({
               {/* Metric buttons - first row (4 buttons) - Mobile optimized */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3">
                 {currentMessage.metricButtons.slice(0, 4).map((button) => {
-                  const stepHasXP = stepsEarnedXP.has(currentMessage.id);
+                  const isViewed = viewedSharedButtons.has(button.key);
                   return (
                     <button
                       key={button.key}
@@ -1478,6 +1567,8 @@ export function TeachingDialogue({
                 <div className="flex justify-center">
                   {(() => {
                     const extraMetricButton = currentMessage.metricButtons[4];
+                    const stepSpecificKey = `${extraMetricButton.key}_${currentMessage.id}`;
+                    const isViewed = viewedStepButtons.has(stepSpecificKey);
                     return (
                       <button
                         key={extraMetricButton.key}

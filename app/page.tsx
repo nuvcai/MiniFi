@@ -1,5 +1,12 @@
+/**
+ * Mini.Fi - Premium Financial Literacy Game
+ * Where History Meets Wealth Wisdom
+ * © 2025 NUVC.AI. All Rights Reserved.
+ */
+
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -385,18 +392,24 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Game Description */}
-          <div className="max-w-2xl mx-auto bg-card rounded-lg shadow-lg p-6 sm:p-8">
-            <div className="space-y-4 sm:space-y-6">
-              <h2 className="text-xl sm:text-2xl font-serif font-semibold text-foreground">
-                Master Wealth Wisdom Through Time Travel
+          {/* What Makes Us Different */}
+          <section 
+            id="differentiators"
+            ref={(el) => { sectionRefs.current['differentiators'] = el; }}
+            className={`max-w-6xl mx-auto py-24 transition-all duration-1000 ${visibleSections.has('differentiators') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          >
+            <div className="text-center mb-16">
+              <span className="inline-block px-4 py-2 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-sm font-medium mb-6">
+                Why Mini.Fi is Different
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+                Not Just Another App
               </h2>
-              <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
-                Welcome to the financial history time adventure! You'll travel
-                to key moments of major financial events, learn investment
-                strategies with AI coaches, and experience real financial
-                decisions in a risk-free environment.
+              <p className="text-lg text-white/70 max-w-2xl mx-auto">
+                Curated from the wisdom of history's greatest market moments and the strategies 
+                used by Family Offices to preserve wealth across generations.
               </p>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               {differentiators.map((item, index) => (
@@ -613,27 +626,116 @@ export default function HomePage() {
                       <p className="text-sm text-indigo-400 font-medium">{selectedCoach.personality}</p>
                     </div>
                   </div>
-                  <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">
-                    Learn Investing
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    Master risk management and asset allocation
-                  </p>
+                  
+                  {/* Typewriter text display */}
+                  <div className="min-h-[140px] relative">
+                    <p className="text-indigo-200 leading-relaxed">
+                      {displayedText}
+                      {!isTypingComplete && (
+                        <span className="inline-block w-0.5 h-5 bg-indigo-400 ml-0.5 animate-pulse" />
+                      )}
+                    </p>
+                    {isTypingComplete && (
+                      <div className="absolute bottom-0 right-0 flex items-center gap-1 text-xs text-indigo-400/60">
+                        <span>Next coach in 3s</span>
+                        <Sparkles className="h-3 w-3" />
+                      </div>
+                    )}
+                  </div>
                 </div>
+                <div className="space-y-4">
+                  <div className="p-5 rounded-xl bg-black/40 border border-white/10">
+                    <div className="text-sm font-semibold text-white/70 mb-2">Historical Hero</div>
+                    <p className="text-white/90 text-sm leading-relaxed">{selectedCoach.historicalHero}</p>
+                  </div>
+                  <div className="p-5 rounded-xl bg-indigo-500/15 border border-indigo-500/30">
+                    <div className="text-sm font-semibold text-indigo-300 mb-2">Favorite Quote</div>
+                    <p className="text-white italic text-sm leading-relaxed">"{selectedCoach.favoriteQuote}"</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                <div className="text-center p-3 sm:p-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 mb-2 sm:mb-3">
-                    <div className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 text-lg sm:text-xl">
-                      📚
+          {/* Family Office Principles */}
+          <section 
+            id="principles"
+            ref={(el) => { sectionRefs.current['principles'] = el; }}
+            className={`max-w-6xl mx-auto py-24 transition-all duration-1000 ${visibleSections.has('principles') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          >
+            <div className="text-center mb-16">
+              <span className="inline-block px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-sm font-medium mb-6">
+                <Building2 className="inline-block h-4 w-4 mr-2" />
+                Family Office Secrets
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+                Wisdom of Generational Wealth
+              </h2>
+              <p className="text-lg text-white/70 max-w-2xl mx-auto">
+                The exact principles used by Family Offices to preserve and grow wealth across generations.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {foPrinciples.map((principle, index) => (
+                <div 
+                  key={index}
+                  className="group p-6 rounded-3xl bg-white/[0.03] border border-white/10 hover:border-emerald-500/40 hover:bg-white/[0.05] transition-all duration-500"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
+                      {principle.number}
+                    </div>
+                    <h3 className="font-semibold text-white group-hover:text-emerald-300 transition-colors leading-tight">{principle.principle}</h3>
+                  </div>
+                  <p className="text-white/70 text-sm leading-relaxed mb-4">{principle.explanation}</p>
+                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="text-xs font-semibold text-emerald-400 mb-1.5 uppercase tracking-wide">For Teens</div>
+                    <p className="text-white/80 text-sm leading-relaxed">{principle.howTeensCanApplyIt}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Investor Wisdom Quotes */}
+          <section 
+            id="quotes"
+            ref={(el) => { sectionRefs.current['quotes'] = el; }}
+            className={`max-w-4xl mx-auto py-24 transition-all duration-1000 ${visibleSections.has('quotes') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          >
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-2 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-sm font-medium mb-6">
+                <Lightbulb className="inline-block h-4 w-4 mr-2" />
+                Words of Wisdom
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
+                From the World's Greatest Investors
+              </h2>
+          </div>
+
+            <div className="space-y-6">
+              {investorWisdom.slice(0, 3).map((wisdom, index) => (
+                <div 
+                  key={index}
+                  className="p-8 rounded-3xl bg-gradient-to-r from-purple-500/15 via-violet-500/10 to-indigo-500/15 border border-purple-500/30"
+                >
+                  <blockquote className="text-xl sm:text-2xl font-medium text-white mb-5 italic leading-relaxed">
+                    "{wisdom.quote}"
+                  </blockquote>
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                      <div className="font-semibold text-purple-300 text-lg">{wisdom.investor}</div>
+                      <div className="text-sm text-white/60">{wisdom.backgroundStory}</div>
+                    </div>
+                    <div className="text-sm text-white/80 max-w-md bg-black/30 px-4 py-2 rounded-lg">
+                      <span className="text-purple-400 font-semibold">Lesson:</span> {wisdom.lesson}
                     </div>
                   </div>
-                  <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">
-                    Historical Insights
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    Understand the causes and effects of financial crises
-                  </p>
                 </div>
+              ))}
+            </div>
+          </section>
 
           {/* League Competition Preview */}
           <section 
@@ -771,27 +873,28 @@ export default function HomePage() {
                     <Users className="h-4 w-4 text-emerald-400" />
                     <span>No account needed</span>
                   </div>
-                  <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">
-                    AI Coaches
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    Professional coaches provide personalized guidance
-                  </p>
                 </div>
+              </div>
+            </div>
+          </section>
 
-                <div className="text-center p-3 sm:p-4">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-100 mb-2 sm:mb-3">
-                    <div className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600 text-lg sm:text-xl">
-                      🎁
-                    </div>
-                  </div>
-                  <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">
-                    Real Rewards
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    Exchange XP for gift cards from partner brands
-                  </p>
-                </div>
+          {/* Mission Reminder */}
+          <div className="max-w-3xl mx-auto text-center pb-24">
+            <div className="p-8 rounded-3xl border border-white/10 bg-white/[0.02]">
+              <p className="text-xl sm:text-2xl font-light text-white/80 leading-relaxed mb-6">
+                "The best time to start investing was 20 years ago.
+                <br />
+                <span className="text-white font-semibold">The second best time is NOW.</span>"
+              </p>
+              <div className="flex items-center justify-center gap-3">
+              <Image
+                src="/nuvc-logo.png"
+                alt="NUVC.AI"
+                width={32}
+                height={32}
+                  className="rounded-lg"
+              />
+                <span className="text-sm text-white/60">A NUVC.AI initiative for financial literacy</span>
               </div>
             </div>
           </div>
@@ -868,7 +971,7 @@ export default function HomePage() {
                 </a>
             </div>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );

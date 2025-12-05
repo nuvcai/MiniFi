@@ -1,7 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    Mini.Fi Design System — Apple-Inspired
@@ -157,21 +156,9 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   MOBILE-FIRST UX OPTIMIZATIONS
-   Larger touch targets, better readability, improved accessibility
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* Base mobile improvements */
-@media (max-width: 768px) {
-  /* Increase base font size for readability */
+  
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;

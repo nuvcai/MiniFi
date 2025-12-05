@@ -5,18 +5,18 @@ import "./globals.css";
 import { MobileBottomNav, MobileNavSpacer } from "@/components/shared/MobileBottomNav";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const montserrat = Montserrat({
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-montserrat",
-  weight: ["400", "600", "700", "900"], // Including Black weight for headings
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const openSans = Open_Sans({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-open-sans",
-  weight: ["400", "500"],
+  variable: "--font-plus-jakarta",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const viewport: Viewport = {

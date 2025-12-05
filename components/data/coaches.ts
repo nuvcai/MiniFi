@@ -1,3 +1,25 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║   🧠 AI COACHES - Family Office Investment Mentors                           ║
+ * ║   Teaching Wealth Accumulation, Preservation, Growth & Transfer              ║
+ * ║   ✨ MiniFi / Legacy Guardians Educational Content ✨                       ║
+ * ║   Copyright (c) 2025 NUVC.AI / Tick.AI. All Rights Reserved.                ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
+// Asset Class type for coach preferences
+export type AssetClassPreference = 
+  | "equities"           // Stocks, shares, equity funds
+  | "fixed_income"       // Bonds, treasuries, fixed-rate securities
+  | "commodities"        // Gold, oil, agricultural products
+  | "alternatives"       // Real estate, private equity, hedge funds
+  | "cash"               // Cash, money market, short-term deposits
+  | "cryptocurrency";    // Digital assets (high-risk alternative)
+
+// Time Horizon for investment recommendations
+export type TimeHorizonPreference = "short" | "medium" | "long";
+
+// Family Office aligned coach interface
 export interface AICoach {
   id: string;
   name: string;
@@ -63,8 +85,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "steady-sam",
     name: "Steady Sam",
-    personality: "Conservative Coach",
-    description: "Specialises in bonds, gold, and stable investment strategies",
+    personality: "The Guardian",
+    description: "Your wise guide to protecting and preserving wealth - teaching you how the smartest families keep their fortunes across generations 🛡️",
     avatar: "/avatars/conservative.png",
     color: "bg-blue-100 text-blue-800",
     animatedAvatar: "/gifs/conservative.gif",
@@ -159,8 +181,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "growth-guru",
     name: "Growth Guru",
-    personality: "Balanced Coach",
-    description: "Balanced investment approach mixing stocks, ETFs, and REITs",
+    personality: "The Architect",
+    description: "Master portfolio architect who builds wealth across ALL asset classes - teaching you the exact strategies Family Offices use to grow wealth steadily for generations 📐",
     avatar: "/avatars/balanced.png",
     color: "bg-green-100 text-green-800",
     animatedAvatar: "/gifs/balanced.gif",
@@ -255,8 +277,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "adventure-alex",
     name: "Adventure Alex",
-    personality: "Aggressive Coach",
-    description: "High-risk, high-reward crypto and growth stocks",
+    personality: "The Visionary",
+    description: "Spot tomorrow's giants TODAY! I'll teach you to recognize transformative trends early - like AI, clean energy, and robotics - the same way past generations caught the Internet revolution 🚀",
     avatar: "/avatars/aggressive.png",
     color: "bg-purple-100 text-purple-800",
     animatedAvatar: "/gifs/aggressive.gif",
@@ -351,8 +373,8 @@ export const aiCoaches: AICoach[] = [
   {
     id: "yield-yoda",
     name: "Yield Yoda",
-    personality: "Income Coach",
-    description: "Focuses on passive income and compound interest effects",
+    personality: "The Sage",
+    description: "Master of compound interest and passive income - teaching you to build wealth that works while you sleep, just like the world's greatest investors 💰",
     avatar: "/avatars/master.png",
     color: "bg-yellow-100 text-yellow-800",
     animatedAvatar: "/gifs/master.gif",

@@ -440,7 +440,6 @@ export function InvestmentDecision({
           );
         })}
       </div>
-      )}
 
       {/* Coach's Portfolio Plan - Shows after selection */}
       {selectedOption && coachAllocations.length > 0 && (

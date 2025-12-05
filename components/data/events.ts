@@ -16,9 +16,8 @@ export interface FinancialEvent {
 export const financialEvents: FinancialEvent[] = [
   {
     year: 1990,
-    title: "Japanese Bubble Economy Collapse",
-    description:
-      "The bursting of Japan's real estate and stock market bubbles marked the beginning of the lost decade",
+    title: "Japan Bubble Burst",
+    description: "The bubble that started a lost decade 📉",
     impact: "negative",
     difficulty: "beginner",
     unlocked: true,
@@ -30,9 +29,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 1997,
-    title: "Asian Financial Crisis",
-    description:
-      "The financial crisis that began in Thailand swept across Asia",
+    title: "Asian Currency Crisis",
+    description: "When currencies collapsed across Asia 🔥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -44,8 +42,8 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2000,
-    title: "Dot-com Bubble Burst",
-    description: "Tech stocks plummeted, with the Nasdaq index falling by 78%",
+    title: "Dot-com Crash",
+    description: "Internet hype meets reality 💥",
     impact: "negative",
     difficulty: "intermediate",
     unlocked: true,
@@ -58,8 +56,7 @@ export const financialEvents: FinancialEvent[] = [
   {
     year: 2008,
     title: "Global Financial Crisis",
-    description:
-      "The subprime mortgage crisis triggered a global financial system collapse",
+    description: "Banks failed, markets crashed 🌍",
     impact: "negative",
     difficulty: "advanced",
     unlocked: true,
@@ -71,32 +68,29 @@ export const financialEvents: FinancialEvent[] = [
   },
   {
     year: 2020,
-    title: "COVID-19 Pandemic Impact",
-    description:
-      "Global pandemic caused economic shutdowns and extreme market volatility",
+    title: "COVID Market Chaos",
+    description: "Pandemic panic to tech rally 🦠🚀",
     impact: "mixed",
     difficulty: "advanced",
     unlocked: false,
     completed: false,
     reward: 250,
     unlockRequirements: [2008],
-    unlockDescription:
-      "Unlocked after completing '2008 - Global Financial Crisis' mission",
+    unlockDescription: "Complete 2008 first",
     image: "/images/covid.png",
     imageAlt: "covid",
   },
   {
     year: 2025,
-    title: "Current Challenges",
-    description: "Inflation, rising interest rates, and geopolitical risks",
+    title: "AI Revolution",
+    description: "Your era, your choices 🤖",
     impact: "mixed",
     difficulty: "expert",
     unlocked: false,
     completed: false,
     reward: 300,
     unlockRequirements: [2020],
-    unlockDescription:
-      "Unlocked after completing '2020 - COVID-19 Pandemic Impact' mission",
+    unlockDescription: "Complete 2020 first",
     image: "/images/inflation.png",
     imageAlt: "inflation",
   },

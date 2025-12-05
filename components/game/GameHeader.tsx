@@ -7,7 +7,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -28,7 +28,6 @@ import { useTheme } from "next-themes";
 import { levelTitles } from "@/components/gamification/LevelUpCelebration";
 import { SeasonEndCelebration } from "@/components/gamification";
 import { useLeague } from "@/hooks/useLeague";
-import { OfflineBadge } from "@/components/shared/OfflineIndicator";
 import {
   Dialog,
   DialogContent,
@@ -36,7 +35,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Gift, Star, Flame } from "lucide-react";
 
 interface GameHeaderProps {
   playerLevel: number;
@@ -46,27 +44,15 @@ interface GameHeaderProps {
   onRewardsClick?: () => void;
 }
 
-// Level titles for personality
-const LEVEL_TITLES: Record<number, string> = {
-  1: "Rookie",
-  2: "Learner", 
-  3: "Investor",
-  4: "Strategist",
-  5: "Expert",
-  6: "Master",
-  7: "Legend",
-};
-
-// Level XP thresholds
-const XP_THRESHOLDS = [0, 250, 600, 1000, 1500, 2000, 2600, 3300];
-
 export function GameHeader({
   playerLevel,
   playerXP,
   weeklyXP = 0,
 }: GameHeaderProps) {
-  // Use lifetimeXP for level progress if provided, otherwise use playerXP
-  const xpForLevel = lifetimeXP ?? playerXP;
+  const xpToNextLevel = 1000;
+  const xpInLevel = playerXP % xpToNextLevel;
+  const xpProgress = (xpInLevel / xpToNextLevel) * 100;
+  const levelInfo = levelTitles[playerLevel] || levelTitles[1];
   
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -170,9 +156,6 @@ export function GameHeader({
               height={36}
               className="h-8 w-auto"
             />
-            <span className="hidden sm:block font-serif font-black text-lg text-indigo-600">
-              Mini.Fi
-            </span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -206,9 +189,6 @@ export function GameHeader({
                 {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
             )}
-            
-            {/* Offline Status Badge */}
-            <OfflineBadge />
             
             {/* User Status */}
             {userEmail ? (

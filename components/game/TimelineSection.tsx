@@ -604,10 +604,18 @@ export function TimelineSection({
               </div>
             ))}
 
-            <CompetitionCard
-              unlocked={competitionUnlocked}
-              onStartCompetition={onStartCompetition}
-            />
+            {/* Competition Card in grid */}
+            {filter === "all" && (
+              <div 
+                className="animate-slide-up-bounce md:col-span-2"
+                style={{ animationDelay: `${filteredEvents.length * 50}ms` }}
+              >
+                <CompetitionCard
+                  unlocked={competitionUnlocked}
+                  onStartCompetition={onStartCompetition}
+                />
+              </div>
+            )}
           </div>
         )}
         
