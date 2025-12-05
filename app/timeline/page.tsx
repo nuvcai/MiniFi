@@ -120,6 +120,7 @@ export default function TimelinePage() {
   
   // Save Progress prompt state
   const [showSaveProgress, setShowSaveProgress] = useState(false);
+  const [lastMissionReward, setLastMissionReward] = useState(0);
 
   // =========================================================================
   // CHECK FOR FIRST-TIME USER & SHOW ONBOARDING
@@ -430,6 +431,9 @@ export default function TimelinePage() {
       const iiiEarned = recordMissionComplete(missionEvent.title, missionReward);
       addLeagueIII(iiiEarned); // Also update league weekly iii
       
+      // Track the reward for the save progress modal
+      setLastMissionReward(iiiEarned);
+      
       setCompletedMissions(newMissions);
 
       // Check if this is a random scenario
@@ -472,12 +476,17 @@ export default function TimelinePage() {
 
       closeMissionModal();
       
-      // Show save progress modal after first mission if user hasn't saved yet
+      // Show save progress modal if user hasn't saved yet
+      // Show after every mission completion (1st, 3rd, 5th, etc.) until they save
       const savedEmail = localStorage.getItem(USER_EMAIL_KEY);
       const savePromptDismissed = localStorage.getItem('minifi_save_prompt_dismissed');
-      if (newMissions.length === 1 && !savedEmail && !savePromptDismissed) {
-        // Delay to let level up animation show first
-        setTimeout(() => setShowSaveProgress(true), 1500);
+      const shouldShowSavePrompt = !savedEmail && !savePromptDismissed && 
+        (newMissions.length === 1 || newMissions.length === 3 || newMissions.length % 2 === 1);
+      
+      if (shouldShowSavePrompt) {
+        // Delay to let level up animation show first if triggered
+        const delay = newLevel > level ? 2500 : 1000;
+        setTimeout(() => setShowSaveProgress(true), delay);
       }
     }
   };
@@ -859,7 +868,7 @@ export default function TimelinePage() {
         onStartPlaying={handleWelcomeClose}
       />
       
-      {/* Save Progress Modal - Shows after first mission */}
+      {/* Save Progress Modal - Shows after mission completion */}
       <SaveProgressModal
         open={showSaveProgress}
         onClose={() => setShowSaveProgress(false)}
@@ -867,6 +876,7 @@ export default function TimelinePage() {
         currentIII={totalIII}
         completedMissions={completedMissions.length}
         streakDays={streakDays}
+        lastMissionReward={lastMissionReward}
       />
       
       {/* Offline Status Indicator */}

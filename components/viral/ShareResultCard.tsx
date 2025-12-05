@@ -325,51 +325,59 @@ export function ShareResultCard({
 
   // Full card version
   return (
-    <Card className="bg-gradient-to-br from-violet-50 via-white to-indigo-50 border-2 border-violet-200 overflow-hidden">
-      {/* Decorative header */}
-      <div className="h-2 bg-gradient-to-r from-violet-400 via-purple-500 to-indigo-500" />
+    <Card className="relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+      {/* Gradient glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-indigo-500/5 dark:from-violet-500/10 dark:to-indigo-500/10" />
       
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Share2 className="h-5 w-5 text-violet-500" />
-          Share Your Journey
+      {/* Decorative header stripe */}
+      <div className="h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
+      
+      <CardHeader className="pb-2 relative">
+        <CardTitle className="flex items-center gap-3 text-lg">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/25">
+            <Share2 className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <span className="text-slate-900 dark:text-white font-semibold">Share Your Journey</span>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">Earn rewards for spreading knowledge</p>
+          </div>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 relative">
         {/* Incentive message */}
-        <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-violet-100">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 flex items-center justify-center flex-shrink-0">
+        <div className="flex items-start gap-3 p-4 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 rounded-xl border border-amber-200/50 dark:border-amber-800/30">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/25">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <p className="font-medium text-gray-800">Earn 🪙 for sharing!</p>
-            <p className="text-sm text-gray-600">
-              Help friends learn investing and get rewarded. Every share helps build financial literacy! 🎓
+            <p className="font-semibold text-slate-900 dark:text-white">Earn 🪙 for sharing!</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Help friends learn investing and get rewarded. Every share builds financial literacy! 🎓
             </p>
           </div>
         </div>
 
         {/* Share buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {Object.entries(platformConfig).slice(0, 4).map(([key, config]) => {
             const reward = getRewardDisplay(key);
             return (
               <Button
                 key={key}
                 onClick={() => handleShare(key)}
-                className={`${config.color} ${config.hoverColor} relative`}
+                className={`relative h-12 ${config.lightColor} ${config.darkColor} ${config.hoverLight} ${config.hoverDark} transition-all shadow-sm`}
                 disabled={!reward.canClaim}
               >
                 {config.icon}
-                <span className="ml-2">{config.label}</span>
+                <span className="ml-2 font-medium">{config.label}</span>
                 {reward.canClaim && (
-                  <Badge className="absolute -top-2 -right-2 bg-amber-400 text-amber-900 text-xs border-0">
+                  <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-amber-400 to-orange-400 text-amber-900 text-xs border-0 shadow-md">
                     +{reward.xp}
                   </Badge>
                 )}
                 {!reward.canClaim && (
-                  <div className="absolute -top-2 -right-2 flex items-center gap-0.5 bg-gray-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  <div className="absolute -top-2 -right-2 flex items-center gap-0.5 bg-slate-600 dark:bg-slate-700 text-white text-xs px-1.5 py-0.5 rounded-full shadow">
                     <Clock className="h-3 w-3" />
                     {reward.cooldown}m
                   </div>
@@ -382,27 +390,29 @@ export function ShareResultCard({
         {/* Copy link option */}
         <Button
           variant="outline"
-          className="w-full"
+          className="w-full h-11 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
           onClick={() => handleShare("copy_link")}
         >
           {copiedLink ? (
             <>
               <CheckCircle className="h-4 w-4 mr-2 text-emerald-500" />
-              Link Copied!
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">Link Copied!</span>
             </>
           ) : (
             <>
               <Copy className="h-4 w-4 mr-2" />
-              Copy Shareable Link
-              <Badge className="ml-2 bg-amber-100 text-amber-700 border-0">+10 🪙</Badge>
+              <span>Copy Shareable Link</span>
+              <Badge className="ml-2 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 border-0">+10 🪙</Badge>
             </>
           )}
         </Button>
 
         {/* Referral tease */}
-        <div className="flex items-center justify-center gap-2 pt-2 border-t border-violet-100 text-sm text-violet-600">
-          <Users className="h-4 w-4" />
-          <span>Invite 3 friends to unlock bonus rewards!</span>
+        <div className="flex items-center justify-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800 text-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400">
+            <Users className="h-4 w-4" />
+            <span className="font-medium">Invite 3 friends to unlock bonus rewards!</span>
+          </div>
         </div>
 
         {/* XP Animation */}
@@ -439,18 +449,22 @@ function ShareModal({
 }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Share2 className="h-5 w-5 text-violet-500" />
-            Share & Earn 🪙
+          <DialogTitle className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/25">
+              <Share2 className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <span className="text-slate-900 dark:text-white">Share & Earn 🪙</span>
+            </div>
           </DialogTitle>
-          <DialogDescription>
-            Share your progress and earn 🪙 iii rewards!
+          <DialogDescription className="text-slate-500 dark:text-slate-400">
+            Share your progress and earn rewards!
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="space-y-2 pt-2">
           {Object.entries(platforms).map(([key, config]) => {
             const reward = getRewardDisplay(key);
             const isShared = sharedPlatform === key;
@@ -459,16 +473,16 @@ function ShareModal({
               <Button
                 key={key}
                 onClick={() => handleShare(key)}
-                className={`w-full justify-between ${config.color} ${config.hoverColor}`}
+                className={`w-full h-12 justify-between ${config.lightColor} ${config.darkColor} ${config.hoverLight} ${config.hoverDark} transition-all`}
                 disabled={!reward.canClaim || isShared}
               >
                 <div className="flex items-center gap-2">
                   {config.icon}
-                  <span>{config.label}</span>
+                  <span className="font-medium">{config.label}</span>
                 </div>
                 
                 {isShared && showXpAnimation ? (
-                  <Badge className="bg-emerald-400 text-emerald-900">
+                  <Badge className="bg-emerald-400 text-emerald-900 shadow">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     +{earnedXp} 🪙
                   </Badge>
@@ -478,7 +492,7 @@ function ShareModal({
                     {reward.cooldown}m
                   </div>
                 ) : (
-                  <Badge className="bg-amber-400/80 text-amber-900">
+                  <Badge className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-900 border-0 shadow">
                     +{reward.xp} 🪙
                   </Badge>
                 )}
@@ -487,9 +501,11 @@ function ShareModal({
           })}
         </div>
 
-        <p className="text-xs text-center text-gray-500 mt-2">
-          💡 Higher rewards for LinkedIn and Email shares!
-        </p>
+        <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800">
+          <p className="text-xs text-center text-slate-500 dark:text-slate-400">
+            💡 Higher rewards for LinkedIn and Email shares!
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );

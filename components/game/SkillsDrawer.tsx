@@ -34,6 +34,7 @@ import {
   getStrategyMastery,
   calculateOverallProgress,
 } from "@/components/data/chapters";
+import { calculateWisdomStats } from "@/components/gamification/WisdomLearned";
 
 interface SkillsDrawerProps {
   events: FinancialEvent[];
@@ -49,6 +50,7 @@ export function SkillsDrawer({ events, onAskCoach, defaultExpanded = false }: Sk
   
   const completedMissions = events.filter(e => e.completed).map(e => e.year);
   const totalProgress = calculateOverallProgress(completedMissions);
+  const wisdomStats = calculateWisdomStats(completedMissions);
   
   return (
     <div className="rounded-2xl overflow-hidden shadow-lg transition-all duration-300
@@ -81,7 +83,17 @@ export function SkillsDrawer({ events, onAskCoach, defaultExpanded = false }: Sk
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Wisdom Score Badge */}
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl 
+              bg-gradient-to-r from-amber-500/20 to-orange-500/10 
+              border border-amber-500/30">
+              <Brain className="h-3 sm:h-3.5 w-3 sm:w-3.5 text-amber-500 dark:text-amber-400" />
+              <span className="text-[10px] sm:text-xs font-black text-amber-600 dark:text-amber-300">
+                {wisdomStats.wisdomScore}
+              </span>
+            </div>
+            
             {/* Progress Badge */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl 
               bg-[#9898f2]/15 dark:bg-[#9898f2]/25 
@@ -107,6 +119,49 @@ export function SkillsDrawer({ events, onAskCoach, defaultExpanded = false }: Sk
       {/* Expandable Content */}
       {isExpanded && (
         <div className="p-4 sm:p-5 bg-slate-50/50 dark:bg-slate-900/50 animate-slide-down">
+          {/* Wisdom Score Summary Card */}
+          <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent 
+            dark:from-amber-500/20 dark:via-orange-500/10 dark:to-transparent
+            border border-amber-500/20 dark:border-amber-500/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg">
+                  <Brain className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Wisdom Score</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-lg font-black text-amber-600 dark:text-amber-400">{wisdomStats.wisdomScore}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">/ 1000</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Learning Velocity</p>
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{wisdomStats.learningVelocity}</p>
+              </div>
+            </div>
+            {/* Quick Stats Row */}
+            <div className="mt-3 grid grid-cols-4 gap-2">
+              <div className="text-center p-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">Pillars</p>
+                <p className="text-xs font-bold text-amber-600 dark:text-amber-400">{wisdomStats.pillarsUnlocked}/{wisdomStats.pillarsTotal}</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">Assets</p>
+                <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{wisdomStats.assetsUnlocked}/{wisdomStats.assetsTotal}</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">Strategies</p>
+                <p className="text-xs font-bold text-violet-600 dark:text-violet-400">{wisdomStats.strategiesUnlocked}/{wisdomStats.strategiesTotal}</p>
+              </div>
+              <div className="text-center p-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500">Eras</p>
+                <p className="text-xs font-bold text-blue-600 dark:text-blue-400">{wisdomStats.erasCompleted}/{wisdomStats.erasTotal}</p>
+              </div>
+            </div>
+          </div>
+          
           {/* Tab Navigation */}
           <div className="flex items-center gap-1 p-1.5 rounded-xl w-fit overflow-x-auto mb-4
             bg-slate-100 dark:bg-slate-800/80 

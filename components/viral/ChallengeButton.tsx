@@ -74,7 +74,7 @@ export function ChallengeButton({
   
   const createChallenge = () => {
     const challengeId = generateChallengeId();
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://minifi.app';
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://minifi.games';
     
     const url = `${baseUrl}/challenge/${challengeId}?` + 
       `mission=${missionId}&` +
@@ -146,7 +146,7 @@ export function ChallengeButton({
       {/* Challenge Button - Prominent call to action */}
       <Button
         onClick={() => setShowModal(true)}
-        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-200"
+        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25 dark:shadow-orange-500/15"
       >
         <Swords className="h-4 w-4 mr-2" />
         Challenge a Friend

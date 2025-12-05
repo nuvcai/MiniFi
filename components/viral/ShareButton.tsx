@@ -24,7 +24,7 @@ export function ShareButton({
   contentType,
   data,
   referralCode,
-  baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://minifi.app',
+  baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://minifi.games',
   onShare,
   variant = 'button',
   platforms = ['twitter', 'whatsapp', 'linkedin', 'copy_link'],

@@ -24,7 +24,6 @@ import {
   Sparkles,
   CheckCircle2,
   X,
-  Cloud,
   Smartphone,
   Gift,
   Loader2,
@@ -38,6 +37,7 @@ interface SaveProgressModalProps {
   currentIII?: number;
   completedMissions?: number;
   streakDays?: number;
+  lastMissionReward?: number;
 }
 
 export function SaveProgressModal({
@@ -47,6 +47,7 @@ export function SaveProgressModal({
   currentIII = 0,
   completedMissions = 0,
   streakDays = 0,
+  lastMissionReward = 0,
 }: SaveProgressModalProps) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -112,23 +113,43 @@ export function SaveProgressModal({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
-              <Cloud className="h-5 w-5 text-white" />
+            <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
             <DialogTitle className="text-xl font-bold">
-              Save Your Progress! ☁️
+              {lastMissionReward > 0 ? "You Did It! 🏆" : "Save Your Progress! ☁️"}
             </DialogTitle>
           </div>
           <DialogDescription>
-            Don't lose your hard-earned iii tokens and achievements!
+            {lastMissionReward > 0 
+              ? `You just earned +${lastMissionReward} ${III_CONFIG.symbol}! Save now to keep your progress safe.`
+              : "Don't lose your hard-earned iii tokens and achievements!"}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
+          {/* Mission Complete Celebration */}
+          {lastMissionReward > 0 && (
+            <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/20 dark:to-teal-500/10 border-2 border-emerald-300 dark:border-emerald-500/40 animate-pulse">
+              <div className="flex items-center justify-center gap-3">
+                <div className="text-3xl">🎉</div>
+                <div className="text-center">
+                  <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                    Mission Complete!
+                  </p>
+                  <p className="text-2xl font-black text-emerald-700 dark:text-emerald-300">
+                    +{lastMissionReward} {III_CONFIG.symbol}
+                  </p>
+                </div>
+                <div className="text-3xl">🎉</div>
+              </div>
+            </div>
+          )}
+          
           {/* Current Progress */}
           <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-500/10 dark:to-purple-500/10 border border-violet-200 dark:border-violet-500/30">
             <p className="text-xs font-semibold text-violet-600 dark:text-violet-400 mb-3">
-              YOUR CURRENT PROGRESS
+              YOUR TOTAL PROGRESS
             </p>
             <div className="grid grid-cols-3 gap-3 text-center">
               <div>

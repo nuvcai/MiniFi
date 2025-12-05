@@ -840,7 +840,7 @@ export const getViralMomentByTrigger = (trigger: string): ViralMoment | undefine
 
 // Generate shareable URL with referral code
 export const generateShareUrl = (referralCode: string, platform: string): string => {
-  const baseUrl = "https://minifi.app";
+  const baseUrl = "https://minifi.games";
   return `${baseUrl}?ref=${referralCode}&utm_source=${platform}&utm_medium=referral&utm_campaign=viral_share`;
 };
 
