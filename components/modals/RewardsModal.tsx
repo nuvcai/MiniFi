@@ -304,139 +304,78 @@ export function RewardsModal({
                       </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="shadow-sm border-gray-300"
-                />
-                <p className="text-xs text-muted-foreground">
-                  We'll send your voucher code to this email address
+                </div>
+                <p className="text-xs text-amber-600 text-center font-medium">
+                  {nextMilestone.xp - playerXP} 🪙 to {nextMilestone.label}
                 </p>
               </div>
 
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-sm text-blue-700">
-                  <strong>Cost:</strong> {selectedReward.cost} XP (You have:{" "}
-                  {playerXP} XP)
-                </p>
-                {playerXP < selectedReward.cost && (
-                  <p className="text-xs text-red-600 mt-1">
-                    You need {selectedReward.cost - playerXP} more XP to redeem
-                    this reward
+          {/* Coming Soon - Light Card */}
+          <Card className="bg-gradient-to-br from-indigo-50 via-violet-50 to-purple-50 border-2 border-indigo-200 shadow-lg shadow-indigo-100 overflow-hidden relative">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-violet-200/30 rounded-full blur-2xl" />
+            </div>
+            <CardContent className="p-6 relative">
+              <div className="text-center space-y-4">
+                {/* Animated rocket icon */}
+                <div className="relative mx-auto w-24 h-24">
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 to-violet-300 rounded-full blur-xl opacity-50 animate-pulse" />
+                  <div className="relative w-24 h-24 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200">
+                    <Rocket className="h-12 w-12 text-white animate-bounce" style={{ animationDuration: '3s' }} />
+                  </div>
+                  <div className="absolute -top-2 -right-2 px-2.5 py-1 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full shadow-lg">
+                    <span className="text-xs font-bold text-white">NEW</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <Badge className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white border-0 px-4 py-1.5 text-sm font-bold mb-3 shadow-lg">
+                    <Clock className="h-3.5 w-3.5 mr-1.5" />
+                    Launching Soon
+                  </Badge>
+                  <h3 className="text-xl font-black text-gray-900 mb-2">
+                    Real Rewards Incoming! 🎁
+                  </h3>
+                  <p className="text-sm text-gray-600 max-w-sm mx-auto">
+                    Trade your 🪙 iii for real gift cards, subscriptions, and exclusive experiences. 
+                    Keep stacking that iii!
                   </p>
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  onClick={handleConfirmRedeem}
-                  disabled={
-                    !email || playerXP < selectedReward.cost || isRedeeming
-                  }
-                  className="flex-1"
-                >
-                  {isRedeeming ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Gift className="h-4 w-4 mr-2" />
-                      Redeem Now
-                    </>
-                  )}
-                </Button>
-                <Button variant="outline" onClick={handleBackToList}>
-                  Back to Rewards
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
+          {/* How It Works - Light Theme */}
+          <Card className="bg-white border-2 border-gray-200 shadow-md">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center gap-2 text-gray-700">
+                <Target className="h-4 w-4 text-indigo-500" />
+                How to Earn Rewards
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3 text-sm">
+              {[
+                { icon: <Trophy className="h-4 w-4 text-amber-500" />, text: "Complete missions", bg: "bg-amber-50 border-amber-200" },
+                { icon: <Zap className="h-4 w-4 text-orange-500" />, text: "Daily streaks", bg: "bg-orange-50 border-orange-200" },
+                { icon: <Star className="h-4 w-4 text-violet-500" />, text: "Earn iii badges", bg: "bg-violet-50 border-violet-200" },
+                { icon: <TrendingUp className="h-4 w-4 text-emerald-500" />, text: "Level up faster", bg: "bg-emerald-50 border-emerald-200" },
+              ].map((item, i) => (
+                <div key={i} className={`flex items-center gap-2 p-2.5 rounded-xl border ${item.bg}`}>
+                  {item.icon}
+                  <span className="text-gray-700 text-xs font-medium">{item.text}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
 
-        {redeemMode === "success" && selectedReward && (
-          <>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl text-green-600">
-                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-                Reward Redeemed!
-              </DialogTitle>
-              <DialogDescription className="text-sm">
-                Your voucher has been sent to your email
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4">
-              <Card className="bg-green-50 border-green-200">
-                <CardContent className="p-4">
-                  <div className="text-center space-y-3">
-                    <div className="text-4xl">🎉</div>
-                    <h3 className="font-semibold text-green-800">
-                      {selectedReward.name} Redeemed!
-                    </h3>
-                    <p className="text-sm text-green-700">
-                      Check your email for the voucher code
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-muted/30">
-                <CardHeader>
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <QrCode className="h-4 w-4" />
-                    Your Voucher Code
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-white p-3 rounded border-2 border-dashed border-gray-300 text-center">
-                    <p className="font-mono text-lg font-bold tracking-wider">
-                      {couponCode}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Show this code at {selectedReward.partner} to redeem
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">
-                  How to Use:
-                </h4>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• Check your email for the complete voucher details</li>
-                  <li>
-                    • Present this code at any {selectedReward.partner} location
-                  </li>
-                  <li>
-                    • The staff will scan or enter the code for your discount
-                  </li>
-                  <li>• Valid for 30 days from today</li>
-                </ul>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button onClick={handleBackToList} className="flex-1">
-                  Back to Rewards
-                </Button>
-                <Button variant="outline" onClick={handleClose}>
-                  Close
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
+          {/* CTA Button */}
+          <Button 
+            onClick={() => onOpenChange(false)}
+            className="w-full py-6 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 hover:from-indigo-600 hover:via-violet-600 hover:to-purple-600 text-white font-bold text-lg shadow-xl shadow-indigo-200 relative overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            <Sparkles className="h-5 w-5 mr-2" />
+            Keep Earning 🪙!
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

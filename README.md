@@ -21,6 +21,22 @@ Built for **NextGen AI Hackathon 2025** by Tick.AI.
 - **🎁 Real Rewards System**: Exchange XP for Australian brand gift cards
 - **📱 Mobile-First Design**: Optimized for all devices
 
+### 🆕 Latest Features (v1.2)
+
+- **🎯 Crisis-Based Learning**: Mission flow aligned with "learning through crisis" philosophy
+- **💎 High Conviction Investing**: Celebrate bold decisions and quick failures as growth
+- **🧠 Emotional Intelligence**: Loss results show "Wisdom Earned" with learning-focused messaging
+- **📱 Mobile-First UX**: Bottom sheet modals, 44px touch targets, bottom navigation
+- **🎮 Enhanced Gamification**:
+  - Knowledge Quiz after missions
+  - What-If Analysis for exploring alternate outcomes
+  - Points System with Flybuys-style rewards
+  - League System for competitive progression
+  - Investor Journey with milestone tracking
+- **🎲 Infinite Gameplay**: Random scenario generation after completing historical missions
+- **📊 Asset Class System**: 6 distinct asset classes with FO-aligned categorization
+- **🎓 FO Certification Path**: Capital Guardian → Balanced Investor → FO Fellow
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -129,10 +145,39 @@ npm run dev
 
 ```
 components/
-├── PerformanceChart.tsx      # Investment performance visualization
+├── data/
+│   ├── missions.ts          # Historical missions with asset class metadata
+│   ├── coaches.ts           # AI coach profiles with FO strategies
+│   ├── assetClasses.ts      # Comprehensive asset class reference
+│   ├── randomScenarios.ts   # Procedural scenario generation
+│   └── events.ts            # Financial events data
+├── features/
+│   ├── UpcomingFeatures.tsx # Coming soon feature teasers
+│   ├── AssetClassMastery.tsx # Asset class progress tracking
+│   ├── RiskSpectrum.tsx     # Risk/return visualization
+│   └── FOCertificationTeaser.tsx # Certification path preview
+├── mission/
+│   ├── MissionIntro.tsx     # Crisis → Challenge → Conviction flow
+│   ├── InvestmentDecision.tsx # High conviction investment choice
+│   ├── InvestmentThesis.tsx # Document reasoning before decisions
+│   ├── MissionResult.tsx    # Wisdom-focused results (wins & learning)
+│   ├── KnowledgeQuiz.tsx    # Post-mission comprehension validation
+│   └── WhatIfAnalysis.tsx   # Explore alternate outcomes
+├── gamification/
+│   ├── InvestorJourney.tsx  # Visual milestone progression
+│   ├── LeagueSystem.tsx     # Competitive tier rankings
+│   ├── RewardsStore.tsx     # XP redemption marketplace
+│   ├── FlybuysRewards.tsx   # Partner rewards integration
+│   ├── SavingsVault.tsx     # Goal-based savings game
+│   ├── StakingCard.tsx      # XP staking for bonuses
+│   └── pointsSystem.ts      # Points calculation utilities
+├── shared/
+│   └── MobileBottomNav.tsx  # Fixed mobile navigation
+├── ui/
+│   └── dialog.tsx           # Bottom sheet modal variants
+├── PerformanceChart.tsx     # Investment performance visualization
 ├── AICoach.tsx              # AI coaching interface
-├── investment-competition.tsx # Competition setup
-├── trading-dashboard.tsx    # Real-time trading interface
+├── trading-dashboard.tsx    # Real-time trading with asset classes
 └── competition-results.tsx  # Results and leaderboards
 
 backend/
@@ -141,7 +186,9 @@ backend/
 ├── database.py             # Database management
 └── services/               # Business logic services
     ├── coach_service.py    # AI coaching (family office approach)
-    └── coach_chat.py       # Real-time chat
+    ├── coach_chat.py       # Real-time chat
+    ├── price_service.py    # Yahoo Finance price data
+    └── investment_metrics_service.py # Historical performance
 ```
 
 ## 🎯 AI Coaching - Family Office Approach
@@ -187,13 +234,166 @@ MiniFi teaches teens to invest like wealthy families:
 
 ## 🚀 Recent Updates
 
+### v1.2.0 - Crisis Learning & Mobile UX Update (December 2025)
+- ✅ **Philosophy-Aligned Mission Flow**: "Crisis Mode" → "High Conviction" → "Wisdom Earned"
+- ✅ **Learning from Failures**: Losses celebrated as growth opportunities with violet confetti
+- ✅ **Mobile Bottom Navigation**: Fixed nav bar with safe area support
+- ✅ **Bottom Sheet Modals**: Native mobile dialog experience
+- ✅ **Enhanced Touch Targets**: All interactive elements meet 44px minimum
+- ✅ **Knowledge Quiz**: Post-mission comprehension validation
+- ✅ **What-If Analysis**: Explore alternate investment outcomes
+- ✅ **Points System**: Flybuys-style rewards with tier progression
+- ✅ **Rewards Store**: Redeem XP for rewards and perks
+- ✅ **League System**: Competitive rankings (Bronze → Diamond)
+- ✅ **Investor Journey**: Visual milestone progression tracker
+- ✅ **Random Scenarios**: Infinite gameplay with procedurally generated events
+- ✅ **Homepage Mobile Menu**: Hamburger navigation with responsive typography
+
+### v1.1.0 - Asset Class & Financial Literacy Update (December 2025)
+- ✅ **Asset Class System**: 6 FO-aligned asset classes with full metadata
+- ✅ **Risk/Return Profiles**: Volatility, correlation, and FO allocation ranges
+- ✅ **Time Horizon Guidance**: Short/Medium/Long investment recommendations
+- ✅ **Asset Class Mastery UI**: Track progress across all asset classes
+- ✅ **FO Certification Teaser**: 3-level certification path preview
+- ✅ **Risk Spectrum Visualization**: Interactive risk/return chart component
+
 ### v1.0.0 - Family Office Edition
 - ✅ AI Coach rewards effort and exploration
 - ✅ Backend caching (10x faster price data)
-- ✅ Mobile-optimized UI (44x44px touch targets)
-- ✅ Request ID tracking for debugging
-- ✅ Improved health checks
+- ✅ Mobile-optimized UI
 - ✅ Comprehensive documentation
+
+---
+
+## 🗺️ Product Roadmap
+
+### Current: v1.2 (December 2025)
+> *Crisis Learning & Mobile UX Update*
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Historical Missions | ✅ Complete | 6 major financial events (1990-2025) |
+| AI Coach System | ✅ Complete | 4 FO-aligned coaches with strategies |
+| Trading Simulation | ✅ Complete | Real-time portfolio with asset classes |
+| Performance Analytics | ✅ Complete | Real Yahoo Finance data integration |
+| Mobile-First UI | ✅ Complete | Bottom nav, bottom sheets, 44px targets |
+| Leaderboards | ✅ Complete | Global competition rankings |
+| **Crisis-Based Learning** | ✅ Complete | Philosophy-aligned mission flow |
+| **Knowledge Quiz** | ✅ Complete | Post-mission comprehension checks |
+| **What-If Analysis** | ✅ Complete | Explore alternate outcomes |
+| **Points & Rewards** | ✅ Complete | Flybuys-style points system |
+| **League System** | ✅ Complete | Competitive tier progression |
+| **Investor Journey** | ✅ Complete | Visual milestone tracker |
+| **Random Scenarios** | ✅ Complete | Infinite procedural gameplay |
+
+---
+
+### v1.2 - Interactive Features (Q1 2026)
+> *Engaging Learning Tools*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 🎯 Risk Profile Quiz | High | Personalized coach matching |
+| 📊 Portfolio Builder | High | Drag-drop portfolio construction |
+| 🎲 Risk Roulette | High | Daily prediction mini-game |
+| 🎓 FO Certification | High | 3-level credential system |
+| ⏱️ Time Horizon Challenges | Medium | Goal-matching gameplay |
+| 📈 Asset Comparison Tool | Medium | Side-by-side analysis |
+
+---
+
+### v1.3 - Enhanced Learning (Q2 2026)
+> *Deepening Educational Impact*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 📚 Extended Missions | High | Expand to 20+ historical events |
+| 🧠 Adaptive Difficulty | High | AI-adjusted challenges based on skill |
+| 📊 Learning Analytics | High | Track knowledge gaps & progress |
+| 🎯 Micro-Lessons | Medium | Bite-sized financial concepts |
+| 🏅 Achievement System | Medium | Badges for milestones & exploration |
+| 🌏 ASX Integration | Medium | Real Australian market data |
+
+---
+
+### v1.2 - Social & Gamification (Q2 2026)
+> *Building Community*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 👥 Friend Competitions | High | Challenge friends, private leagues |
+| 💬 Social Feed | High | Share achievements, strategies |
+| 🏫 Classroom Mode | High | Teacher dashboards, class competitions |
+| 🎁 Rewards Marketplace | Medium | Australian brand gift cards (Woolworths, JB Hi-Fi) |
+| 📱 Push Notifications | Medium | Market alerts, challenge reminders |
+| 🤝 Mentorship Pairing | Low | Connect beginners with advanced users |
+
+---
+
+### v1.3 - Advanced Trading (Q3 2026)
+> *Professional-Grade Features*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 📈 Advanced Charts | High | Candlesticks, technical indicators |
+| ⚡ Options Trading Sim | High | Learn derivatives safely |
+| 🔄 Auto-Rebalancing | Medium | Portfolio optimization suggestions |
+| 📉 Short Selling Sim | Medium | Understand market mechanics |
+| 🌐 Global Markets | Medium | US, UK, Asian market simulations |
+| 🤖 AI Strategy Builder | Low | Create & backtest custom strategies |
+
+---
+
+### v2.0 - Platform Expansion (Q4 2026)
+> *Scaling Impact*
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| 📱 Native Mobile Apps | High | iOS & Android with offline mode |
+| 🏦 Real Micro-Investing | High | Connect to real brokerage (supervised) |
+| 🎓 School Curriculum API | High | LMS integration for educators |
+| 👨‍👩‍👧 Parent Portal | Medium | Progress tracking, parental controls |
+| 🌏 APAC Expansion | Medium | Localized for Singapore, NZ, HK |
+| 🏆 National Competitions | Medium | School vs school tournaments |
+
+---
+
+### v3.0 - AI Evolution (2027)
+> *Next-Gen Intelligence*
+
+| Feature | Vision | Description |
+|---------|--------|-------------|
+| 🧠 Personalized AI Tutors | Planned | Custom AI trained on user learning style |
+| 🎮 VR Trading Floor | Planned | Immersive market experience |
+| 🔮 Predictive Analytics | Planned | AI-powered market scenario modeling |
+| 🌍 Global Launch | Planned | Multi-language, multi-currency |
+| 📜 Certification Program | Planned | Industry-recognized credentials |
+| 🤝 Fintech Partnerships | Planned | Bank & broker integrations |
+
+---
+
+### 📊 Success Metrics & KPIs
+
+| Metric | v1.0 Target | v2.0 Target |
+|--------|-------------|-------------|
+| Active Users | 1,000 | 50,000 |
+| School Partnerships | 5 | 200 |
+| Mission Completion Rate | 70% | 85% |
+| Financial Literacy Improvement | 40% | 60% |
+| User Retention (30-day) | 35% | 55% |
+| NPS Score | 40+ | 60+ |
+
+---
+
+### 🎯 Strategic Priorities
+
+1. **Education First**: Every feature must have measurable learning outcomes
+2. **Teen-Centric Design**: UI/UX optimized for Gen Z engagement patterns  
+3. **AI-Native**: Leverage AI throughout, not as an afterthought
+4. **Australian Focus**: Local market context, brands, and regulations
+5. **Responsible Growth**: Build trust with parents, schools, regulators
+
+---
 
 ## 📚 Documentation
 

@@ -309,8 +309,17 @@ export const missionData: Record<number, MissionData> = {
         description: "Invest in artificial intelligence related companies",
         risk: "High",
         expectedReturn: "20-40%",
-        actualReturn: 0,
-        investmentInsight: "AI revolution is transforming industries, but valuations are high and competition intense. Early winners may dominate, but market is still evolving rapidly.",
+        actualReturn: 35, // Simulated: AI stocks have been strong in 2024-2025
+        investmentInsight: "AI is the hottest thing since the internet! 🤖 Nvidia, Microsoft, Google - they're all racing to dominate. But are prices already too high?",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "25-40%",
+          correlationWithStocks: "high",
+        },
+        foAllocationRange: "10-20%",
+        liquidityRating: "high",
       },
       {
         id: "energy",
@@ -318,8 +327,17 @@ export const missionData: Record<number, MissionData> = {
         description: "Invest in solar, wind and other green energy",
         risk: "High",
         expectedReturn: "15-30%",
-        actualReturn: 0,
-        investmentInsight: "Government subsidies and climate initiatives drive green energy adoption, but rising interest rates hurt capital-intensive projects. Regulatory changes and competition create volatility.",
+        actualReturn: -15, // Simulated: Green energy struggled with high rates in 2024
+        investmentInsight: "The world is going green! 🌱 Governments are spending big on clean energy. But high interest rates make these projects more expensive.",
+        assetClass: "equities" as AssetClass,
+        timeHorizon: "long" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "high",
+          historicalVolatility: "25-35%",
+          correlationWithStocks: "moderate",
+        },
+        foAllocationRange: "5-15%",
+        liquidityRating: "high",
       },
       {
         id: "tips",
@@ -327,8 +345,17 @@ export const missionData: Record<number, MissionData> = {
         description: "Purchase Treasury Inflation-Protected Securities (TIPS)",
         risk: "Low",
         expectedReturn: "5-8%",
-        actualReturn: 0,
-        investmentInsight: "TIPS provide direct inflation protection as principal adjusts with CPI changes. With persistent inflation concerns and high nominal rates, they offer real return preservation.",
+        actualReturn: 8, // Simulated: TIPS performed as expected with inflation
+        investmentInsight: "With prices going up everywhere, these bonds protect your buying power 💪 Not exciting, but you won't lose money to inflation!",
+        assetClass: "fixed_income" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "low",
+          historicalVolatility: "5-10%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "10-20%",
+        liquidityRating: "high",
       },
       {
         id: "commodities",
@@ -336,8 +363,17 @@ export const missionData: Record<number, MissionData> = {
         description: "Invest in oil, gold, and agricultural products",
         risk: "Medium",
         expectedReturn: "10-20%",
-        actualReturn: 0,
-        investmentInsight: "Geopolitical tensions and supply chain disruptions support commodity prices as inflation hedges. However, recession risks and central bank tightening may dampen demand.",
+        actualReturn: 18, // Simulated: Gold hit all-time highs in 2024
+        investmentInsight: "Real stuff like oil, gold, and food usually does well when inflation is high 🛢️ Global supply chain issues and conflicts can push prices up.",
+        assetClass: "commodities" as AssetClass,
+        timeHorizon: "medium" as TimeHorizon,
+        riskReturnProfile: {
+          riskLevel: "medium",
+          historicalVolatility: "15-25%",
+          correlationWithStocks: "low",
+        },
+        foAllocationRange: "5-10%",
+        liquidityRating: "high",
       },
     ],
     coachAdvice: {
@@ -351,6 +387,10 @@ export const missionData: Record<number, MissionData> = {
         "In an inflationary environment, physical assets and inflation-protected bonds are the best choices.",
     },
     outcome:
-      "This is a current ongoing event, and the results are yet to be determined. Your investment decisions will impact future wealth accumulation!",
+      "🎬 LIVE SCENARIO: Based on 2024-2025 market trends, AI stocks surged 35% as companies raced to deploy AI. Green energy struggled (-15%) with high interest rates. TIPS delivered steady 8% protection. Gold hit all-time highs pushing commodities up 18%. The lesson? Even in YOUR era, diversification wins!",
+    wealthLesson: "🎓 WEALTH LESSON: You are living through YOUR generation's transformative moment! AI is this era's Industrial Revolution, Internet, and smartphone combined. Every generation has a defining technology - AI and robotics are YOURS.",
+    foWisdom: "🏛️ FAMILY OFFICE WISDOM: The smartest FOs are allocating 15-30% to AI-related investments while maintaining diversification. They're buying the 'picks and shovels' (NVIDIA, cloud providers) AND promising AI applications. But they NEVER go all-in on any single bet.",
+    historicalOpportunity: "💡 THE OPPORTUNITY: You're witnessing the early stages of the AI revolution - like being in 1995 for the internet or 2007 for smartphones. The companies that will dominate 2035 are being built RIGHT NOW. Understanding AI gives you an edge most investors don't have!",
+    hopeMessage: "✨ FOR YOU: This isn't just an investment opportunity - it's YOUR moment in history! Carnegie had steel, Ford had automobiles, Gates had software, Bezos had e-commerce. What will YOU build or invest in during the AI era? The biggest fortunes of the next 30 years are being created NOW! 🤖🚀"
   },
 };

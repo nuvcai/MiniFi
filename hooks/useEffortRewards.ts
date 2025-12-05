@@ -22,6 +22,19 @@ import {
   SHARE_REWARDS,
 } from "@/lib/marketing";
 
+// Thesis entry for journal feature
+export interface ThesisEntry {
+  id: string;
+  eventYear: number;
+  eventTitle: string;
+  optionName: string;
+  thesis: string;
+  outcome: "profit" | "loss";
+  actualReturn: number;
+  timestamp: Date;
+  xpEarned: number;
+}
+
 interface EffortStats {
   investmentsMade: number;
   riskPreviewsViewed: number;
@@ -39,6 +52,17 @@ interface EffortStats {
   totalShares: number;
   sharesByPlatform: Record<string, number>;
   shareXpEarned: number;
+  // Quiz tracking
+  quizzesCompleted: number;
+  totalQuizScore: number;
+  quizQuestionsCorrect: number;
+  quizQuestionsAttempted: number;
+  averageQuizScore: number;
+  // Thesis tracking
+  thesesWritten: number;
+  thesesHistory: ThesisEntry[];
+  // Journey tracking
+  claimedJourneyStages: string[];
 }
 
 interface EarnedReward {
@@ -63,6 +87,17 @@ interface UseEffortRewardsReturn {
   // Share actions
   recordShare: (platform: string) => { xp: number; canClaim: boolean; cooldownRemaining: number };
   getShareRewardInfo: (platform: string) => { xp: number; canClaim: boolean; cooldownRemaining: number };
+  
+  // Quiz actions
+  recordQuizCompleted: (questionsCorrect: number, totalQuestions: number) => void;
+  
+  // Thesis actions
+  recordThesis: (entry: Omit<ThesisEntry, "id" | "timestamp">) => void;
+  getThesesHistory: () => ThesisEntry[];
+  
+  // Journey actions
+  claimJourneyStage: (stageId: string) => void;
+  isJourneyStageClaimedFn: (stageId: string) => boolean;
   
   // Helpers
   getLossEncouragement: () => string;
@@ -90,6 +125,17 @@ const initialStats: EffortStats = {
   totalShares: 0,
   sharesByPlatform: {},
   shareXpEarned: 0,
+  // Quiz tracking
+  quizzesCompleted: 0,
+  totalQuizScore: 0,
+  quizQuestionsCorrect: 0,
+  quizQuestionsAttempted: 0,
+  averageQuizScore: 0,
+  // Thesis tracking
+  thesesWritten: 0,
+  thesesHistory: [],
+  // Journey tracking
+  claimedJourneyStages: [],
 };
 
 export function useEffortRewards(): UseEffortRewardsReturn {
@@ -104,10 +150,17 @@ export function useEffortRewards(): UseEffortRewardsReturn {
       if (saved) {
         const parsed = JSON.parse(saved);
         setStats({
+          ...initialStats,
           ...parsed,
           differentRiskLevelsTried: new Set(parsed.differentRiskLevelsTried || []),
           differentAssetClassesTried: new Set(parsed.differentAssetClassesTried || []),
           coachesUsed: new Set(parsed.coachesUsed || []),
+          // Parse thesis history dates
+          thesesHistory: (parsed.thesesHistory || []).map((t: ThesisEntry) => ({
+            ...t,
+            timestamp: new Date(t.timestamp),
+          })),
+          claimedJourneyStages: parsed.claimedJourneyStages || [],
         });
       }
     } catch (e) {
@@ -333,6 +386,66 @@ export function useEffortRewards(): UseEffortRewardsReturn {
     setPendingNotifications((prev) => prev.slice(1));
   }, []);
 
+  // Record quiz completion
+  const recordQuizCompleted = useCallback((questionsCorrect: number, totalQuestions: number) => {
+    setStats((prev) => {
+      const newTotalCorrect = prev.quizQuestionsCorrect + questionsCorrect;
+      const newTotalAttempted = prev.quizQuestionsAttempted + totalQuestions;
+      const newAverageScore = newTotalAttempted > 0 
+        ? Math.round((newTotalCorrect / newTotalAttempted) * 100) 
+        : 0;
+      
+      return {
+        ...prev,
+        quizzesCompleted: prev.quizzesCompleted + 1,
+        totalQuizScore: prev.totalQuizScore + Math.round((questionsCorrect / totalQuestions) * 100),
+        quizQuestionsCorrect: newTotalCorrect,
+        quizQuestionsAttempted: newTotalAttempted,
+        averageQuizScore: newAverageScore,
+      };
+    });
+  }, []);
+
+  // Record investment thesis
+  const recordThesis = useCallback((entry: Omit<ThesisEntry, "id" | "timestamp">) => {
+    const newEntry: ThesisEntry = {
+      ...entry,
+      id: `thesis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+    };
+
+    setStats((prev) => ({
+      ...prev,
+      thesesWritten: prev.thesesWritten + 1,
+      thesesHistory: [...prev.thesesHistory, newEntry].slice(-50), // Keep last 50 entries
+    }));
+  }, []);
+
+  // Get thesis history
+  const getThesesHistory = useCallback(() => {
+    return [...stats.thesesHistory].sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }, [stats.thesesHistory]);
+
+  // Claim journey stage
+  const claimJourneyStage = useCallback((stageId: string) => {
+    setStats((prev) => {
+      if (prev.claimedJourneyStages.includes(stageId)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        claimedJourneyStages: [...prev.claimedJourneyStages, stageId],
+      };
+    });
+  }, []);
+
+  // Check if journey stage is claimed
+  const isJourneyStageClaimedFn = useCallback((stageId: string) => {
+    return stats.claimedJourneyStages.includes(stageId);
+  }, [stats.claimedJourneyStages]);
+
   // Get share reward info without claiming
   const getShareRewardInfo = useCallback((platform: string) => {
     const streakMultiplier = stats.currentStreak > 0 ? 1 + (stats.currentStreak * 0.05) : 1;
@@ -430,6 +543,14 @@ export function useEffortRewards(): UseEffortRewardsReturn {
     // Share methods
     recordShare,
     getShareRewardInfo,
+    // Quiz methods
+    recordQuizCompleted,
+    // Thesis methods
+    recordThesis,
+    getThesesHistory,
+    // Journey methods
+    claimJourneyStage,
+    isJourneyStageClaimedFn,
     // Helpers
     getLossEncouragement,
     getNextMilestone,

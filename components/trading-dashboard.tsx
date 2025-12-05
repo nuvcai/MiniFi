@@ -396,11 +396,73 @@ export default function TradingDashboard({
   };
 
   const handleEndCompetition = () => {
+    // Calculate additional performance metrics using performanceData
+    const portfolioHistory = performanceData.length > 0 
+      ? performanceData.map(p => ({ time: p.time, value: p.total }))
+      : [{ time: 0, value: startingCapital }];
+    
+    // Calculate volatility (standard deviation of hourly returns)
+    const hourlyReturns: number[] = [];
+    for (let i = 1; i < portfolioHistory.length; i++) {
+      const prevValue = portfolioHistory[i - 1].value;
+      const currValue = portfolioHistory[i].value;
+      if (prevValue > 0) {
+        hourlyReturns.push((currValue - prevValue) / prevValue);
+      }
+    }
+    
+    const avgReturn = hourlyReturns.length > 0 
+      ? hourlyReturns.reduce((a, b) => a + b, 0) / hourlyReturns.length 
+      : 0;
+    
+    const variance = hourlyReturns.length > 0
+      ? hourlyReturns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / hourlyReturns.length
+      : 0;
+    
+    // Annualize: ~252 trading days * 6.5 hours per day
+    const volatility = Math.sqrt(variance) * Math.sqrt(252 * 6.5) * 100;
+    
+    // Calculate max drawdown
+    let maxDrawdown = 0;
+    let peak = portfolioHistory[0]?.value || startingCapital;
+    
+    for (const point of portfolioHistory) {
+      if (point.value > peak) {
+        peak = point.value;
+      }
+      const drawdown = (peak - point.value) / peak;
+      if (drawdown > maxDrawdown) {
+        maxDrawdown = drawdown;
+      }
+    }
+    
+    // Calculate Sharpe ratio (assuming risk-free rate of 4%)
+    const riskFreeRate = 0.04;
+    const annualizedReturn = dailyReturn; // Already in percentage
+    const sharpeRatio = volatility > 0 
+      ? (annualizedReturn / 100 - riskFreeRate) / (volatility / 100) 
+      : 0;
+    
+    // Generate chart data for results page
+    const chartData = portfolioHistory.map((point, index) => {
+      const date = new Date();
+      date.setHours(date.getHours() - (portfolioHistory.length - 1 - index));
+      return {
+        date: date.toISOString().split('T')[0] + ' ' + date.toTimeString().slice(0, 5),
+        value: point.value,
+      };
+    });
+    
     onEndCompetition({
       finalValue: totalValue,
       totalReturn: dailyReturn,
       portfolio,
       cash,
+      volatility: Math.abs(volatility).toFixed(1),
+      sharpeRatio: sharpeRatio.toFixed(2),
+      maxDrawdown: (maxDrawdown * 100).toFixed(1),
+      annualizedReturn: annualizedReturn.toFixed(1),
+      chartData,
     });
   };
 
@@ -474,17 +536,19 @@ export default function TradingDashboard({
           <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Portfolio Overview */}
             <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-              {/* Performance Summary */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                <Card className="bg-card border-border">
-                  <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-primary" />
+              {/* Performance Summary - Mobile-optimized grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <Card className="bg-card border-border touch-manipulation active:scale-[0.98] transition-transform">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="p-2 rounded-xl bg-primary/10">
+                        <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
                           Total Assets
                         </p>
-                        <p className="text-sm sm:text-lg md:text-xl font-bold text-foreground">
+                        <p className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                           ${totalValue.toFixed(2)}
                         </p>
                       </div>
@@ -492,13 +556,15 @@ export default function TradingDashboard({
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-border">
-                  <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <Activity className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-secondary" />
+                <Card className="bg-card border-border touch-manipulation active:scale-[0.98] transition-transform">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="p-2 rounded-xl bg-secondary/10">
+                        <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-secondary" />
+                      </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">Cash</p>
-                        <p className="text-sm sm:text-lg md:text-xl font-bold text-foreground">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">Cash</p>
+                        <p className="text-base sm:text-lg md:text-xl font-bold text-foreground">
                           ${cash.toFixed(2)}
                         </p>
                       </div>
@@ -506,21 +572,23 @@ export default function TradingDashboard({
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-border">
-                  <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      {dailyReturn >= 0 ? (
-                        <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-chart-1" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-chart-2" />
-                      )}
+                <Card className="bg-card border-border touch-manipulation active:scale-[0.98] transition-transform">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className={`p-2 rounded-xl ${dailyReturn >= 0 ? "bg-emerald-500/10" : "bg-red-500/10"}`}>
+                        {dailyReturn >= 0 ? (
+                          <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500" />
+                        ) : (
+                          <TrendingDown className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+                        )}
+                      </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">
-                          Total Return
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
+                          Return
                         </p>
                         <p
-                          className={`text-sm sm:text-lg md:text-xl font-bold ${
-                            dailyReturn >= 0 ? "text-chart-1" : "text-chart-2"
+                          className={`text-base sm:text-lg md:text-xl font-bold ${
+                            dailyReturn >= 0 ? "text-emerald-500" : "text-red-500"
                           }`}
                         >
                           {dailyReturn >= 0 ? "+" : ""}
@@ -531,17 +599,19 @@ export default function TradingDashboard({
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-border">
-                  <CardContent className="p-2 sm:p-3 md:p-4">
-                    <div className="flex items-center gap-1 sm:gap-2">
-                      <Target className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-accent" />
+                <Card className="bg-card border-border touch-manipulation active:scale-[0.98] transition-transform">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className={`p-2 rounded-xl ${totalValue >= startingCapital ? "bg-emerald-500/10" : "bg-red-500/10"}`}>
+                        <Target className={`h-4 w-4 sm:h-5 sm:w-5 ${totalValue >= startingCapital ? "text-emerald-500" : "text-red-500"}`} />
+                      </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">P&L</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">P&L</p>
                         <p
-                          className={`text-sm sm:text-lg md:text-xl font-bold ${
+                          className={`text-base sm:text-lg md:text-xl font-bold ${
                             totalValue >= startingCapital
-                              ? "text-chart-1"
-                              : "text-chart-2"
+                              ? "text-emerald-500"
+                              : "text-red-500"
                           }`}
                         >
                           ${(totalValue - startingCapital).toFixed(2)}
@@ -682,27 +752,28 @@ export default function TradingDashboard({
                               <span className="font-semibold text-foreground text-sm sm:text-base">
                                 ${currentValue.toFixed(2)}
                               </span>
-                              <div className="flex items-center gap-1">
+                              {/* Mobile-optimized trading controls with larger touch targets */}
+                              <div className="flex items-center gap-2 sm:gap-1">
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleBuy(asset, qty)}
                                   disabled={!canBuy}
-                                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                                  className="min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] bg-primary text-primary-foreground hover:bg-primary/90 touch-manipulation"
                                   title={
                                     !canBuy
                                       ? "Not enough cash or invalid qty"
                                       : "Buy"
                                   }
                                 >
-                                  <ShoppingCart className="h-3 w-3" />
+                                  <ShoppingCart className="h-4 w-4 sm:h-3 sm:w-3" />
                                 </Button>
                                 <Input
                                   type="number"
                                   inputMode="decimal"
                                   min={0}
                                   step={0.1}
-                                  className="w-16 bg-white text-foreground"
+                                  className="w-20 sm:w-16 h-11 sm:h-9 bg-white text-foreground text-center text-base sm:text-sm font-medium rounded-lg"
                                   value={Number.isFinite(qty) ? qty : 0.1}
                                   onChange={(e) => {
                                     const v = parseFloat(e.target.value);
@@ -717,10 +788,10 @@ export default function TradingDashboard({
                                   variant="outline"
                                   onClick={() => handleSell(asset, qty)}
                                   disabled={!canSell}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  className="min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] bg-destructive text-destructive-foreground hover:bg-destructive/90 touch-manipulation"
                                   title={!canSell ? "Invalid qty" : "Sell"}
                                 >
-                                  <Minus className="h-3 w-3" />
+                                  <Minus className="h-4 w-4 sm:h-3 sm:w-3" />
                                 </Button>
                               </div>
                             </div>

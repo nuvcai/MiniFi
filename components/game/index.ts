@@ -1,31 +1,27 @@
-// Game Components Index
-// Re-export all game-related components for easy imports
+/**
+ * Game Components - Unified exports
+ * © 2025 NUVC.AI. All Rights Reserved.
+ */
 
-// Core Game Components
-export { GameHeader } from "./GameHeader";
-export { CoachSidebar } from "./CoachSidebar";
-export { ProgressCard } from "./ProgressCard";
-export { TimelineSection } from "./TimelineSection";
-export { EventCard } from "./EventCard";
-export { CompetitionCard } from "./CompetitionCard";
+// Main journey container (replaces TimelineSection)
+export { JourneyHub } from './JourneyHub';
 
-// New UX Components
-export { FloatingCoach } from "./FloatingCoach";
-export { MobileNav } from "./MobileNav";
-export { TradeConfirmation } from "./TradeConfirmation";
-export { RiskRewardMeter, RiskRewardChart } from "./RiskRewardMeter";
-export { KnowledgeLibrary, defaultConcepts } from "./KnowledgeLibrary";
-export type { FinancialConcept } from "./KnowledgeLibrary";
+// Chapter selection and progression
+export { ChapterHub } from './ChapterHub';
 
-// Animations & Celebrations
-export { XPAnimation, LevelUpCelebration, StreakCounter } from "./XPAnimation";
+// Skills dashboard (single instance, collapsible)
+export { SkillsDrawer } from './SkillsDrawer';
 
-// Achievement System
-export {
-  AchievementBadge,
-  AchievementUnlockPopup,
-  AchievementsGrid,
-  defaultAchievements,
-} from "./Achievements";
-export type { Achievement } from "./Achievements";
+// Practice mode (competition + random scenarios)
+export { PracticeMode } from './PracticeMode';
 
+// Other game components
+export { GameHeader } from './GameHeader';
+export { CoachSidebar } from './CoachSidebar';
+export { EventCard } from './EventCard';
+export { CompetitionCard } from './CompetitionCard';
+export { DifficultyMeter } from './DifficultyMeter';
+export { FOLearningPath } from './FOLearningPath';
+export { GameSidebar } from './GameSidebar';
+export { PersonalizedJourneyHeader } from './PersonalizedJourneyHeader';
+export { ProgressCard } from './ProgressCard';
