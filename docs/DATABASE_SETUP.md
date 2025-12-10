@@ -130,3 +130,5 @@ If Supabase is not configured, the app runs in demo mode:
 
 
 
+
+

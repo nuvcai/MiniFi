@@ -28,19 +28,33 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "NUVC Financial Literacy App",
-  description: "Empowering Australian teens with AI-powered investment education through gamified learning",
+  title: "Minifi - Learn Investing Through History",
+  description: "Master investing by trading through history's biggest market events. AI-powered financial education game for teens.",
   icons: {
     icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: '/minifi-icon.svg',
   },
   authors: [{ name: "NUVC.AI", url: "https://nuvc.ai" }],
   creator: "NUVC.AI",
-  keywords: ["financial literacy", "investment education", "game", "teens", "AI"],
+  publisher: "Minifi",
+  keywords: ["minifi", "financial literacy", "investment education", "trading game", "teens", "AI coach", "market history", "stock market"],
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "Mini.Fi",
+    statusBarStyle: "black-translucent",
+    title: "Minifi",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Minifi",
+    title: "Minifi - Learn Investing Through History",
+    description: "Master investing by trading through history's biggest market events",
+    images: ['/minifi-icon.svg'],
+  },
+  twitter: {
+    card: "summary",
+    title: "Minifi - Learn Investing Through History",
+    description: "Master investing by trading through history's biggest market events",
+    images: ['/minifi-icon.svg'],
   },
 };
 

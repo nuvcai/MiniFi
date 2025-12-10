@@ -1,14 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <defs>
-    <linearGradient id="favGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#8B7CF6"/>
-      <stop offset="100%" style="stop-color:#6B5AD4"/>
-    </linearGradient>
-  </defs>
-  <!-- Mini.Fi Favicon -->
-  <rect x="2" y="2" width="28" height="28" rx="7" fill="url(#favGradient)"/>
-  <!-- M letter stylized -->
-  <path d="M8 24V12L12 18L16 12L20 18L24 12V24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <!-- Growth dot -->
-  <circle cx="24" cy="9" r="2" fill="#FFD700"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.34 121.34"><defs><style>.cls-1{fill:#0d0d0d;}.cls-2{fill:#9898f2;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect class="cls-1" width="121.34" height="121.34"/><path class="cls-2" d="M86.65,82.08c0,2.22.25,3.66.73,4.32a2.94,2.94,0,0,0,2.52,1v3.25H70.41V87.38a2.88,2.88,0,0,0,2.53-1q.72-1,.72-4.35V63.11A7.3,7.3,0,0,0,73.11,60c-.38-.77-1.19-1.1-2.44-1V55.76l13.5-4.62h2.48Z"/><circle class="cls-2" cx="80.03" cy="38.36" r="7.65"/><path class="cls-2" d="M67.17,82.08q0,3.33.72,4.32a3,3,0,0,0,2.52,1v3.25H50.93V87.38a2.88,2.88,0,0,0,2.52-1q.72-1,.72-4.35V63.11A7.3,7.3,0,0,0,53.62,60c-.37-.77-1.18-1.10-2.44-1V55.76l13.51-4.62h2.48Z"/><circle class="cls-2" cx="60.54" cy="38.36" r="7.65"/><path class="cls-2" d="M47.68,82.08c0,2.22.24,3.66.73,4.32a2.94,2.94,0,0,0,2.52,1v3.25H31.44V87.38a2.85,2.85,0,0,0,2.52-1c.49-.68.73-2.13.73-4.35V63.11A7.29,7.29,0,0,0,34.13,60q-.56-1.16-2.43-1V55.76l13.5-4.62h2.48Z"/><circle class="cls-2" cx="41.06" cy="38.36" r="7.65"/></g></g></svg>

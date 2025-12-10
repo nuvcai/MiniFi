@@ -328,54 +328,91 @@ export function ChapterHub({ events, onLevelClick, streakDays = 0 }: ChapterHubP
                   <div
                     key={event.year}
                     onClick={() => handleLevelClick(event, index)}
-                    className={`group relative p-3 rounded-xl overflow-hidden cursor-pointer transition-all duration-200
-                      bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/15 dark:to-teal-500/10
-                      border-2 border-emerald-300 dark:border-emerald-500/40
+                    className={`group relative p-4 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300
+                      bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 
+                      dark:from-emerald-500/20 dark:via-teal-500/15 dark:to-cyan-500/10
+                      border-2 border-emerald-400/60 dark:border-emerald-400/50
+                      hover:border-emerald-500 dark:hover:border-emerald-400
+                      hover:shadow-xl hover:shadow-emerald-500/25 dark:hover:shadow-emerald-400/20
                       active:scale-[0.98] touch-manipulation
                       ${isAnimating ? 'scale-95' : ''}`}
                   >
-                    <div className="absolute -top-10 -right-10 w-20 h-20 bg-emerald-400/20 rounded-full blur-2xl" />
+                    {/* Animated Background Elements */}
+                    <div className="absolute -top-12 -right-12 w-24 h-24 bg-emerald-400/30 dark:bg-emerald-400/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="absolute -bottom-8 -left-8 w-20 h-20 bg-teal-400/20 dark:bg-teal-400/15 rounded-full blur-2xl" />
+                    
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    </div>
                     
                     <div className="relative">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-md flex-shrink-0">
-                          <CheckCircle2 className="h-5 w-5 text-white" />
+                      <div className="flex items-start gap-3">
+                        {/* Icon with enhanced styling */}
+                        <div className="relative flex-shrink-0">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/50 dark:shadow-emerald-400/30 group-hover:scale-110 transition-transform duration-300">
+                            <CheckCircle2 className="h-6 w-6 text-white drop-shadow-sm" />
+                          </div>
+                          {/* Pulsing ring */}
+                          <div className="absolute inset-0 rounded-xl bg-emerald-400/30 animate-ping" style={{ animationDuration: '2s' }} />
                         </div>
                         
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">{event.year}</span>
-                            <Badge className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-0 text-[8px] font-bold px-1">✓</Badge>
+                          <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                            <span className="text-xs font-black text-emerald-700 dark:text-emerald-300 tracking-wide">{event.year}</span>
+                            <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 text-[8px] font-bold px-1.5 shadow-sm">
+                              ✓ DONE
+                            </Badge>
                             <ImpactBadge impact={event.impact} />
                           </div>
-                          <h4 className="font-bold text-sm text-slate-800 dark:text-white leading-tight truncate">{event.title}</h4>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">+{event.reward} {III_CONFIG.symbol} earned</span>
+                          <h4 className="font-bold text-base text-slate-900 dark:text-white leading-tight mb-1.5 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
+                            {event.title}
+                          </h4>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/15 dark:bg-emerald-400/20 border border-emerald-300/50 dark:border-emerald-400/30">
+                              <Sparkles className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+                                +{event.reward} {III_CONFIG.symbol}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        
                       </div>
                       
-                      {/* Replay Button - Full width on mobile */}
+                      {/* Replay Button - Enhanced styling */}
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleLevelClick(event, index);
                         }}
-                        variant="outline"
-                        className="w-full mt-2 min-h-[40px] sm:min-h-[32px] text-xs font-semibold border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 touch-manipulation active:scale-[0.97]"
+                        className="w-full mt-3 min-h-[44px] sm:min-h-[40px] text-sm font-bold
+                          bg-gradient-to-r from-emerald-600 to-teal-600 
+                          hover:from-emerald-500 hover:to-teal-500
+                          text-white shadow-md hover:shadow-lg
+                          border-0 touch-manipulation active:scale-[0.97]
+                          transition-all duration-200"
                       >
-                        <Play className="h-3.5 w-3.5 mr-1.5" />
-                        Play Again
+                        <Play className="h-4 w-4 mr-2" />
+                        Replay Mission
                       </Button>
                     </div>
                     
-                    {/* Stars - Top right corner */}
-                    <div className="absolute top-2 right-2 flex gap-0.5">
+                    {/* Stars - Top right corner with glow */}
+                    <div className="absolute top-3 right-3 flex gap-1">
                       {[...Array(meta.stars)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 text-amber-400 fill-amber-400" />
+                        <div key={i} className="relative">
+                          <Star className="h-4 w-4 text-amber-400 fill-amber-400 drop-shadow-md animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+                          <div className="absolute inset-0 blur-sm">
+                            <Star className="h-4 w-4 text-amber-300 fill-amber-300" />
+                          </div>
+                        </div>
                       ))}
                     </div>
+                    
+                    {/* Confetti particles (subtle) */}
+                    <div className="absolute top-1 left-1/4 w-1 h-1 bg-emerald-400 rounded-full opacity-60" />
+                    <div className="absolute bottom-1/4 right-1/4 w-1.5 h-1.5 bg-teal-400 rounded-full opacity-40" />
+                    <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-cyan-400 rounded-full opacity-50" />
                   </div>
                 );
               }

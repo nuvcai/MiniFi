@@ -98,7 +98,7 @@ vercel login
 vercel --prod
 
 # 4. Set environment variable in Vercel dashboard:
-# NEXT_PUBLIC_API_URL=https://minifi-backend.onrender.com
+# NEXT_PUBLIC_API_URL=https://minifi-onqw.onrender.com
 ```
 
 Or connect via Vercel Dashboard → Import Git Repository

@@ -70,3 +70,5 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
     envVars:
       - key: CRON_SECRET
         sync: false
+
+

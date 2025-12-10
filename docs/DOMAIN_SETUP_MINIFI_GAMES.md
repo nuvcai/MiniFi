@@ -38,7 +38,7 @@
 
 **Vercel Environment Variables Required:**
 ```bash
-NEXT_PUBLIC_API_URL=https://minifi-backend.onrender.com
+NEXT_PUBLIC_API_URL=https://minifi-onqw.onrender.com
 ```
 
 ### ⚠️ Backend (Render)
@@ -80,12 +80,12 @@ curl -I https://www.minifi.games
 
 ```bash
 # Check backend health
-curl https://minifi-backend.onrender.com/health
+curl https://minifi-onqw.onrender.com/health
 
 # Expected: {"status":"healthy","timestamp":"..."}
 
 # Check backend root
-curl https://minifi-backend.onrender.com/
+curl https://minifi-onqw.onrender.com/
 
 # Expected: API info JSON
 ```
@@ -103,11 +103,11 @@ Open browser console on `https://minifi.games` and check for CORS errors when ma
 1. **Deploy Backend Changes**
    - The CORS configuration has been updated in `backend/main.py`
    - Deploy to Render to apply changes
-   - Verify backend is accessible at `https://minifi-backend.onrender.com`
+   - Verify backend is accessible at `https://minifi-onqw.onrender.com`
 
 2. **Verify Vercel Environment Variables**
    - Ensure `NEXT_PUBLIC_API_URL` is set in Vercel dashboard
-   - Value should be: `https://minifi-backend.onrender.com`
+   - Value should be: `https://minifi-onqw.onrender.com`
 
 3. **Test End-to-End**
    - Visit `https://minifi.games`
@@ -190,3 +190,5 @@ Open browser console on `https://minifi.games` and check for CORS errors when ma
 
 **Last Updated:** 2025-12-09  
 **Status:** CORS configuration fixed, backend deployment verification pending
+
+

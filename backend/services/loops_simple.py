@@ -166,3 +166,5 @@ async def send_weekly_digest_event(emails: list[str], week_number: int):
 
 
 
+
+
